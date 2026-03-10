@@ -3,11 +3,24 @@ import API_CONFIG from '../config/api';
 const BASE_URL = API_CONFIG.API_BASE;
 
 const handleResponse = async (response) => {
+  const data = await response.json().catch(() => ({}));
+
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || 'Network response was not ok');
+    // Prefer backend error / validation messages when available
+    const validationMessage = Array.isArray(data.details) && data.details.length
+      ? data.details[0].msg
+      : undefined;
+
+    const message =
+      data.error ||
+      data.message ||
+      validationMessage ||
+      'Request failed';
+
+    throw new Error(message);
   }
-  return response.json();
+
+  return data;
 };
 
 const getAuthHeaders = () => {
