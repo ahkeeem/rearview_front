@@ -1,0 +1,117 @@
+.dashboard-rightbar {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quick-stats {
+  margin-bottom: 30px;
+}
+
+.quick-stats h3 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+.progress {
+  height: 100%;
+  background: #4CAF50;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+}
+
+.todo-list li {
+  padding: 8px 0;
+  color: #666;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.todo-list li:before {
+  content: '•';
+  color: #4CAF50;
+  margin-right: 8px;
+}
+
+.suggested-connections {
+  margin-top: 20px;
+}
+
+.suggested-connections h3 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+}
+
+.suggestion-card {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.suggestion-card:last-child {
+  border-bottom: none;
+}
+
+.suggestion-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.suggestion-info {
+  flex: 1;
+}
+
+.suggestion-info h4 {
+  margin: 0;
+  font-size: 15px;
+  color: #2c3e50;
+}
+
+.suggestion-info p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.suggestion-info span {
+  font-size: 12px;
+  color: #888;
+}
+
+.btn-connect {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-connect:hover {
+  background: #43a047;
+}
+
+.suggestion-card.loading {
+  min-height: 70px;
+}

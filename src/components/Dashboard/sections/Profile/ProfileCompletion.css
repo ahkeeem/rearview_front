@@ -1,0 +1,89 @@
+.profile-completion-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.profile-completion-card h3 {
+  margin: 0 0 16px;
+  color: #2c3e50;
+  font-size: 18px;
+}
+
+.progress-section {
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #edf2f7;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #4caf50;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.task-item i {
+  color: #cbd5e0;
+  font-size: 16px;
+}
+
+.task-item.completed {
+  color: #718096;
+}
+
+.task-item.completed i {
+  color: #4caf50;
+}
+
+.complete-profile-btn {
+  width: 100%;
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.complete-profile-btn:hover {
+  background: #1565c0;
+}
+
+.complete-profile-btn i {
+  font-size: 14px;
+}

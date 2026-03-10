@@ -1,0 +1,34 @@
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton-base {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 936px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.skeleton-card {
+  composes: skeleton-base;
+  height: 120px;
+  border-radius: 8px;
+}
+
+.skeleton-text {
+  composes: skeleton-base;
+  height: 20px;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+.skeleton-circle {
+  composes: skeleton-base;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}

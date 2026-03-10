@@ -1,0 +1,160 @@
+.notification-container {
+  position: relative;
+}
+
+.notification-dropdown {
+  position: relative;
+}
+
+.notification-trigger {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.notification-trigger:hover {
+  background: #f5f7fa;
+  color: #1976d2;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #ff4081;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.notification-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 320px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 8px;
+  z-index: 1000;
+}
+
+.notification-header {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+.unread-count {
+  background: #f0f7ff;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.notification-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #eee;
+}
+
+.notification-item:hover {
+  background: #f8f9fa;
+}
+
+.notification-item.unread {
+  background: #f0f7ff;
+}
+
+.notification-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notification-icon.connection {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.notification-icon.review {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.notification-icon.verification {
+  background: #e8f5e9;
+  color: #4caf50;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #2c3e50;
+  line-height: 1.4;
+}
+
+.notification-time {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.notification-footer {
+  padding: 12px;
+  text-align: center;
+  border-top: 1px solid #eee;
+}
+
+.view-all {
+  background: transparent;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+  padding: 8px 16px;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.view-all:hover {
+  color: #1565c0;
+}
+
+.no-notifications {
+  text-align: center;
+  padding: 24px;
+  color: #666;
+}

@@ -1,0 +1,129 @@
+.messages-section {
+  display: flex;
+  height: calc(100vh - 80px);
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.messages-section .conversations-list {
+  width: 320px;
+  border-right: 1px solid #eee;
+  background: #f8f9fa;
+}
+
+.messages-section .chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-section .empty-state {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #6c757d;
+}
+
+.messages-section .empty-state i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: #dee2e6;
+}
+
+.messages-section .empty-state h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.messages-section .empty-state p {
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
+.conversations-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+
+.conversations {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.conversation-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.conversation-item:hover {
+  background: #f8f9fa;
+}
+
+.conversation-item.active {
+  background: #e3f2fd;
+}
+
+.conversation-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.conversation-info {
+  flex: 1;
+}
+
+.conversation-info h3 {
+  margin: 0;
+  font-size: 15px;
+  color: #2c3e50;
+}
+
+.conversation-info p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unread-badge {
+  background: #1976d2;
+  color: white;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0 6px;
+}
+
+.new-message-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #1976d2;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.new-message-btn:hover {
+  background: #1565c0;
+}
