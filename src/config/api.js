@@ -2,7 +2,7 @@ const isBrowser = typeof window !== 'undefined';
 const isProdHosted = isBrowser && window.location.hostname.endsWith('vercel.app');
 
 // Replace with your actual Render backend URL:
-const RENDER_API_BASE = 'https://<your-render-backend>.onrender.com';
+const RENDER_API_BASE = 'https://rearview-api.onrender.com';
 
 const DEFAULT_API_BASE = isProdHosted ? RENDER_API_BASE : 'http://localhost:4000';
 
