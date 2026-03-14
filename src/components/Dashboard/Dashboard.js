@@ -7,6 +7,8 @@ import RightBar from './sections/RightBar/RightBar';
 import ConnectionsSection from '../Connections/ConnectionsSection';
 import Reviews from './sections/Reviews/Reviews';
 import MessagesSection from './sections/Messages/MessagesSection';
+import UserProfile from './sections/Profile/UserProfile';
+import Settings from './sections/Settings/Settings';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -20,6 +22,8 @@ const Dashboard = () => {
           <Route path="/connections" element={<ConnectionsSection />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/messages" element={<MessagesSection />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
         <RightBar />
       </div>

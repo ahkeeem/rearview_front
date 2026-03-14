@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import { userService } from '../../../../services/userService';
 import ActivityFeed from './ActivityFeed';
@@ -66,7 +67,7 @@ const MainContent = () => {
           >
             {showFindConnections ? 'Back to Dashboard' : 'Find Connections'}
           </button>
-          <button className="btn-secondary">Write Review</button>
+          <Link to="/dashboard/reviews" className="btn-secondary">Write Review</Link>
         </div>
       </header>
 

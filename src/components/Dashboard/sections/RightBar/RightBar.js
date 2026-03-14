@@ -1,30 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../../../context/AuthContext';
 import { userService } from '../../../../services/userService';
 import LoadingSkeleton from '../../components/LoadingSkeleton';
 import connectionService from '../../../../services/connectionService';
+import api from '../../../../services/api';
 import './RightBar.css';
 
 const RightBar = () => {
+  const { user } = useAuth();
   const [suggestions, setSuggestions] = useState([]);
-  const [profileStrength, setProfileStrength] = useState({
-    score: 0,
-    tasks: []
-  });
+  const [profileStrength, setProfileStrength] = useState({ score: 0, tasks: [] });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadRightBarData();
-  }, []);
+    if (user?.id) loadRightBarData();
+    else setLoading(false);
+  }, [user?.id]);
 
   const loadRightBarData = async () => {
     try {
+      setLoading(true);
       const [suggestedUsers, profileData] = await Promise.all([
         userService.getSuggestedConnections(),
-        userService.getProfileStrength()
+        userService.getProfileStrength(user.id)
       ]);
-
-      setSuggestions(suggestedUsers);
-      setProfileStrength(profileData);
+      const connectionIds = new Set();
+      try {
+        const conns = await api.connections.getAll();
+        conns.forEach(c => {
+          connectionIds.add(c.user_id);
+          connectionIds.add(c.connected_user_id);
+        });
+      } catch (_) {}
+      const filtered = (suggestedUsers || []).filter(
+        u => u.id !== user.id && !connectionIds.has(u.id)
+      );
+      setSuggestions(filtered.slice(0, 5));
+      setProfileStrength(profileData || { score: 0, tasks: [] });
     } catch (error) {
       console.error('Error loading rightbar data:', error);
     } finally {
@@ -61,26 +73,29 @@ const RightBar = () => {
 
       <div className="suggested-connections">
         <h3>Suggested Connections</h3>
-        {suggestions.map(user => (
-          <div key={user.id} className="suggestion-card">
-            <img 
-              src={user.avatar || '/default-avatar.png'} 
-              alt={user.name} 
-              className="suggestion-avatar" 
-            />
-            <div className="suggestion-info">
-              <h4>{user.name}</h4>
-              <p>{user.role}</p>
-              <span>{user.mutualConnections} mutual connections</span>
+        {suggestions.length === 0 ? (
+          <p className="no-suggestions">No suggestions right now. Use Find Connections to search.</p>
+        ) : (
+          suggestions.map(sug => (
+            <div key={sug.id} className="suggestion-card">
+              <img
+                src={sug.photo_url || '/default-avatar.png'}
+                alt={sug.name}
+                className="suggestion-avatar"
+              />
+              <div className="suggestion-info">
+                <h4>{sug.name}</h4>
+                <p>{sug.email || 'Member'}</p>
+              </div>
+              <button
+                className="btn-connect"
+                onClick={() => handleConnect(sug.id)}
+              >
+                Connect
+              </button>
             </div>
-            <button 
-              className="btn-connect"
-              onClick={() => handleConnect(user.id)}
-            >
-              Connect
-            </button>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

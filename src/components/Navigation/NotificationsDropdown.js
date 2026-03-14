@@ -36,7 +36,10 @@ const NotificationsDropdown = ({ notifications }) => {
           </div>
           
           <div className="notifications-list">
-            {notifications.map(notification => (
+            {(notifications || []).length === 0 ? (
+              <p className="empty-dropdown">No notifications yet</p>
+            ) : (
+            (notifications || []).map(notification => (
               <div 
                 key={notification.id} 
                 className={`notification-item ${notification.read ? '' : 'unread'}`}
@@ -53,7 +56,8 @@ const NotificationsDropdown = ({ notifications }) => {
                   </span>
                 </div>
               </div>
-            ))}
+            ))
+            )}
           </div>
           
           <div className="notifications-footer">

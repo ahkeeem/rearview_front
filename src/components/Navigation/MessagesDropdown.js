@@ -37,27 +37,31 @@ const MessagesDropdown = ({ messages }) => {
           </div>
           
           <div className="messages-list">
-            {messages.map(message => (
+            {(messages || []).length === 0 ? (
+              <p className="empty-dropdown">No recent messages. Start a conversation from Messages.</p>
+            ) : (
+              (messages || []).map(message => (
               <div 
                 key={message.id} 
                 className={`message-item ${message.read ? '' : 'unread'}`}
               >
                 <img 
-                  src={message.sender.avatar || '/default-avatar.png'} 
+                  src={message.sender?.avatar || '/default-avatar.png'} 
                   alt="" 
                   className="message-avatar"
                 />
                 <div className="message-content">
-                  <h4>{message.sender.name}</h4>
+                  <h4>{message.sender?.name}</h4>
                   <p>{message.content}</p>
                   <span className="message-time">{message.timestamp}</span>
                 </div>
               </div>
-            ))}
+              ))
+            )}
           </div>
           
           <div className="messages-footer">
-            <Link to="/dashboard/messages/new" className="new-message-btn">
+            <Link to="/dashboard/messages" className="new-message-btn">
               <i className="fas fa-pen"></i>
               New Message
             </Link>

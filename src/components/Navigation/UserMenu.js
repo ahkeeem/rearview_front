@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './UserMenu.css';
 
 const UserMenu = () => {
@@ -15,44 +15,43 @@ const UserMenu = () => {
         setIsOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleLogout = () => {
+    setIsOpen(false);
     logout();
     navigate('/login');
   };
 
   return (
     <div className="user-menu" ref={menuRef}>
-      <button 
-        className="user-menu-trigger" 
+      <button
+        className="user-menu-trigger"
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
       >
-        <img 
-          src={user?.avatar || '/default-avatar.png'} 
-          alt={user?.name} 
+        <img
+          src={user?.photo_url || '/default-avatar.png'}
+          alt={user?.name}
           className="user-avatar"
         />
         <span className="user-name">{user?.name}</span>
-        <i className={`fas fa-chevron-down ${isOpen ? 'rotate' : ''}`}></i>
+        <i className={`fas fa-chevron-down ${isOpen ? 'rotate' : ''}`} aria-hidden />
       </button>
 
       {isOpen && (
-        <div className="dropdown-menu">
-          <a href="/profile">
-            <i className="fas fa-user"></i>
-            Profile
-          </a>
-          <a href="/settings">
-            <i className="fas fa-cog"></i>
-            Settings
-          </a>
-          <button onClick={handleLogout}>
-            <i className="fas fa-sign-out-alt"></i>
-            Logout
+        <div className="dropdown-menu" role="menu">
+          <Link to="/dashboard/profile" role="menuitem" onClick={() => setIsOpen(false)}>
+            <i className="fas fa-user" aria-hidden /> Profile
+          </Link>
+          <Link to="/dashboard/settings" role="menuitem" onClick={() => setIsOpen(false)}>
+            <i className="fas fa-cog" aria-hidden /> Settings
+          </Link>
+          <button type="button" onClick={handleLogout} role="menuitem">
+            <i className="fas fa-sign-out-alt" aria-hidden /> Logout
           </button>
         </div>
       )}

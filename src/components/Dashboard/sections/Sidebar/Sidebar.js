@@ -6,69 +6,37 @@ import './Sidebar.css';
 const Sidebar = () => {
   const { user } = useAuth();
   const location = useLocation();
-  const [profileData, setProfileData] = useState({
-    notifications: {
-      connections: 0,
-      reviews: 0,
-      messages: 2, // Mock notification count for messages
-      verifications: 0
-    }
-  });
+  const path = location.pathname;
 
   return (
     <div className="dashboard-sidebar">
       <div className="user-profile">
-        <img 
-          src={user?.avatar || '/default-avatar.png'} 
-          alt={user?.name} 
+        <img
+          src={user?.photo_url || '/default-avatar.png'}
+          alt={user?.name}
           className="profile-image"
         />
         <h3>{user?.name}</h3>
       </div>
 
-      <nav className="sidebar-nav">
-        <Link 
-          to="/dashboard" 
-          className={location.pathname === '/dashboard' ? 'active' : ''}
-        >
-          <i className="fas fa-home"></i>
-          Overview
+      <nav className="sidebar-nav" aria-label="Dashboard navigation">
+        <Link to="/dashboard" className={path === '/dashboard' ? 'active' : ''}>
+          <i className="fas fa-home" aria-hidden /> Overview
         </Link>
-        <Link 
-          to="/dashboard/connections" 
-          className={location.pathname === '/dashboard/connections' ? 'active' : ''}
-        >
-          <i className="fas fa-users"></i>
-          Connections
-          {profileData.notifications.connections > 0 && (
-            <span className="notification-badge">
-              {profileData.notifications.connections}
-            </span>
-          )}
+        <Link to="/dashboard/connections" className={path.includes('/connections') ? 'active' : ''}>
+          <i className="fas fa-users" aria-hidden /> Connections
         </Link>
-        <Link 
-          to="/dashboard/messages" 
-          className={location.pathname === '/dashboard/messages' ? 'active' : ''}
-        >
-          <i className="fas fa-envelope"></i>
-          Messages
-          {profileData.notifications.messages > 0 && (
-            <span className="notification-badge">
-              {profileData.notifications.messages}
-            </span>
-          )}
+        <Link to="/dashboard/messages" className={path.includes('/messages') ? 'active' : ''}>
+          <i className="fas fa-envelope" aria-hidden /> Messages
         </Link>
-        <Link 
-          to="/dashboard/reviews" 
-          className={location.pathname === '/dashboard/reviews' ? 'active' : ''}
-        >
-          <i className="fas fa-star"></i>
-          Reviews
-          {profileData.notifications.reviews > 0 && (
-            <span className="notification-badge">
-              {profileData.notifications.reviews}
-            </span>
-          )}
+        <Link to="/dashboard/reviews" className={path.includes('/reviews') ? 'active' : ''}>
+          <i className="fas fa-star" aria-hidden /> Reviews
+        </Link>
+        <Link to="/dashboard/profile" className={path.includes('/profile') ? 'active' : ''}>
+          <i className="fas fa-user" aria-hidden /> Profile
+        </Link>
+        <Link to="/dashboard/settings" className={path.includes('/settings') ? 'active' : ''}>
+          <i className="fas fa-cog" aria-hidden /> Settings
         </Link>
       </nav>
     </div>
