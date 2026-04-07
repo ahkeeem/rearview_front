@@ -3,6 +3,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../../services/api';
 import DeleteAccountModal from './DeleteAccountModal';
+import SecuritySettings from './SecuritySettings';
 import './Settings.css';
 
 const Settings = () => {
@@ -98,6 +99,8 @@ const Settings = () => {
           </label>
         </div>
       </section>
+
+      <SecuritySettings />
 
       <section className="settings-section">
         <h3>Privacy</h3>

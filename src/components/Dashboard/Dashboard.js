@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import useInactivityTimeout from '../../hooks/useInactivityTimeout';
 import Navigation from '../Navigation/Navigation';
 import Sidebar from './sections/Sidebar/Sidebar';
 import MainContent from './sections/MainContent/MainContent';
@@ -10,10 +11,25 @@ import MessagesSection from './sections/Messages/MessagesSection';
 import UserProfile from './sections/Profile/UserProfile';
 import PublicProfile from './sections/Profile/PublicProfile';
 import Settings from './sections/Settings/Settings';
+import api from '../../services/api';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await api.users.logout();
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      navigate('/login');
+    }
+  };
+
+  // 30 minute inactivity timeout
+  useInactivityTimeout(handleLogout, 30 * 60 * 1000);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);

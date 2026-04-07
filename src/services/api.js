@@ -51,6 +51,15 @@ const api = {
       return handleResponse(response);
     },
 
+    confirmOTP: async (userId, code) => {
+      const response = await fetch(`${BASE_URL}/users/login/confirm`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, code })
+      });
+      return handleResponse(response);
+    },
+
     uploadImage: async (formData) => {
       const token = localStorage.getItem('token');
       const response = await fetch(`${BASE_URL}/users/upload-image`, {

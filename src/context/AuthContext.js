@@ -43,9 +43,15 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       const response = await api.users.login(credentials);
-      const { token, user: userData } = response;
       
+      // If OTP is required, don't set user yet
+      if (response.pending_verification) {
+        return response;
+      }
+
+      const { token, user: userData } = response;
       localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
       return response;
     } catch (error) {
@@ -56,10 +62,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-    setError(null);
+  const verifyOTP = async (userId, code) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.users.confirmOTP(userId, code);
+      const { token, user: userData } = response;
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+      return response;
+    } catch (error) {
+      setError(error.message || 'Verification failed');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await api.users.logout();
+    } catch (err) {
+      console.error('Logout failed on server');
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null);
+      setError(null);
+    }
   };
 
   const value = {
