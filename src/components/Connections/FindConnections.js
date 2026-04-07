@@ -84,17 +84,25 @@ const FindConnections = () => {
                 </div>
               </div>
               <div className="user-card-actions">
-                <button 
-                  className={`btn-connect ${user.connectionStatus === 'pending' ? 'pending' : ''}`}
-                  onClick={() => sendConnectionRequest(user.id)}
-                  disabled={user.connectionStatus === 'pending'}
-                >
-                  {user.connectionStatus === 'pending' ? (
-                    <><i className="fas fa-clock"></i> Pending</>
-                  ) : (
-                    <><i className="fas fa-plus"></i> Connect</>
-                  )}
-                </button>
+                {user.connectionStatus === 'accepted' ? (
+                  <button 
+                    className="btn-connect connected"
+                    onClick={() => window.location.href = '/dashboard/messages'}
+                  >
+                    <i className="fas fa-paper-plane"></i> Message
+                  </button>
+                ) : user.connectionStatus === 'pending' ? (
+                  <button className="btn-connect pending" disabled>
+                    <i className="fas fa-clock"></i> Pending
+                  </button>
+                ) : (
+                  <button 
+                    className="btn-connect"
+                    onClick={() => sendConnectionRequest(user.id)}
+                  >
+                    <i className="fas fa-plus"></i> Connect
+                  </button>
+                )}
               </div>
             </div>
           ))

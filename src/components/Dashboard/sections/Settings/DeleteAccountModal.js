@@ -27,14 +27,14 @@ const DeleteAccountModal = ({ user, onClose, onConfirm, isDeleting }) => {
         <div className="delete-modal-body">
           <div className="warning-banner">
             <i className="fas fa-exclamation-triangle"></i>
-            <p><strong>Warning:</strong> This action is permanent and cannot be undone.</p>
+            <p><strong>Warning:</strong> Initiating an account deletion activates a 30-day grace period.</p>
           </div>
           
-          <p>This will permanently delete your account, your profile, all your connections, reviews, verifications, and your message history.</p>
+          <p>Your account will be instantly deactivated, logging you out and severing all network connections. After 30 days, your Personal Identifiable Information (PII) and messages will be permanently scrubbed in accordance with GDPR. Your legacy reviews will remain anonymously attached to products.</p>
           
           <div className="confirmation-section">
             <p className="confirmation-instruction">
-              Please type <strong>{expectedText}</strong> to confirm.
+              Please type <strong>{expectedText}</strong> to confirm deactivation.
             </p>
             <input
               type="text"
@@ -65,9 +65,9 @@ const DeleteAccountModal = ({ user, onClose, onConfirm, isDeleting }) => {
             disabled={confirmationInput !== expectedText || isDeleting}
           >
             {isDeleting ? (
-              <><i className="fas fa-spinner fa-spin"></i> Deleting...</>
+              <><i className="fas fa-spinner fa-spin"></i> Deactivating...</>
             ) : (
-              'Delete this account'
+              'Deactivate Account'
             )}
           </button>
         </div>

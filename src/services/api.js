@@ -51,6 +51,19 @@ const api = {
       return handleResponse(response);
     },
 
+    uploadImage: async (formData) => {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${BASE_URL}/users/upload-image`, {
+        method: 'POST',
+        headers: {
+          'Authorization': token ? `Bearer ${token}` : ''
+          // Note: Content-Type is NOT set here to allow the browser to auto-set the multipart boundary
+        },
+        body: formData
+      });
+      return handleResponse(response);
+    },
+
     getProfile: async (userId) => {
       const response = await fetch(`${BASE_URL}/users/profile/${userId}`, {
         headers: getAuthHeaders()
@@ -152,6 +165,33 @@ const api = {
         headers: getAuthHeaders()
       });
       return handleResponse(response);
+    },
+
+    dispute: async (reviewId, reason) => {
+      const response = await fetch(`${BASE_URL}/reviews/${reviewId}/dispute`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ reason })
+      });
+      return handleResponse(response);
+    },
+
+    resolve: async (reviewId, proof_url) => {
+      const response = await fetch(`${BASE_URL}/reviews/${reviewId}/resolve`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ proof_url })
+      });
+      return handleResponse(response);
+    },
+
+    reply: async (reviewId, content) => {
+      const response = await fetch(`${BASE_URL}/reviews/${reviewId}/responses`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ content })
+      });
+      return handleResponse(response);
     }
   },
 
@@ -186,6 +226,74 @@ const api = {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ conversationId, content })
+      });
+      return handleResponse(response);
+    }
+  },
+
+  feed: {
+    get: async (scope = 'mixed') => {
+      const response = await fetch(`${BASE_URL}/feed?scope=${scope}`, {
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
+    },
+    getWarnings: async () => {
+      const response = await fetch(`${BASE_URL}/feed/warnings`, {
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
+    }
+  },
+
+  entities: {
+    search: async (query, type = '') => {
+      const url = type ? `${BASE_URL}/entities/search?q=${query}&type=${type}` : `${BASE_URL}/entities/search?q=${query}`;
+      const response = await fetch(url, { headers: getAuthHeaders() });
+      return handleResponse(response);
+    },
+    register: async (entityData) => {
+      const response = await fetch(`${BASE_URL}/entities/register`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(entityData)
+      });
+      return handleResponse(response);
+    }
+  },
+
+  threads: {
+    getByEntity: async (entityId) => {
+      const response = await fetch(`${BASE_URL}/threads/entity/${entityId}`, {
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
+    },
+    create: async (threadData) => {
+      const response = await fetch(`${BASE_URL}/threads`, {
+        method: 'POST',
+        headers: {
+          ...getAuthHeaders(),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(threadData)
+      });
+      return handleResponse(response);
+    },
+    getComments: async (threadId) => {
+      const response = await fetch(`${BASE_URL}/threads/${threadId}`, {
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
+    },
+    addComment: async (threadId, content) => {
+      const response = await fetch(`${BASE_URL}/threads/${threadId}/comments`, {
+        method: 'POST',
+        headers: {
+          ...getAuthHeaders(),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ content })
       });
       return handleResponse(response);
     }

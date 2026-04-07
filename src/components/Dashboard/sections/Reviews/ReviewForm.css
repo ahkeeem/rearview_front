@@ -16,19 +16,25 @@
   gap: 8px;
 }
 
-.rating-input {
+.stars {
   display: flex;
   gap: 8px;
+  padding: 8px 0;
 }
 
-.star {
-  font-size: 24px;
-  color: var(--border-color);
+.fa-star {
+  font-size: 28px;
+  color: var(--text-tertiary);
   cursor: pointer;
+  transition: transform 0.1s ease;
 }
 
-.star.active {
-  color: #ffd700;
+.fa-star:hover {
+  transform: scale(1.15);
+}
+
+.fa-star.filled {
+  color: #fbbf24; /* Amber 400 */
 }
 
 .btn-submit {

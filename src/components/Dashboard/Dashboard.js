@@ -8,6 +8,7 @@ import ConnectionsSection from '../Connections/ConnectionsSection';
 import Reviews from './sections/Reviews/Reviews';
 import MessagesSection from './sections/Messages/MessagesSection';
 import UserProfile from './sections/Profile/UserProfile';
+import PublicProfile from './sections/Profile/PublicProfile';
 import Settings from './sections/Settings/Settings';
 import './Dashboard.css';
 
@@ -30,6 +31,7 @@ const Dashboard = () => {
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/messages" element={<MessagesSection />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/profile/:id" element={<PublicProfile />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>
         </main>
