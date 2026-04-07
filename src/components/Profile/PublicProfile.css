@@ -2,20 +2,20 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background: #f5f5f5;
+  background: var(--bg-secondary);
   min-height: 100vh;
 }
 
 .loading-spinner, .error-message {
   text-align: center;
   padding: 40px;
-  background: white;
-  border-radius: 8px;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
   margin: 20px 0;
 }
 
 .error-message h2 {
-  color: #d32f2f;
+  color: var(--error-color);
   margin-bottom: 10px;
 }
 
@@ -23,20 +23,20 @@
   display: inline-block;
   margin-top: 20px;
   padding: 10px 20px;
-  background: #1976d2;
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
 }
 
 .profile-header-section {
-  background: white;
-  border-radius: 8px;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
   padding: 30px;
   margin-bottom: 20px;
   display: flex;
   gap: 30px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .profile-avatar-large {
@@ -48,7 +48,7 @@
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #e0e0e0;
+  border: 4px solid var(--border-color);
 }
 
 .profile-header-info {
@@ -57,17 +57,17 @@
 
 .profile-header-info h1 {
   margin: 0 0 10px 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 2em;
 }
 
 .profile-email {
-  color: #666;
+  color: var(--text-secondary);
   margin: 5px 0;
 }
 
 .profile-bio {
-  color: #555;
+  color: var(--text-secondary);
   margin: 15px 0;
   line-height: 1.6;
 }
@@ -77,7 +77,7 @@
   gap: 15px;
   align-items: center;
   margin-top: 15px;
-  color: #888;
+  color: var(--text-muted);
   font-size: 0.9em;
 }
 
@@ -85,7 +85,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: #4caf50;
+  color: var(--success-color);
   font-weight: 500;
 }
 
@@ -105,21 +105,21 @@
   display: block;
   font-size: 1.8em;
   font-weight: bold;
-  color: #1976d2;
+  color: var(--primary-color);
 }
 
 .stat-label {
   display: block;
   font-size: 0.9em;
-  color: #666;
+  color: var(--text-secondary);
   margin-top: 5px;
 }
 
 .profile-content-section {
-  background: white;
-  border-radius: 8px;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
   padding: 30px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .reviews-section-public {
@@ -132,16 +132,16 @@
   align-items: center;
   margin-bottom: 25px;
   padding-bottom: 15px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--border-color);
 }
 
 .section-header h2 {
   margin: 0;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .view-all-link {
-  color: #1976d2;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 500;
 }
@@ -153,42 +153,42 @@
 .no-reviews-message {
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .write-review-btn, .write-review-btn-primary {
   display: inline-block;
   margin-top: 20px;
   padding: 12px 24px;
-  background: #1976d2;
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   font-weight: 500;
-  transition: background 0.3s;
+  transition: var(--transition);
 }
 
 .write-review-btn:hover, .write-review-btn-primary:hover {
-  background: #1565c0;
+  background: var(--primary-hover);
 }
 
 .write-review-section {
   margin-top: 30px;
   padding-top: 30px;
-  border-top: 2px solid #e0e0e0;
+  border-top: 2px solid var(--border-color);
   text-align: center;
 }
 
 .reviews-summary {
   margin-bottom: 30px;
   padding: 20px;
-  background: #f9f9f9;
-  border-radius: 8px;
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
 }
 
 .rating-breakdown h3 {
   margin: 0 0 15px 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.1em;
 }
 
@@ -202,28 +202,28 @@
 .rating-label {
   min-width: 70px;
   font-size: 0.9em;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .rating-bar {
   flex: 1;
   height: 20px;
-  background: #e0e0e0;
-  border-radius: 10px;
+  background: var(--border-color);
+  border-radius: var(--border-radius-lg);
   overflow: hidden;
 }
 
 .rating-bar-fill {
   height: 100%;
   background: #ffc107;
-  transition: width 0.3s;
+  transition: var(--transition);
 }
 
 .rating-count {
   min-width: 30px;
   text-align: right;
   font-size: 0.9em;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .reviews-list-public {
@@ -234,9 +234,9 @@
 
 .review-card-public {
   padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background: #fafafa;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--bg-secondary);
 }
 
 .review-header-public {
@@ -248,11 +248,11 @@
 
 .reviewer-info-public h4 {
   margin: 0 0 5px 0;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .review-date {
-  color: #888;
+  color: var(--text-muted);
   font-size: 0.85em;
 }
 
@@ -263,7 +263,7 @@
 }
 
 .review-rating-public .star {
-  color: #ddd;
+  color: var(--border-color);
   font-size: 1.2em;
 }
 
@@ -274,11 +274,11 @@
 .rating-value {
   margin-left: 5px;
   font-weight: 500;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .review-content-public {
-  color: #555;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 

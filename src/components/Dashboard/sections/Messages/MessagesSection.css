@@ -1,16 +1,16 @@
 .messages-section {
   display: flex;
   height: calc(100vh - 80px);
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
 .messages-section .conversations-list {
   width: 320px;
-  border-right: 1px solid #eee;
-  background: #f8f9fa;
+  border-right: 1px solid var(--border-color);
+  background: var(--bg-secondary);
 }
 
 .messages-section .chat-window {
@@ -25,7 +25,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  color: #6c757d;
+  color: var(--text-secondary);
 }
 
 .messages-section .empty-state i {
@@ -50,7 +50,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .conversations {
@@ -63,15 +63,15 @@
   align-items: center;
   padding: 15px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: var(--transition);
 }
 
 .conversation-item:hover {
-  background: #f8f9fa;
+  background: var(--bg-secondary);
 }
 
 .conversation-item.active {
-  background: #e3f2fd;
+  background: var(--primary-light);
 }
 
 .conversation-avatar {
@@ -88,24 +88,24 @@
 .conversation-info h3 {
   margin: 0;
   font-size: 15px;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .conversation-info p {
   margin: 4px 0 0;
   font-size: 13px;
-  color: #666;
-  white-space: nowrap;
+  color: var(--text-secondary);
+  var(--bg-primary)-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .unread-badge {
-  background: #1976d2;
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
   min-width: 20px;
   height: 20px;
-  border-radius: 10px;
+  border-radius: var(--border-radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,12 +118,12 @@
   height: 40px;
   border-radius: 50%;
   border: none;
-  background: #1976d2;
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: var(--transition);
 }
 
 .new-message-btn:hover {
-  background: #1565c0;
+  background: var(--primary-hover);
 }

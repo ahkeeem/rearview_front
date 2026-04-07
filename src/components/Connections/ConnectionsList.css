@@ -13,9 +13,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
 }
 
 .connection-info {
@@ -45,17 +45,17 @@
 .connection-status {
   font-size: 14px;
   padding: 4px 8px;
-  border-radius: 12px;
+  border-radius: var(--border-radius-lg);
   background: #f0f0f0;
 }
 
 .connection-status.pending {
-  background: #fff3cd;
+  background: var(--warning-light);
   color: #856404;
 }
 
 .connection-status.accepted {
-  background: #d4edda;
+  background: var(--success-light);
   color: #155724;
 }
 
@@ -67,17 +67,17 @@
 .accept-button, .reject-button {
   padding: 8px 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
   font-weight: 500;
 }
 
 .accept-button {
-  background: #28a745;
-  color: white;
+  background: var(--success-color);
+  color: var(--bg-primary);
 }
 
 .reject-button {
-  background: #dc3545;
-  color: white;
+  background: var(--error-color);
+  color: var(--bg-primary);
 }

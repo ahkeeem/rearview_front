@@ -1,8 +1,8 @@
 .find-connections {
   padding: 20px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
 }
 
 .search-header {
@@ -12,8 +12,8 @@
 .search-header input {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
   font-size: 16px;
 }
 
@@ -25,8 +25,8 @@
 
 .user-card {
   padding: 16px;
-  border-radius: 8px;
-  background: #f8f9fa;
+  border-radius: var(--border-radius);
+  background: var(--bg-secondary);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -51,35 +51,35 @@
 .user-info p {
   margin: 4px 0 0;
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .connect-btn {
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   border: none;
   cursor: pointer;
   font-size: 14px;
-  transition: all 0.2s;
+  transition: var(--transition);
 }
 
 .connect-btn:not(.pending) {
-  background: #1976d2;
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
 }
 
 .connect-btn:not(.pending):hover {
-  background: #1565c0;
+  background: var(--primary-hover);
 }
 
 .connect-btn.pending {
-  background: #e0e0e0;
-  color: #666;
+  background: var(--border-color);
+  color: var(--text-secondary);
   cursor: not-allowed;
 }
 
 .loading {
   text-align: center;
   padding: 20px;
-  color: #666;
+  color: var(--text-secondary);
 }

@@ -1,13 +1,13 @@
 .trust-score-card {
-  background: white;
-  border-radius: 12px;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
   padding: 24px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .trust-score-card h3 {
   margin: 0 0 24px;
-  color: #2c3e50;
+  color: var(--text-primary);
   text-align: center;
 }
 
@@ -25,7 +25,7 @@
 
 .score-text {
   font-size: 16px;
-  fill: #2c3e50;
+  fill: var(--text-primary);
   font-weight: bold;
   text-anchor: middle;
   transform: rotate(90deg);
@@ -46,27 +46,27 @@
 .metric-label {
   width: 100px;
   font-size: 14px;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .metric-bar {
   flex: 1;
   height: 8px;
   background: #edf2f7;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   overflow: hidden;
 }
 
 .metric-fill {
   height: 100%;
-  background: #1976d2;
-  border-radius: 4px;
-  transition: width 0.3s ease;
+  background: var(--primary-color);
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
 }
 
 .metric-value {
   width: 40px;
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
   text-align: right;
 }

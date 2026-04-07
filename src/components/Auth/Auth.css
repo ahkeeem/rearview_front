@@ -3,28 +3,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f5f7fa;
+  background: var(--bg-secondary);
   padding: 20px;
 }
 
 .auth-card {
-  background: white;
-  border-radius: 12px;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
   padding: 40px;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .auth-card h2 {
   margin: 0;
-  color: #2c3e50;
+  color: var(--text-primary);
   font-size: 24px;
   text-align: center;
 }
 
 .auth-subtitle {
-  color: #666;
+  color: var(--text-secondary);
   text-align: center;
   margin: 8px 0 24px;
 }
@@ -42,39 +42,39 @@
 }
 
 .form-group label {
-  color: #2c3e50;
+  color: var(--text-primary);
   font-weight: 500;
   font-size: 14px;
 }
 
 .form-group input {
   padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
   font-size: 14px;
-  transition: all 0.2s;
+  transition: var(--transition);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #1976d2;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
 }
 
 .auth-button {
-  background: #1976d2;
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
   border: none;
   padding: 12px;
-  border-radius: 6px;
+  border-radius: var(--border-radius-sm);
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: var(--transition);
   margin-top: 8px;
 }
 
 .auth-button:hover {
-  background: #1565c0;
+  background: var(--primary-hover);
 }
 
 .auth-button:disabled {
@@ -83,21 +83,21 @@
 }
 
 .error-message {
-  background: #ffebee;
-  color: #d32f2f;
+  background: var(--error-light);
+  color: var(--error-color);
   padding: 12px;
-  border-radius: 6px;
+  border-radius: var(--border-radius-sm);
   font-size: 14px;
 }
 
 .auth-footer {
   margin-top: 24px;
   text-align: center;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .auth-footer a {
-  color: #1976d2;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 500;
 }

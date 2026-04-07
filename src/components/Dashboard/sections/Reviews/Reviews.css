@@ -1,14 +1,14 @@
 .reviews-list {
-  background: white;
-  border-radius: 12px;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .review-card {
   padding: 16px;
-  border-bottom: 1px solid #eee;
-  transition: background-color 0.2s;
+  border-bottom: 1px solid var(--border-color);
+  transition: var(--transition);
 }
 
 .review-card:last-child {
@@ -16,7 +16,7 @@
 }
 
 .review-card:hover {
-  background: #f8f9fa;
+  background: var(--bg-secondary);
 }
 
 .review-header {
@@ -39,7 +39,7 @@
 
 .reviewer-info h4 {
   margin: 0;
-  color: #2c3e50;
+  color: var(--text-primary);
   font-size: 16px;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .fa-star {
-  color: #ddd;
+  color: var(--border-color);
   font-size: 14px;
 }
 
@@ -59,34 +59,34 @@
 }
 
 .review-date {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
 .review-content {
   margin: 0;
-  color: #2c3e50;
+  color: var(--text-primary);
   font-size: 14px;
   line-height: 1.5;
 }
 
 .no-reviews {
   text-align: center;
-  color: #666;
+  color: var(--text-secondary);
   padding: 24px;
 }
 
 .loading {
   text-align: center;
   padding: 24px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 /* Add these styles to the existing Reviews.css file */
 
 .review-form-container {
-  background: white;
-  border-radius: 12px;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
   padding: 24px;
   margin-bottom: 24px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -94,7 +94,7 @@
 
 .review-form-container h3 {
   margin: 0 0 16px;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .review-form {
@@ -110,7 +110,7 @@
 }
 
 .rating-input label {
-  color: #2c3e50;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -122,7 +122,7 @@
 .stars .fa-star {
   cursor: pointer;
   font-size: 20px;
-  transition: color 0.2s;
+  transition: var(--transition);
 }
 
 .stars .fa-star:hover {
@@ -136,14 +136,14 @@
 }
 
 .form-group label {
-  color: #2c3e50;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
 .form-group textarea {
   padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
   min-height: 100px;
   resize: vertical;
   font-family: inherit;
@@ -151,23 +151,23 @@
 
 .form-group textarea:focus {
   outline: none;
-  border-color: #1976d2;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
 }
 
 .submit-review {
-  background: #1976d2;
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
   border: none;
   padding: 12px;
-  border-radius: 6px;
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
   font-weight: 500;
-  transition: background-color 0.2s;
+  transition: var(--transition);
 }
 
 .submit-review:hover {
-  background: #1565c0;
+  background: var(--primary-hover);
 }
 
 .submit-review:disabled {
@@ -177,9 +177,9 @@
 
 .reviews-section {
   padding: 24px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .reviews-header {
@@ -196,13 +196,13 @@
 
 .tab {
   padding: 8px 16px;
-  border-radius: 6px;
-  background: #f5f5f5;
+  border-radius: var(--border-radius-sm);
+  background: var(--bg-secondary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: var(--transition);
 }
 
 .tab.active {
-  background: #1976d2;
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
 }

@@ -14,8 +14,8 @@
 }
 
 .new-message-modal {
-  background: white;
-  border-radius: 8px;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
   width: 400px;
   max-height: 80vh;
   display: flex;
@@ -24,7 +24,7 @@
 
 .modal-header {
   padding: 16px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -32,7 +32,7 @@
 
 .modal-header h3 {
   margin: 0;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .close-btn {
@@ -40,19 +40,19 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .search-box {
   padding: 16px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .search-box input {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
   font-size: 14px;
 }
 
@@ -68,11 +68,11 @@
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: var(--transition);
 }
 
 .connection-item:hover {
-  background: #f5f5f5;
+  background: var(--bg-secondary);
 }
 
 .connection-item img {
@@ -85,13 +85,13 @@
 .loading {
   padding: 20px;
   text-align: center;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .no-results {
   padding: 20px;
   text-align: center;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .search-input-wrapper {
@@ -107,7 +107,7 @@
   width: 20px;
   height: 20px;
   border: 2px solid #f3f3f3;
-  border-top: 2px solid #1976d2;
+  border-top: 2px solid var(--primary-color);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -127,7 +127,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, #f0f0f0 25%, var(--border-color) 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -139,9 +139,9 @@
 
 .skeleton-line {
   height: 14px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, #f0f0f0 25%, var(--border-color) 50%, #f0f0f0 75%);
   background-size: 200% 100%;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   animation: shimmer 1.5s infinite;
   margin-bottom: 8px;
 }

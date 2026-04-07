@@ -5,9 +5,9 @@
 
 .review-card {
   padding: 16px;
-  background: white;
-  border: 1px solid #eee;
-  border-radius: 8px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
 }
 
 .review-header {
@@ -29,7 +29,7 @@
 
 .review-date {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .review-rating {
@@ -44,9 +44,9 @@
 .review-category {
   display: inline-block;
   padding: 4px 8px;
-  background: #e3f2fd;
-  color: #1976d2;
-  border-radius: 4px;
+  background: var(--primary-light);
+  color: var(--primary-color);
+  border-radius: var(--border-radius-sm);
   font-size: 12px;
   margin-bottom: 8px;
 }
@@ -54,5 +54,5 @@
 .no-reviews {
   text-align: center;
   padding: 32px;
-  color: #666;
+  color: var(--text-secondary);
 }

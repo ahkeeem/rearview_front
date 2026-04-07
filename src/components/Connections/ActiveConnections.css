@@ -1,20 +1,20 @@
 .active-connections-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
   padding: 20px;
   margin: 20px 0;
 }
 
 .active-connections-header {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 15px;
   margin-bottom: 20px;
 }
 
 .active-connections-header h2 {
   font-size: 1.2rem;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -29,14 +29,14 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #eee;
-  transition: all 0.2s ease;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
 }
 
 .connection-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .connection-avatar {
@@ -54,24 +54,24 @@
 
 .connection-name {
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text-primary);
   margin: 0 0 5px 0;
 }
 
 .connection-status {
   font-size: 0.9rem;
-  color: #28a745;
+  color: var(--success-color);
 }
 
 .message-btn {
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: var(--border-radius-sm);
   border: none;
   background: #007bff;
-  color: white;
+  color: var(--bg-primary);
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition);
 }
 
 .message-btn:hover {
@@ -81,14 +81,14 @@
 .no-connections {
   text-align: center;
   padding: 30px;
-  color: #6c757d;
+  color: var(--text-secondary);
 }
 
 .connection-item {
   display: flex;
   align-items: center;
   padding: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   gap: 15px;
 }
 
@@ -105,50 +105,50 @@
 
 .connection-details h4 {
   margin: 0;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .view-profile-btn {
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   border: none;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: var(--transition);
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #f5f5f5;
-  color: #333;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .view-profile-btn:hover {
-  background: #e0e0e0;
+  background: var(--border-color);
 }
 
 .empty-connections {
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .empty-connections i {
   font-size: 48px;
-  color: #1976d2;
+  color: var(--primary-color);
   margin-bottom: 16px;
 }
 
 .find-connections-btn {
   margin-top: 16px;
   padding: 10px 24px;
-  background: #1976d2;
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
   font-size: 14px;
 }
 
 .find-connections-btn:hover {
-  background: #1565c0;
+  background: var(--primary-hover);
 }

@@ -1,8 +1,8 @@
 .dashboard-rightbar {
   padding: 20px;
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
 }
 
 .quick-stats {
@@ -11,21 +11,21 @@
 
 .quick-stats h3 {
   margin: 0 0 15px 0;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .progress-bar {
   height: 8px;
-  background: #eee;
-  border-radius: 4px;
+  background: var(--border-color);
+  border-radius: var(--border-radius-sm);
   margin: 10px 0;
 }
 
 .progress {
   height: 100%;
-  background: #4CAF50;
-  border-radius: 4px;
-  transition: width 0.3s ease;
+  background: var(--success-color);
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
 }
 
 .todo-list {
@@ -36,7 +36,7 @@
 
 .todo-list li {
   padding: 8px 0;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -44,7 +44,7 @@
 
 .todo-list li:before {
   content: '•';
-  color: #4CAF50;
+  color: var(--success-color);
   margin-right: 8px;
 }
 
@@ -54,13 +54,13 @@
 
 .suggested-connections h3 {
   margin: 0 0 15px 0;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .no-suggestions {
   padding: 16px;
   text-align: center;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
   margin: 0;
 }
@@ -69,8 +69,8 @@
   display: flex;
   align-items: center;
   padding: 15px;
-  border-bottom: 1px solid #eee;
-  transition: background-color 0.2s;
+  border-bottom: 1px solid var(--border-color);
+  transition: var(--transition);
 }
 
 .suggestion-card:last-child {
@@ -92,32 +92,32 @@
 .suggestion-info h4 {
   margin: 0;
   font-size: 15px;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .suggestion-info p {
   margin: 4px 0;
   font-size: 13px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .suggestion-info span {
   font-size: 12px;
-  color: #888;
+  color: var(--text-muted);
 }
 
 .btn-connect {
-  background: #4CAF50;
-  color: white;
+  background: var(--success-color);
+  color: var(--bg-primary);
   border: none;
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: var(--transition);
 }
 
 .btn-connect:hover {
-  background: #43a047;
+  background: var(--success-color);
 }
 
 .suggestion-card.loading {

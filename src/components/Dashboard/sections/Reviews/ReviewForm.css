@@ -1,8 +1,8 @@
 .review-form-container {
   margin-bottom: 32px;
   padding: 24px;
-  background: #f8f9fa;
-  border-radius: 8px;
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
 }
 
 .review-form {
@@ -23,7 +23,7 @@
 
 .star {
   font-size: 24px;
-  color: #ddd;
+  color: var(--border-color);
   cursor: pointer;
 }
 
@@ -32,14 +32,14 @@
 }
 
 .btn-submit {
-  background: #1976d2;
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
   padding: 12px;
-  border-radius: 6px;
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: var(--transition);
 }
 
 .btn-submit:hover {
-  background: #1565c0;
+  background: var(--primary-hover);
 }

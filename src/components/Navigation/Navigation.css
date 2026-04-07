@@ -4,8 +4,8 @@
   justify-content: space-between;
   padding: 0 24px;
   height: 64px;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--bg-primary);
+  box-shadow: var(--shadow-sm);
   position: fixed;
   top: 0;
   left: 0;
@@ -21,7 +21,7 @@
 .logo {
   font-size: 24px;
   font-weight: bold;
-  color: #1976d2;
+  color: var(--primary-color);
   text-decoration: none;
 }
 
@@ -34,7 +34,7 @@
 .search-bar {
   display: flex;
   align-items: center;
-  background: #f5f5f5;
+  background: var(--bg-secondary);
   border-radius: 24px;
   padding: 8px 16px;
 }
@@ -63,25 +63,25 @@
   background: none;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: var(--transition);
   position: relative;
 }
 
 .nav-icon:hover {
-  background-color: #f5f5f5;
+  background-color: var(--bg-secondary);
 }
 
 .nav-icon i {
   font-size: 18px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .notification-badge {
   position: absolute;
   top: -2px;
   right: -2px;
-  background: #f44336;
-  color: white;
+  background: var(--error-color);
+  color: var(--bg-primary);
   font-size: 12px;
   min-width: 18px;
   height: 18px;
@@ -110,9 +110,9 @@
   position: absolute;
   top: 100%;
   right: 0;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
   padding: 8px 0;
   min-width: 160px;
 }
@@ -121,7 +121,7 @@
 .dropdown-menu button {
   display: block;
   padding: 8px 16px;
-  color: #333;
+  color: var(--text-primary);
   text-decoration: none;
   width: 100%;
   text-align: left;
@@ -132,5 +132,5 @@
 
 .dropdown-menu a:hover,
 .dropdown-menu button:hover {
-  background: #f5f5f5;
+  background: var(--bg-secondary);
 }

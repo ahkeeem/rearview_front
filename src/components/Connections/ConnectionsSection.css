@@ -1,25 +1,25 @@
 .connections-section {
-  background: white;
-  border-radius: 8px;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
   padding: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .connections-header {
   display: flex;
   justify-content: space-between;
   padding: 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .connections-header h2 {
   font-size: 1.2rem;
-  color: #2c3e50;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .connections-header h2 span {
-  color: #6c757d;
+  color: var(--text-secondary);
   font-size: 1rem;
   margin-left: 8px;
 }
@@ -32,17 +32,17 @@
 .tab-btn {
   padding: 8px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--border-radius-sm);
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  background: #f5f5f5;
-  color: #666;
+  transition: var(--transition);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
 }
 
 .tab-btn.active {
-  background: #1976d2;
-  color: white;
+  background: var(--primary-color);
+  color: var(--bg-primary);
 }
 
 .tab-btn:hover {
@@ -50,7 +50,7 @@
 }
 
 .tab-btn.active:hover {
-  background: #1565c0;
+  background: var(--primary-hover);
 }
 .connection-stats {
   display: flex;
@@ -65,12 +65,12 @@
   display: block;
   font-size: 24px;
   font-weight: 600;
-  color: #1976d2;
+  color: var(--primary-color);
 }
 
 .stat-label {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .loading-spinner {
