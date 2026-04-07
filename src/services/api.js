@@ -385,6 +385,102 @@ const api = {
       });
       return handleResponse(response);
     }
+  },
+
+  payments: {
+    getWallet: async () => {
+      const response = await fetch(`${BASE_URL}/payments/wallet`, { headers: getAuthHeaders() });
+      return handleResponse(response);
+    },
+    getTransactions: async (page = 1, limit = 20) => {
+      const response = await fetch(`${BASE_URL}/payments/transactions?page=${page}&limit=${limit}`, { headers: getAuthHeaders() });
+      return handleResponse(response);
+    },
+    initializePayment: async (data) => {
+      const response = await fetch(`${BASE_URL}/payments/initialize`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+      });
+      return handleResponse(response);
+    },
+    initiateTopUp: async (amount) => {
+      const response = await fetch(`${BASE_URL}/payments/topup`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ amount })
+      });
+      return handleResponse(response);
+    },
+    verifyPayment: async (reference) => {
+      const response = await fetch(`${BASE_URL}/payments/verify/${reference}`, { headers: getAuthHeaders() });
+      return handleResponse(response);
+    },
+    getBanks: async () => {
+      const response = await fetch(`${BASE_URL}/payments/banks`, { headers: getAuthHeaders() });
+      return handleResponse(response);
+    },
+    verifyAccount: async (data) => {
+      const response = await fetch(`${BASE_URL}/payments/verify-account`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+      });
+      return handleResponse(response);
+    },
+    requestPayout: async (data) => {
+      const response = await fetch(`${BASE_URL}/payments/payout`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+      });
+      return handleResponse(response);
+    }
+  },
+
+  escrow: {
+    createOrder: async (data) => {
+      const response = await fetch(`${BASE_URL}/escrow/orders`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+      });
+      return handleResponse(response);
+    },
+    getOrders: async (role, status) => {
+      let query = '?';
+      if (role) query += `role=${role}&`;
+      if (status) query += `status=${status}`;
+      const response = await fetch(`${BASE_URL}/escrow/orders${query}`, { headers: getAuthHeaders() });
+      return handleResponse(response);
+    },
+    getOrderDetail: async (id) => {
+      const response = await fetch(`${BASE_URL}/escrow/orders/${id}`, { headers: getAuthHeaders() });
+      return handleResponse(response);
+    },
+    confirmDelivery: async (id) => {
+      const response = await fetch(`${BASE_URL}/escrow/orders/${id}/confirm`, {
+        method: 'PUT',
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
+    },
+    disputeOrder: async (id, reason) => {
+      const response = await fetch(`${BASE_URL}/escrow/orders/${id}/dispute`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ reason })
+      });
+      return handleResponse(response);
+    },
+    resolveDispute: async (id, resolution) => {
+      const response = await fetch(`${BASE_URL}/escrow/orders/${id}/resolve`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ resolution })
+      });
+      return handleResponse(response);
+    }
   }
 };
 export default api;

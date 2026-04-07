@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
@@ -14,6 +13,7 @@ const Login = () => {
   const [otp, setOtp] = useState('');
   const [pendingOTP, setPendingOTP] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [devOtp, setDevOtp] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -27,6 +27,10 @@ const Login = () => {
       if (response.pending_verification) {
         setPendingOTP(true);
         setUserId(response.userId);
+        // In dev mode, the backend returns the OTP for convenience
+        if (response.dev_otp) {
+          setDevOtp(response.dev_otp);
+        }
       } else {
         navigate('/dashboard');
       }
@@ -50,6 +54,14 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleBackToLogin = () => {
+    setPendingOTP(false);
+    setOtp('');
+    setDevOtp(null);
+    setError(null);
+    setUserId(null);
   };
 
   return (
@@ -84,8 +96,15 @@ const Login = () => {
       ) : (
         <form className="login-form" onSubmit={handleVerifyOTP}>
           <h2>Verify Identity</h2>
-          <div className="form-info">Please enter the 6-digit code sent to your email/phone.</div>
+          <div className="form-info">Enter the 6-digit code sent to your email/phone.</div>
           {error && <div className="error-message">{error}</div>}
+          
+          {devOtp && (
+            <div className="dev-otp-banner">
+              <strong>DEV MODE</strong> — Your code is: <span className="dev-otp-code">{devOtp}</span>
+            </div>
+          )}
+
           <input
             type="text"
             maxLength="6"
@@ -94,13 +113,16 @@ const Login = () => {
             placeholder="6-digit code"
             required
             className="otp-input"
+            autoFocus
           />
           <button type="submit" disabled={loading || otp.length < 6}>
             {loading ? 'Verifying...' : 'Verify & Continue'}
           </button>
-          <button type="button" className="btn-link" onClick={() => setPendingOTP(false)}>
-            Back to login
-          </button>
+          <div className="auth-links">
+            <a href="#back" className="register-link" onClick={(e) => { e.preventDefault(); handleBackToLogin(); }}>
+              ← Back to login
+            </a>
+          </div>
         </form>
       )}
     </div>

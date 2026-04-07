@@ -40,7 +40,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      setLoading(true);
       setError(null);
       const response = await api.users.login(credentials);
       
@@ -57,14 +56,11 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       setError(error.message || 'Login failed');
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
   const verifyOTP = async (userId, code) => {
     try {
-      setLoading(true);
       setError(null);
       const response = await api.users.confirmOTP(userId, code);
       const { token, user: userData } = response;
@@ -76,8 +72,6 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       setError(error.message || 'Verification failed');
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 

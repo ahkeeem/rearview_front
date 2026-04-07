@@ -11,6 +11,8 @@ import MessagesSection from './sections/Messages/MessagesSection';
 import UserProfile from './sections/Profile/UserProfile';
 import PublicProfile from './sections/Profile/PublicProfile';
 import Settings from './sections/Settings/Settings';
+import WalletSection from './sections/Wallet/WalletSection';
+import EscrowSection from './sections/Escrow/EscrowSection';
 import api from '../../services/api';
 import './Dashboard.css';
 
@@ -49,6 +51,8 @@ const Dashboard = () => {
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/profile/:id" element={<PublicProfile />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/wallet" element={<WalletSection />} />
+            <Route path="/escrow" element={<EscrowSection />} />
           </Routes>
         </main>
         <RightBar />

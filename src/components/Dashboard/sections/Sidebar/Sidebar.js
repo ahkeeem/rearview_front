@@ -40,6 +40,12 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
         <Link to="/dashboard/reviews" className={path.includes('/reviews') ? 'active' : ''} title="Submit or View Reviews">
           <i className="fas fa-star" aria-hidden /> {!isCollapsed && <span>Reviews</span>}
         </Link>
+        <Link to="/dashboard/wallet" className={path.includes('/wallet') ? 'active' : ''} title="Wallet & Payouts">
+          <i className="fas fa-wallet" aria-hidden /> {!isCollapsed && <span>Wallet</span>}
+        </Link>
+        <Link to="/dashboard/escrow" className={path.includes('/escrow') ? 'active' : ''} title="Escrow Payments">
+          <i className="fas fa-shield-alt" aria-hidden /> {!isCollapsed && <span>Escrow</span>}
+        </Link>
         <Link to="/dashboard/profile" className={path.includes('/profile') ? 'active' : ''} title="Your Public Profile">
           <i className="fas fa-user" aria-hidden /> {!isCollapsed && <span>Profile</span>}
         </Link>

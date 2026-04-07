@@ -134,3 +134,44 @@
 .dropdown-menu button:hover {
   background: var(--bg-secondary);
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .main-nav {
+    padding: 10px 16px;
+    height: auto;
+    min-height: 64px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .nav-center {
+    order: 3; /* Push search bar to the bottom */
+    width: 100%;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .nav-left, .nav-right {
+    flex: 1;
+  }
+
+  .nav-right {
+    justify-content: flex-end;
+  }
+
+  .nav-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .user-avatar {
+    margin-left: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 20px;
+  }
+}
