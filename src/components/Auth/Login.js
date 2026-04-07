@@ -78,6 +78,7 @@ const Login = () => {
           </button>
           <div className="auth-links">
             <Link to="/register" className="register-link">Create an account</Link>
+            <Link to="/forgot-password" className="forgot-password-link">Forgot Password?</Link>
           </div>
         </form>
       ) : (

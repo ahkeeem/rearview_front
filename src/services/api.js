@@ -109,6 +109,85 @@ const api = {
         headers: getAuthHeaders()
       });
       return handleResponse(response);
+    },
+
+    logout: async () => {
+      const response = await fetch(`${BASE_URL}/users/logout`, {
+        method: 'POST',
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
+    },
+
+    forgotPassword: async (email) => {
+      const response = await fetch(`${BASE_URL}/users/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      return handleResponse(response);
+    },
+
+    resetPassword: async (email, code, newPassword) => {
+      const response = await fetch(`${BASE_URL}/users/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, newPassword })
+      });
+      return handleResponse(response);
+    },
+
+    verifyNIN: async (nin) => {
+      const response = await fetch(`${BASE_URL}/verifications/nin`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ nin })
+      });
+      return handleResponse(response);
+    },
+
+    verifyBVN: async (bvn) => {
+      const response = await fetch(`${BASE_URL}/verifications/bvn`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ bvn })
+      });
+      return handleResponse(response);
+    },
+
+    verifyEmail: async () => {
+      const response = await fetch(`${BASE_URL}/users/verify/send-email`, {
+        method: 'POST',
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
+    },
+
+    confirmEmailOTP: async (code) => {
+      const response = await fetch(`${BASE_URL}/users/verify/confirm-email`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ code })
+      });
+      return handleResponse(response);
+    },
+
+    verifyPhone: async (phone) => {
+      const response = await fetch(`${BASE_URL}/users/verify/send-phone`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ phone })
+      });
+      return handleResponse(response);
+    },
+
+    confirmPhoneOTP: async (code) => {
+      const response = await fetch(`${BASE_URL}/users/verify/confirm-phone`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ code })
+      });
+      return handleResponse(response);
     }
   },
 

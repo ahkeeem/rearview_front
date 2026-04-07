@@ -97,6 +97,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     login,
+    verifyOTP,
     logout,
     loading,
     error

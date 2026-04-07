@@ -9,6 +9,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     password: '',
     confirmPassword: ''
   });
@@ -61,11 +62,11 @@ const Register = () => {
     }
 
     try {
-      // Send only required data to backend
       const registrationData = {
         name: formData.name,
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        ...(formData.phone && { phone: formData.phone })
       };
       
       await api.users.register(registrationData);
@@ -91,6 +92,13 @@ const Register = () => {
           onChange={(e) => setFormData({...formData, name: e.target.value})}
           placeholder="Full Name"
           required
+        />
+        
+        <input
+          type="tel"
+          value={formData.phone}
+          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+          placeholder="Phone (optional — can verify later)"
         />
         
         <input

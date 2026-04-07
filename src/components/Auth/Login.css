@@ -76,10 +76,49 @@
 }
 
 .error-message {
-  background: var(--error-light);
-  color: var(--error-color);
+  background: var(--error-light, #fce4ec);
+  color: var(--error-color, #c62828);
   padding: 12px;
   border-radius: var(--border-radius-sm);
   margin-bottom: 16px;
   font-size: 14px;
+}
+
+.success-message {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 12px;
+  border-radius: var(--border-radius-sm);
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.form-info {
+  color: var(--text-secondary, #666);
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.otp-input {
+  text-align: center;
+  letter-spacing: 8px;
+  font-size: 24px !important;
+  font-weight: 600;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 0;
+  width: 100%;
+  text-align: center;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
 }

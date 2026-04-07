@@ -6,8 +6,19 @@ const SecuritySettings = () => {
     const [loading, setLoading] = useState(false);
     const [nin, setNin] = useState('');
     const [bvn, setBvn] = useState('');
-    const [status, setStatus] = useState({ nin: false, bvn: false });
-    const [logs, setLogs] = useState([]);
+    const [phoneInput, setPhoneInput] = useState('');
+    const [emailOtp, setEmailOtp] = useState('');
+    const [phoneOtp, setPhoneOtp] = useState('');
+    const [status, setStatus] = useState({
+        nin: false,
+        bvn: false,
+        email_verified: false,
+        phone_verified: false,
+        phone: '',
+        verification_level: 'none'
+    });
+    const [pendingEmailOtp, setPendingEmailOtp] = useState(false);
+    const [pendingPhoneOtp, setPendingPhoneOtp] = useState(false);
 
     useEffect(() => {
         fetchStatus();
@@ -19,29 +30,96 @@ const SecuritySettings = () => {
             const profile = await api.users.getProfile(user.id);
             setStatus({
                 nin: !!profile.nin_verified,
-                bvn: !!profile.bvn_verified
+                bvn: !!profile.bvn_verified,
+                email_verified: !!profile.email_verified,
+                phone_verified: !!profile.phone_verified,
+                phone: profile.phone || '',
+                verification_level: profile.verification_level || 'none'
             });
+            if (profile.phone) setPhoneInput(profile.phone);
         } catch (err) {
             console.error('Failed to fetch security status');
         }
     };
 
     const handleVerifyNIN = async () => {
-        if (nin.length !== 11) return alert('NIN must be 11 digits');
+        if (nin.length !== 11) return;
         setLoading(true);
         try {
-            await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:4000/api'}/verifications/nin`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({ nin })
-            });
+            await api.users.verifyNIN(nin);
             alert('NIN Verified Successfully!');
             fetchStatus();
         } catch (err) {
-            alert('Verification failed: ' + err.message);
+            alert('NIN Verification failed: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleVerifyBVN = async () => {
+        if (bvn.length !== 11) return;
+        setLoading(true);
+        try {
+            await api.users.verifyBVN(bvn);
+            alert('BVN Verified Successfully!');
+            fetchStatus();
+        } catch (err) {
+            alert('BVN Verification failed: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSendEmailOTP = async () => {
+        setLoading(true);
+        try {
+            await api.users.verifyEmail();
+            setPendingEmailOtp(true);
+            alert('Verification code sent to your email! Check server console for code.');
+        } catch (err) {
+            alert('Failed: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleConfirmEmailOTP = async () => {
+        setLoading(true);
+        try {
+            await api.users.confirmEmailOTP(emailOtp);
+            alert('Email verified!');
+            setPendingEmailOtp(false);
+            fetchStatus();
+        } catch (err) {
+            alert('Failed: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSendPhoneOTP = async () => {
+        if (!phoneInput) return alert('Enter a phone number first');
+        setLoading(true);
+        try {
+            await api.users.verifyPhone(phoneInput);
+            setPendingPhoneOtp(true);
+            alert('Verification code sent! Check server console for code.');
+        } catch (err) {
+            alert('Failed: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleConfirmPhoneOTP = async () => {
+        setLoading(true);
+        try {
+            await api.users.confirmPhoneOTP(phoneOtp);
+            alert('Phone verified!');
+            setPendingPhoneOtp(false);
+            fetchStatus();
+        } catch (err) {
+            alert('Failed: ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -51,10 +129,92 @@ const SecuritySettings = () => {
         <div className="security-settings">
             <header className="section-header">
                 <h2>Account Security & Identity</h2>
-                <p>Manage your verifiable identifiers and account safety settings.</p>
+                <p>Verify your identity to unlock full platform access and boost your trust score.</p>
             </header>
 
+            {status.verification_level === 'none' && (
+                <div className="verification-banner">
+                    <i className="fas fa-exclamation-triangle"></i>
+                    <span>Your account is unverified. Verify your email or phone to interact with others on RearView.</span>
+                </div>
+            )}
+
             <div className="security-grid">
+                {/* Email & Phone Verification */}
+                <section className="security-card identity-card">
+                    <div className="card-icon"><i className="fas fa-envelope"></i></div>
+                    <h3>Contact Verification</h3>
+                    <p>Verify your email and phone to unlock reviews, connections, and messaging.</p>
+
+                    <div className="verification-fields">
+                        {/* Email */}
+                        <div className="verify-item">
+                            <label>Email Address</label>
+                            <div className="input-group">
+                                <input type="email" value={status.email_verified ? '✓ Verified' : 'Not verified'} disabled />
+                                {!status.email_verified && !pendingEmailOtp && (
+                                    <button onClick={handleSendEmailOTP} disabled={loading}>
+                                        Send Code
+                                    </button>
+                                )}
+                                {status.email_verified && (
+                                    <button className="verified" disabled>Verified</button>
+                                )}
+                            </div>
+                            {pendingEmailOtp && (
+                                <div className="otp-inline">
+                                    <input
+                                        type="text"
+                                        maxLength="6"
+                                        placeholder="Enter code"
+                                        value={emailOtp}
+                                        onChange={(e) => setEmailOtp(e.target.value.replace(/\D/g, ''))}
+                                    />
+                                    <button onClick={handleConfirmEmailOTP} disabled={loading || emailOtp.length < 6}>
+                                        Confirm
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Phone */}
+                        <div className="verify-item">
+                            <label>Phone Number</label>
+                            <div className="input-group">
+                                <input
+                                    type="tel"
+                                    placeholder="+234 ..."
+                                    value={phoneInput}
+                                    onChange={(e) => setPhoneInput(e.target.value)}
+                                    disabled={status.phone_verified || loading}
+                                />
+                                {!status.phone_verified && !pendingPhoneOtp && (
+                                    <button onClick={handleSendPhoneOTP} disabled={loading || !phoneInput}>
+                                        Send Code
+                                    </button>
+                                )}
+                                {status.phone_verified && (
+                                    <button className="verified" disabled>Verified</button>
+                                )}
+                            </div>
+                            {pendingPhoneOtp && (
+                                <div className="otp-inline">
+                                    <input
+                                        type="text"
+                                        maxLength="6"
+                                        placeholder="Enter code"
+                                        value={phoneOtp}
+                                        onChange={(e) => setPhoneOtp(e.target.value.replace(/\D/g, ''))}
+                                    />
+                                    <button onClick={handleConfirmPhoneOTP} disabled={loading || phoneOtp.length < 6}>
+                                        Confirm
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </section>
+
                 {/* Government Identity Section */}
                 <section className="security-card identity-card">
                     <div className="card-icon"><i className="fas fa-id-badge"></i></div>
@@ -69,7 +229,8 @@ const SecuritySettings = () => {
                                     type="text" 
                                     placeholder="11-digit NIN" 
                                     value={nin} 
-                                    onChange={(e) => setNin(e.target.value)}
+                                    onChange={(e) => setNin(e.target.value.replace(/\D/g, ''))}
+                                    maxLength="11"
                                     disabled={status.nin || loading}
                                 />
                                 <button 
@@ -77,7 +238,7 @@ const SecuritySettings = () => {
                                     disabled={status.nin || loading || nin.length !== 11}
                                     className={status.nin ? 'verified' : ''}
                                 >
-                                    {status.nin ? 'Verified' : 'Verify'}
+                                    {status.nin ? '✓ Verified' : 'Verify'}
                                 </button>
                             </div>
                         </div>
@@ -89,14 +250,16 @@ const SecuritySettings = () => {
                                     type="text" 
                                     placeholder="11-digit BVN" 
                                     value={bvn} 
-                                    onChange={(e) => setBvn(e.target.value)}
+                                    onChange={(e) => setBvn(e.target.value.replace(/\D/g, ''))}
+                                    maxLength="11"
                                     disabled={status.bvn || loading}
                                 />
                                 <button 
+                                    onClick={handleVerifyBVN}
                                     disabled={status.bvn || loading || bvn.length !== 11}
                                     className={status.bvn ? 'verified' : ''}
                                 >
-                                    {status.bvn ? 'Verified' : 'Verify'}
+                                    {status.bvn ? '✓ Verified' : 'Verify'}
                                 </button>
                             </div>
                         </div>
@@ -113,6 +276,16 @@ const SecuritySettings = () => {
                             <p>Required for all logins on this infrastructure.</p>
                         </div>
                         <div className="status-badge active">Always On</div>
+                    </div>
+
+                    <div className="safety-toggle">
+                        <div className="toggle-info">
+                            <strong>Verification Level</strong>
+                            <p>Current trust tier based on your verified identifiers.</p>
+                        </div>
+                        <div className={`status-badge ${status.verification_level === 'none' ? 'inactive' : status.verification_level === 'phone' ? 'pending' : 'active'}`}>
+                            {status.verification_level === 'none' ? 'Unverified' : status.verification_level === 'phone' ? 'Basic' : 'Advanced'}
+                        </div>
                     </div>
 
                     <div className="safety-info">
