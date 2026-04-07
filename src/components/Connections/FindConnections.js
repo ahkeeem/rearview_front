@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { userService } from '../../services/userService';
+import api from '../../services/api';
 import './FindConnections.css';
 
 const FindConnections = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSearch = async (e) => {
     const term = e.target.value;
@@ -13,11 +14,13 @@ const FindConnections = () => {
     
     if (term.length >= 2) {
       setLoading(true);
+      setError(null);
       try {
-        const users = await userService.searchUsers(term);
+        const users = await api.users.search(term);
         setSearchResults(users);
-      } catch (error) {
-        console.error('Search failed:', error);
+      } catch (err) {
+        console.error('Search failed:', err);
+        setError('Failed to search users. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -28,7 +31,7 @@ const FindConnections = () => {
 
   const sendConnectionRequest = async (userId) => {
     try {
-      await userService.sendConnectionRequest(userId);
+      await api.connections.create(userId);
       // Update the UI to show pending status
       setSearchResults(results => 
         results.map(user => 
@@ -37,44 +40,62 @@ const FindConnections = () => {
             : user
         )
       );
-    } catch (error) {
-      console.error('Failed to send connection request:', error);
+    } catch (err) {
+      console.error('Failed to send connection request:', err);
+      // Fallback for demo if it fails but we want to show it
+      alert('Could not send request: ' + err.message);
     }
   };
 
   return (
     <div className="find-connections">
       <div className="search-header">
-        <input
-          type="text"
-          placeholder="Search users by name..."
-          value={searchTerm}
-          onChange={handleSearch}
-        />
+        <div className="search-input-wrapper">
+          <i className="fas fa-search search-icon"></i>
+          <input
+            type="text"
+            placeholder="Search by name or email (e.g. Simple Pharma)..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="search-input"
+          />
+        </div>
       </div>
 
-      <div className="search-results">
+      {error && <div className="error-banner">{error}</div>}
+
+      <div className="search-results-grid">
         {loading ? (
-          <div className="loading">Searching...</div>
+          <div className="loading-spinner">Searching...</div>
+        ) : searchResults.length === 0 && searchTerm.length >= 2 ? (
+          <div className="no-results">No users found matching "{searchTerm}"</div>
         ) : (
           searchResults.map(user => (
-            <div key={user.id} className="user-card">
-              <img 
-                src={user.avatar || '/default-avatar.png'} 
-                alt={user.name} 
-                className="user-avatar"
-              />
-              <div className="user-info">
-                <h3>{user.name}</h3>
-                <p>{user.role || 'User'}</p>
+            <div key={user.id} className="user-discovery-card">
+              <div className="user-card-main">
+                <img 
+                  src={user.avatar || '/default-avatar.png'} 
+                  alt={user.name} 
+                  className="user-avatar"
+                />
+                <div className="user-details">
+                  <h3>{user.name}</h3>
+                  <p className="user-email">{user.email}</p>
+                </div>
               </div>
-              <button 
-                className={`connect-btn ${user.connectionStatus}`}
-                onClick={() => sendConnectionRequest(user.id)}
-                disabled={user.connectionStatus === 'pending'}
-              >
-                {user.connectionStatus === 'pending' ? 'Request Sent' : 'Connect'}
-              </button>
+              <div className="user-card-actions">
+                <button 
+                  className={`btn-connect ${user.connectionStatus === 'pending' ? 'pending' : ''}`}
+                  onClick={() => sendConnectionRequest(user.id)}
+                  disabled={user.connectionStatus === 'pending'}
+                >
+                  {user.connectionStatus === 'pending' ? (
+                    <><i className="fas fa-clock"></i> Pending</>
+                  ) : (
+                    <><i className="fas fa-plus"></i> Connect</>
+                  )}
+                </button>
+              </div>
             </div>
           ))
         )}

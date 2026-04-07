@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import api from '../../../../services/api';
+import DeleteAccountModal from './DeleteAccountModal';
 import './Settings.css';
 
 const Settings = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const [settings, setSettings] = useState({
     notifications: {
       email: true,
@@ -37,6 +44,22 @@ const Settings = () => {
         [key]: value
       }
     }));
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!user?.id) return;
+    
+    setIsDeleting(true);
+    try {
+      await api.users.deleteAccount(user.id);
+      logout();
+      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error('Failed to delete account:', error);
+      alert('Failed to delete account: ' + error.message);
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+    }
   };
 
   return (
@@ -105,9 +128,26 @@ const Settings = () => {
       <section className="settings-section">
         <h3>Account</h3>
         <div className="settings-group">
-          <button className="btn-danger">Delete Account</button>
+          <div className="danger-zone">
+            <div className="danger-zone-details">
+              <h4>Delete account</h4>
+              <p>Permanently remove your personal account and all of its contents.</p>
+            </div>
+            <button className="btn-danger" onClick={() => setShowDeleteModal(true)}>
+              Delete Account
+            </button>
+          </div>
         </div>
       </section>
+
+      {showDeleteModal && (
+        <DeleteAccountModal 
+          user={user}
+          isDeleting={isDeleting}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleDeleteAccount}
+        />
+      )}
     </div>
   );
 };

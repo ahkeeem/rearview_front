@@ -45,7 +45,7 @@ export const userService = {
    */
   getSuggestedConnections: async () => {
     try {
-      const list = await api.users.search(' ');
+      const list = await api.users.search('');
       return Array.isArray(list) ? list.slice(0, 10) : [];
     } catch {
       return [];

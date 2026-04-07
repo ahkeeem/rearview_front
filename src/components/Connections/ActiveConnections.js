@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import connectionService from '../../services/connectionService';
 import './ActiveConnections.css';
 
 const ActiveConnections = () => {
   const [connections, setConnections] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchActiveConnections();
@@ -20,6 +22,23 @@ const ActiveConnections = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleMessageClick = (connection) => {
+    // To properly start a conversation with the connected user, 
+    // identify their actual ID from the connection object
+    const otherUserId = connection.direction === 'outgoing' 
+      ? connection.connected_user_id 
+      : connection.user_id;
+
+    navigate('/dashboard/messages', { 
+      state: { 
+        startChatWith: { 
+          id: otherUserId, 
+          name: connection.connected_user_name 
+        } 
+      } 
+    });
   };
 
   if (loading) {
@@ -49,7 +68,12 @@ const ActiveConnections = () => {
                 <h3 className="connection-name">{connection.connected_user_name}</h3>
                 <span className="connection-status">Connected</span>
               </div>
-              <button className="message-btn">Message</button>
+              <button 
+                className="message-btn"
+                onClick={() => handleMessageClick(connection)}
+              >
+                <i className="fas fa-comment"></i> Message
+              </button>
             </div>
           ))}
         </div>

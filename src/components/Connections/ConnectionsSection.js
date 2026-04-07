@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import connectionService from '../../services/connectionService';
 import ActiveConnections from './ActiveConnections';
 import PendingRequests from './PendingRequests';
+import FindConnections from './FindConnections';
 import './ConnectionsSection.css';
 
 const ConnectionsSection = () => {
@@ -27,11 +28,20 @@ const ConnectionsSection = () => {
       });
     } catch (error) {
       console.error('Error fetching connection stats:', error);
-      // Set default values if fetch fails
-      setStats({
-        activeCount: 0,
-        requestsCount: 0
-      });
+      setStats({ activeCount: 0, requestsCount: 0 });
+    }
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'connections':
+        return <ActiveConnections />;
+      case 'requests':
+        return <PendingRequests onStatusUpdate={fetchConnectionStats} />;
+      case 'discover':
+        return <FindConnections />;
+      default:
+        return <ActiveConnections />;
     }
   };
 
@@ -51,10 +61,18 @@ const ConnectionsSection = () => {
           >
             Requests ({stats.requestsCount})
           </button>
+          <button 
+            className={`tab-btn ${activeTab === 'discover' ? 'active' : ''}`}
+            onClick={() => setActiveTab('discover')}
+          >
+            Discover
+          </button>
         </div>
       </div>
       
-      {activeTab === 'connections' ? <ActiveConnections /> : <PendingRequests />}
+      <div className="connections-content">
+        {renderContent()}
+      </div>
     </div>
   );
 };

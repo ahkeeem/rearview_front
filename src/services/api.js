@@ -67,6 +67,14 @@ const api = {
       return handleResponse(response);
     },
 
+    deleteAccount: async (userId) => {
+      const response = await fetch(`${BASE_URL}/users/profile/${userId}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
+    },
+
     getStats: async (userId) => {
       const response = await fetch(`${BASE_URL}/users/${userId}/stats`, {
         headers: getAuthHeaders()

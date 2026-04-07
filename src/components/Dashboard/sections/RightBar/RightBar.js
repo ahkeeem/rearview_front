@@ -35,7 +35,10 @@ const RightBar = () => {
       const filtered = (suggestedUsers || []).filter(
         u => u.id !== user.id && !connectionIds.has(u.id)
       );
-      setSuggestions(filtered.slice(0, 5));
+      // Ensure we don't accidentally list raw SQL duplicates
+      const uniqueFiltered = Array.from(new Map(filtered.map(item => [item.id, item])).values());
+      
+      setSuggestions(uniqueFiltered.slice(0, 5));
       setProfileStrength(profileData || { score: 0, tasks: [] });
     } catch (error) {
       console.error('Error loading rightbar data:', error);
@@ -46,7 +49,7 @@ const RightBar = () => {
 
   const handleConnect = async (userId) => {
     try {
-      await connectionService.sendRequest(userId);
+      await connectionService.sendConnectionRequest(userId);
       // Remove user from suggestions after sending request
       setSuggestions(prev => prev.filter(user => user.id !== userId));
     } catch (error) {

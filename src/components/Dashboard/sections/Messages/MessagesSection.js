@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import { io } from 'socket.io-client';
 import ConversationsList from './ConversationsList';
@@ -10,6 +11,9 @@ import './MessagesSection.css';
 
 const MessagesSection = () => {
   const { user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  
   const [socket, setSocket] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
@@ -63,6 +67,15 @@ const MessagesSection = () => {
     fetchConversations();
   }, []);
 
+  // Handle incoming 'startChatWith' routing state
+  useEffect(() => {
+    if (location.state?.startChatWith) {
+      handleStartNewConversation(location.state.startChatWith);
+      // Clear the state so it doesn't trigger again on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate]);
+
   const fetchConversations = async () => {
     try {
       setLoading(true);
@@ -81,9 +94,11 @@ const MessagesSection = () => {
       }));
       
       setConversations(transformedConversations);
+      return transformedConversations;
     } catch (error) {
       console.error('Error fetching conversations:', error);
       setError('Failed to load conversations. Please try again.');
+      return [];
     } finally {
       setLoading(false);
     }
@@ -94,15 +109,18 @@ const MessagesSection = () => {
       setError(null);
       const result = await api.conversations.create(selectedUser.id || selectedUser.connected_user_id);
       
-      // If conversation already exists, find it
+      // Fetch latest conversations to ensure we have it in the list
+      const updatedConversations = await fetchConversations();
+      
       if (result.conversationId) {
-        await fetchConversations();
-        // Find the conversation in the list
-        const conversation = conversations.find(c => c.id === result.conversationId) || 
-                           { id: result.conversationId, participant_id: selectedUser.id || selectedUser.connected_user_id };
-        setActiveConversation(conversation);
-      } else {
-        await fetchConversations();
+        // Find the conversation in the updated list
+        const conversation = updatedConversations.find(c => c.id === result.conversationId) || 
+                           { 
+                             id: result.conversationId, 
+                             participant_id: selectedUser.id || selectedUser.connected_user_id,
+                             participant_name: selectedUser.name
+                           };
+        handleSelectConversation(conversation);
       }
       
       setShowNewMessageModal(false);
