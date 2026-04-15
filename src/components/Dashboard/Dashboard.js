@@ -13,12 +13,15 @@ import PublicProfile from './sections/Profile/PublicProfile';
 import Settings from './sections/Settings/Settings';
 import WalletSection from './sections/Wallet/WalletSection';
 import EscrowSection from './sections/Escrow/EscrowSection';
+import AdminPanel from './sections/Admin/AdminPanel';
+import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -53,6 +56,10 @@ const Dashboard = () => {
             <Route path="/settings" element={<Settings />} />
             <Route path="/wallet" element={<WalletSection />} />
             <Route path="/escrow" element={<EscrowSection />} />
+            {/* Admin-only route — only rendered for role=admin */}
+            {user?.role === 'admin' && (
+              <Route path="/admin" element={<AdminPanel />} />
+            )}
           </Routes>
         </main>
         <RightBar />

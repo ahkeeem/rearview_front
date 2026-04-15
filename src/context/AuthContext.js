@@ -28,7 +28,8 @@ export const AuthProvider = ({ children }) => {
           setUser({
             id: decoded.userId || decoded.id,
             name: decoded.name,
-            email: decoded.email
+            email: decoded.email,
+            role: decoded.role || 'user'
           });
         }
       } catch (err) {
