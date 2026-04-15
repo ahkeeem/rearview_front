@@ -1,11 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import UserMenu from './UserMenu';
 import NotificationsDropdown from './NotificationsDropdown';
 import MessagesDropdown from './MessagesDropdown';
+import SearchBar from './SearchBar';
+import api from '../../services/api';
 import './Navigation.css';
 
 const Navigation = () => {
+  const [notifications, setNotifications] = useState([]);
+  const [conversations, setConversations] = useState([]);
+
+  // Fetch real conversations for the messages dropdown badge
+  useEffect(() => {
+    const fetchNavData = async () => {
+      try {
+        const convData = await api.conversations.getAll();
+        // Show up to 5 most recent conversations in the dropdown
+        setConversations(convData.slice(0, 5));
+      } catch (_) {
+        // silently fail — user may not be logged in yet
+      }
+    };
+    fetchNavData();
+
+    // Poll every 60s to keep badge reasonably fresh without websockets
+    const interval = setInterval(fetchNavData, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <nav className="main-nav" role="navigation">
       <div className="nav-left">
@@ -15,15 +38,13 @@ const Navigation = () => {
       </div>
 
       <div className="nav-center">
-        <div className="search-bar">
-          <i className="fas fa-search" aria-hidden />
-          <input type="search" placeholder="Search users..." aria-label="Search users" />
-        </div>
+        {/* Use the full SearchBar component with live results & navigation */}
+        <SearchBar />
       </div>
 
       <div className="nav-right">
-        <NotificationsDropdown notifications={[]} />
-        <MessagesDropdown messages={[]} />
+        <NotificationsDropdown notifications={notifications} />
+        <MessagesDropdown conversations={conversations} />
         <UserMenu />
       </div>
     </nav>

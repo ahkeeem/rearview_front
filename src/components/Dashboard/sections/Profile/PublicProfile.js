@@ -29,6 +29,7 @@ const PublicProfile = () => {
       return;
     }
     loadPublicProfileData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user, navigate]);
 
   const loadPublicProfileData = async () => {
@@ -87,6 +88,7 @@ const PublicProfile = () => {
   const skills = Array.isArray(profile.skills) ? profile.skills : [];
   const experience = Array.isArray(profile.experience) ? profile.experience : [];
   const education = Array.isArray(profile.education) ? profile.education : [];
+
 
   return (
     <div className="profile-container" style={{ paddingBottom: '32px' }}>
@@ -174,10 +176,9 @@ const PublicProfile = () => {
           </div>
         )}
 
-        <div style={{ padding: '0 32px', marginBottom: '20px' }}>
+        <div className="share-section">
            <button 
              className="whatsapp-share-btn" 
-             style={{ background: '#25D366', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
              onClick={() => {
                 const url = window.location.href;
                 const text = `Check out ${profile.name}'s trust score on RearView: ${url}`;
@@ -212,6 +213,51 @@ const PublicProfile = () => {
               <h3><i className="fas fa-user-circle"></i> About {profile.name.split(' ')[0]}</h3>
               <p className="bio-text">{profile.bio || 'This user has not provided a bio.'}</p>
             </section>
+
+            {skills.length > 0 && (
+              <section className="profile-section" style={{ margin: '32px' }}>
+                <h3><i className="fas fa-tools"></i> Skills</h3>
+                <div className="skills-list">
+                  {skills.map((skill, index) => (
+                    <span key={index} className="skill-tag">{skill.name || skill}</span>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {experience.length > 0 && (
+              <section className="profile-section" style={{ margin: '32px' }}>
+                <h3><i className="fas fa-briefcase"></i> Experience</h3>
+                {experience.map((exp, index) => (
+                  <div key={index} className="experience-item">
+                    <div className="exp-icon"><i className="fas fa-building"></i></div>
+                    <div className="exp-details">
+                      <h4>{exp.title || exp.position}</h4>
+                      <p className="company-name">{exp.company || exp.organization}</p>
+                      <p className="period">{exp.startDate || exp.start_date} - {exp.current ? 'Present' : (exp.endDate || exp.end_date || 'Present')}</p>
+                      {exp.description && <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginTop: '8px' }}>{exp.description}</p>}
+                    </div>
+                  </div>
+                ))}
+              </section>
+            )}
+
+            {education.length > 0 && (
+              <section className="profile-section" style={{ margin: '32px' }}>
+                <h3><i className="fas fa-graduation-cap"></i> Education</h3>
+                {education.map((edu, index) => (
+                  <div key={index} className="education-item">
+                    <div className="exp-icon"><i className="fas fa-university"></i></div>
+                    <div className="exp-details">
+                      <h4>{edu.degree || edu.field}</h4>
+                      <p className="school-name">{edu.school || edu.institution}</p>
+                      <p className="year">{(edu.year || edu.start_date || '') + (edu.end_date ? ` - ${edu.end_date}` : '')}</p>
+                      {edu.description && <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginTop: '8px' }}>{edu.description}</p>}
+                    </div>
+                  </div>
+                ))}
+              </section>
+            )}
 
             <div style={{ margin: '0 32px' }}>
                 <h3 style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '20px' }}>

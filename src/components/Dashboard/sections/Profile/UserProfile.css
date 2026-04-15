@@ -306,3 +306,51 @@ textarea:focus {
     margin: 0 16px;
   }
 }
+
+/* Lagos Trust Builder - Sticky Mobile Guardrail */
+.share-section {
+  padding: 0 32px;
+  margin-bottom: 20px;
+}
+
+.whatsapp-share-btn {
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+}
+
+.whatsapp-share-btn:hover {
+  transform: scale(1.05);
+  background: #20ba59;
+}
+
+@media (max-width: 600px) {
+  .share-section {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    z-index: 1000;
+    pointer-events: none; /* Allow clicking through background */
+  }
+
+  .whatsapp-share-btn {
+    pointer-events: auto; /* Enable clicks on button */
+    padding: 12px 32px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    border: 2px solid white;
+  }
+}

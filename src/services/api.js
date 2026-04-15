@@ -11,11 +11,21 @@ const handleResponse = async (response) => {
       ? data.details[0].msg
       : undefined;
 
-    const message =
+    let message =
       data.error ||
       data.message ||
       validationMessage ||
       'Request failed';
+
+    if (data.details) {
+      // details can be an array of express-validator error objects or a plain string
+      if (Array.isArray(data.details)) {
+        const msgs = data.details.map(d => d.msg || JSON.stringify(d)).join('; ');
+        message += ` — ${msgs}`;
+      } else if (typeof data.details === 'string') {
+        message += ` (${data.details})`;
+      }
+    }
 
     throw new Error(message);
   }

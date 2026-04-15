@@ -47,7 +47,15 @@ const ProfileEditModal = ({ profile, onSave, onCancel }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await onSave(formData);
+      // Only submit fields the backend accepts — strip all internal DB/auth fields
+      const updatableFields = ['name', 'bio', 'headline', 'location', 'photo_url', 'banner_url', 'phone', 'website', 'email'];
+      const payload = {};
+      updatableFields.forEach(key => {
+        if (formData[key] !== undefined && formData[key] !== null) {
+          payload[key] = formData[key];
+        }
+      });
+      await onSave(payload);
     } catch (err) {
       console.error(err);
     } finally {

@@ -1,48 +1,264 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import { userService } from '../../../../services/userService';
 import ActivityFeed from './ActivityFeed';
-import NotificationDropdown from './NotificationDropdown';
 import ConnectionsSection from '../../../Connections/ConnectionsSection';
-import MessagesSection from '../Messages/MessagesSection';
-import FindConnections from '../../../Connections/FindConnections';
 import LoadingSkeleton from '../../components/LoadingSkeleton';
 import api from '../../../../services/api';
 import './MainContent.css';
 
+/* ─────────────────────────────────────────────
+   Animated Trust Score Ring
+───────────────────────────────────────────── */
+const TrustRing = ({ score }) => {
+  const [animatedScore, setAnimatedScore] = useState(0);
+  const radius = 52;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (animatedScore / 100) * circumference;
+
+  const getColor = (s) => {
+    if (s >= 80) return '#22c55e';   // green
+    if (s >= 50) return '#f59e0b';   // amber
+    return '#ef4444';                 // red
+  };
+
+  const getLabel = (s) => {
+    if (s >= 80) return 'High Credibility';
+    if (s >= 50) return 'Developing Trust';
+    return 'Unverified Status';
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      let current = 0;
+      const inc = score / 60;
+      const interval = setInterval(() => {
+        current += inc;
+        if (current >= score) {
+          setAnimatedScore(score);
+          clearInterval(interval);
+        } else {
+          setAnimatedScore(Math.round(current));
+        }
+      }, 16);
+      return () => clearInterval(interval);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [score]);
+
+  const color = getColor(score);
+
+  return (
+    <div className="trust-ring-wrapper">
+      <svg className="trust-ring-svg" viewBox="0 0 120 120">
+        {/* Background track */}
+        <circle cx="60" cy="60" r={radius} fill="none" stroke="var(--border-color)" strokeWidth="10" />
+        {/* Animated progress */}
+        <circle
+          cx="60" cy="60" r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          style={{ transition: 'stroke-dashoffset 0.05s linear', transform: 'rotate(-90deg)', transformOrigin: '60px 60px' }}
+        />
+        <text x="60" y="55" textAnchor="middle" className="ring-score-num" fill={color}>
+          {animatedScore}
+        </text>
+        <text x="60" y="72" textAnchor="middle" className="ring-score-label" fill="var(--text-muted)">
+          / 100
+        </text>
+      </svg>
+      <div className="trust-ring-meta">
+        <h3>Trust Score</h3>
+        <span className="trust-tier-badge" style={{ background: `${color}22`, color }}>
+          {getLabel(score)}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────────
+   Hero Entity Lookup
+───────────────────────────────────────────── */
+const HeroSearch = () => {
+  const navigate = useNavigate();
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const containerRef = useRef(null);
+  const debounceRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const doSearch = useCallback(async (term) => {
+    if (term.length < 2) { setResults([]); setShowResults(false); return; }
+    setLoading(true);
+    try {
+      // Search both users and entities in parallel
+      const [userResults, entityResults] = await Promise.allSettled([
+        api.users.search(term),
+        api.entities.search(term)
+      ]);
+      const users = userResults.status === 'fulfilled' ? userResults.value : [];
+      const entities = entityResults.status === 'fulfilled' ? entityResults.value : [];
+      // Tag each result with its source type
+      const combined = [
+        ...users.map(u => ({ ...u, _resultType: 'user' })),
+        ...entities.filter(e => e.type !== 'user').map(e => ({ ...e, _resultType: 'entity' }))
+      ].slice(0, 8);
+      setResults(combined);
+      setShowResults(true);
+    } catch (_) {
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const handleInput = (e) => {
+    const val = e.target.value;
+    setQuery(val);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => doSearch(val), 300);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && query.trim()) {
+      navigate(`/dashboard/reviews?search=${encodeURIComponent(query.trim())}`);
+      setShowResults(false);
+    }
+    if (e.key === 'Escape') { setShowResults(false); }
+  };
+
+  const handleSelect = (item) => {
+    setShowResults(false);
+    setQuery('');
+    if (item._resultType === 'user') {
+      navigate(`/dashboard/profile/${item.id}`);
+    } else {
+      navigate(`/dashboard/reviews?search=${encodeURIComponent(item.name)}`);
+    }
+  };
+
+  const getIcon = (type) => {
+    switch (type) {
+      case 'user': return 'fas fa-user-circle';
+      case 'business': return 'fas fa-store';
+      case 'product': return 'fas fa-box';
+      default: return 'fas fa-search';
+    }
+  };
+
+  return (
+    <div className="hero-search-container" ref={containerRef}>
+      <div className={`hero-search-pill ${loading ? 'searching' : ''}`}>
+        <i className={`fas ${loading ? 'fa-circle-notch fa-spin' : 'fa-shield-alt'} hero-pill-icon`}></i>
+        <input
+          type="text"
+          value={query}
+          onChange={handleInput}
+          onKeyDown={handleKeyDown}
+          placeholder="Name, phone number, or business..."
+          className="hero-pill-input"
+          aria-label="Verify a person, business, or product"
+          aria-autocomplete="list"
+          aria-expanded={showResults}
+        />
+        <button
+          className="hero-pill-btn"
+          onClick={() => query.trim() && navigate(`/dashboard/reviews?search=${encodeURIComponent(query.trim())}`)}
+          disabled={!query.trim()}
+        >
+          Verify Now
+        </button>
+      </div>
+
+      {showResults && results.length > 0 && (
+        <div className="hero-results-dropdown" role="listbox">
+          {results.map((item) => (
+            <div
+              key={`${item._resultType}-${item.id}`}
+              className="hero-result-item"
+              role="option"
+              onClick={() => handleSelect(item)}
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && handleSelect(item)}
+            >
+              <div className={`hero-result-icon ${item._resultType}`}>
+                <i className={getIcon(item.type || item._resultType)}></i>
+              </div>
+              <div className="hero-result-info">
+                <span className="hero-result-name">{item.name}</span>
+                <span className="hero-result-type">{item.type || item._resultType}</span>
+              </div>
+              <i className="fas fa-arrow-right hero-result-arrow"></i>
+            </div>
+          ))}
+          <div className="hero-results-footer" onClick={() => navigate(`/dashboard/reviews?search=${encodeURIComponent(query)}`)}>
+            <i className="fas fa-search"></i> Search full registry for "<strong>{query}</strong>"
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────────
+   Main Dashboard Content
+───────────────────────────────────────────── */
 const MainContent = () => {
   const { user } = useAuth();
-  const [showFindConnections, setShowFindConnections] = useState(false);
-  const [showMessages, setShowMessages] = useState(false);
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     trustScore: 0,
     connectionCount: 0,
     reviewCount: 0,
-    verificationCount: 0
+    verificationCount: 0,
+    breakdown: null
   });
   const [warnings, setWarnings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [profileStrength, setProfileStrength] = useState({ score: 0, tasks: [] });
 
   useEffect(() => {
     loadDashboardData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      const [stats, warningData] = await Promise.all([
-        userService.getUserStats(user.id),
-        api.feed.getWarnings()
+      const [stats, warningData, strength] = await Promise.all([
+        userService.getUserStats(user.id).catch(() => null),
+        api.feed.getWarnings().catch(() => []),
+        userService.getProfileStrength(user.id).catch(() => ({ score: 0, tasks: [] }))
       ]);
-      
-      setUserData({
-        trustScore: stats.trustScore || 0,
-        connectionCount: stats.connectionCount || 0,
-        reviewCount: stats.reviewCount || 0,
-        verificationCount: stats.verificationCount || 0
-      });
+
+      if (stats) {
+        setUserData({
+          trustScore: stats.trustScore || 0,
+          connectionCount: stats.connectionCount || 0,
+          reviewCount: stats.reviewCount || 0,
+          verificationCount: stats.verificationCount || 0,
+          breakdown: stats.breakdown || null
+        });
+      }
       setWarnings(warningData || []);
+      setProfileStrength(strength);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {
@@ -50,131 +266,186 @@ const MainContent = () => {
     }
   };
 
+  const stats = [
+    { icon: 'fas fa-users', value: userData.connectionCount, label: 'Network', color: '#6366f1', link: '/dashboard/connections' },
+    { icon: 'fas fa-star', value: userData.reviewCount, label: 'Reviews', color: '#f59e0b', link: '/dashboard/reviews' },
+    { icon: 'fas fa-id-badge', value: userData.verificationCount === 0 ? 'None' : userData.verificationCount === 1 ? 'Basic' : 'Advanced', label: 'Verify Level', color: '#22c55e', link: '/dashboard/settings' },
+  ];
+
+  if (loading) {
+    return (
+      <div className="dashboard-main">
+        <LoadingSkeleton />
+      </div>
+    );
+  }
+
   return (
     <div className="dashboard-main">
-      <header className="dashboard-header">
-        <h1>Trust Insights</h1>
-        <div className="header-actions">
-          <NotificationDropdown />
-          <button 
-            className="btn-primary"
-            onClick={() => {
-              setShowFindConnections(false);
-              setShowMessages(!showMessages);
-            }}
-          >
-            {showMessages ? 'Back to Dashboard' : 'Messages'}
-          </button>
+
+      {/* ── Hero ──────────────────────────────────── */}
+      <section className="lookup-hero-section">
+        <div className="hero-bg-orbs" aria-hidden="true">
+          <span className="orb orb-1"></span>
+          <span className="orb orb-2"></span>
+          <span className="orb orb-3"></span>
         </div>
-      </header>
-
-      {loading ? (
-        <LoadingSkeleton />
-      ) : showMessages ? (
-        <MessagesSection />
-      ) : showFindConnections ? (
-        <FindConnections />
-      ) : (
-        <>
-          {/* Hero Universal Lookup Section */}
-          <div className="lookup-hero-section">
-            <div className="lookup-hero-content">
-              <h2>Universal Trust Registry</h2>
-              <p>Search any Person, Business, or Product by Name or Phone Number before you transact.</p>
-              
-              <div className="hero-search-wrapper">
-                <i className="fas fa-search search-icon"></i>
-                <input 
-                  type="text" 
-                  placeholder="Enter Name, Phone Number, or Business..." 
-                  className="hero-search-input"
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                       window.location.href = `/dashboard/reviews?search=${e.target.value}`;
-                    }
-                  }}
-                />
-                <button className="hero-search-btn">Verify Now</button>
-              </div>
-              
-              <div className="quick-tags">
-                <span>Trending:</span>
-                <span className="tag">#VerifiedMerchants</span>
-                <span className="tag">#ProductSafety</span>
-                <span className="tag">#ServiceReviews</span>
-              </div>
-            </div>
+        <div className="lookup-hero-content">
+          <div className="hero-eyebrow">
+            <i className="fas fa-shield-alt"></i> Nigeria's Trust Registry
           </div>
+          <h2>
+            <span className="hero-title-line">Know Before You</span>
+            <span className="hero-title-line hero-title-accent"> Transact</span>
+          </h2>
+          <p>Instantly verify any Person, Business, or Product by name or phone — before you hand over your money.</p>
 
-          <div className="dashboard-grid-refocus">
-            <div className="left-column">
-               <div className="trust-score-section-refocused">
-                  <div className="score-card primary">
-                    <div className="score-circle">
-                      <svg viewBox="0 0 36 36">
-                        <path 
-                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
-                          fill="none" 
-                          stroke="#4CAF50" 
-                          strokeWidth="3" 
-                          strokeDasharray={`${userData.trustScore}, 100`}
-                        />
-                        <text x="18" y="20.35" className="score-text">{userData.trustScore}</text>
-                      </svg>
+          <HeroSearch />
+
+          <div className="quick-tags">
+            <span className="tag-label">Trending:</span>
+            {['#VerifiedMerchants', '#ScamAlert', '#SafeDelivery'].map(tag => (
+              <button
+                key={tag}
+                className="tag"
+                onClick={() => navigate(`/dashboard/reviews?search=${tag.replace('#', '')}`)}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Dashboard Grid ─────────────────────────── */}
+      <div className="dashboard-grid-refocus">
+
+        {/* LEFT COLUMN */}
+        <div className="left-column">
+
+          {/* Trust Score Card */}
+          <div className="score-card primary animate-in">
+            <TrustRing score={userData.trustScore} />
+
+            <div className="score-card-right">
+              {/* Stat chips */}
+              <div className="stats-grid">
+                {stats.map(s => (
+                  <div
+                    key={s.label}
+                    className="stat-card"
+                    onClick={() => navigate(s.link)}
+                    style={{ '--stat-accent': s.color }}
+                  >
+                    <div className="stat-icon-wrap">
+                      <i className={s.icon} style={{ color: s.color }}></i>
                     </div>
-                    <div className="score-meta">
-                      <h3>Your Trust Score</h3>
-                      <p>{userData.trustScore > 80 ? 'High Credibility' : userData.trustScore > 50 ? 'Developing Trust' : 'Unverified Status'}</p>
-                    </div>
+                    <span className="stat-value">{s.value}</span>
+                    <span className="stat-label">{s.label}</span>
                   </div>
-               </div>
+                ))}
+              </div>
 
-               <div className="stats-grid">
-                  <div className="stat-card">
-                    <span className="stat-value">{userData.connectionCount}</span>
-                    <span className="stat-label">Network</span>
+              {/* Profile completeness bar */}
+              {profileStrength.tasks.length > 0 && (
+                <div className="profile-strength-bar">
+                  <div className="strength-header">
+                    <span>Profile Strength</span>
+                    <strong>{profileStrength.score}%</strong>
                   </div>
-                  <div className="stat-card">
-                    <span className="stat-value">{userData.reviewCount}</span>
-                    <span className="stat-label">Reviews</span>
+                  <div className="strength-track">
+                    <div
+                      className="strength-fill"
+                      style={{ width: `${profileStrength.score}%` }}
+                    ></div>
                   </div>
-                  <div className="stat-card">
-                    <span className="stat-value">{userData.verificationCount}</span>
-                    <span className="stat-label">Level</span>
+                  <div className="strength-tasks">
+                    {profileStrength.tasks.map(t => (
+                      <span key={t} className="strength-task">
+                        <i className="fas fa-circle-dot"></i> {t}
+                      </span>
+                    ))}
                   </div>
-               </div>
+                </div>
+              )}
 
-               <ActivityFeed />
-            </div>
-
-            <div className="right-sidebar-column">
-               <div className="trust-cta-card">
-                  <h4><i className="fas fa-shield-alt"></i> Level Up Trust</h4>
-                  <p>Upgrade to **Phone Verified** status to increase your review impact.</p>
-                  <button className="btn-verify-now">Start Verification</button>
-               </div>
-               
-               <div className="negative-signals-widget">
-                  <h4><i className="fas fa-exclamation-triangle"></i> Recent Warnings</h4>
-                  {warnings.length > 0 ? (
-                    warnings.map(warning => (
-                      <div key={warning.id} className="warning-item" style={{ marginBottom: '12px', borderBottom: '1px solid rgba(197, 48, 48, 0.1)', paddingBottom: '8px' }}>
-                        <p><strong>{warning.target_name}</strong>: {warning.is_disputed ? 'Disputed interaction' : 'Low rating detected'}</p>
-                        <span style={{ fontSize: '0.75rem' }}>{new Date(warning.created_at).toLocaleDateString()}</span>
+              {/* Breakdown if available */}
+              {userData.breakdown && (
+                <div className="score-breakdown">
+                  {[
+                    { label: 'Reviews', value: userData.breakdown.reviews, max: 60 },
+                    { label: 'Identity', value: userData.breakdown.verification, max: 25 },
+                    { label: 'Network', value: userData.breakdown.proximity, max: 15 },
+                  ].map(b => (
+                    <div key={b.label} className="breakdown-row">
+                      <span className="bd-label">{b.label}</span>
+                      <div className="bd-track">
+                        <div className="bd-fill" style={{ width: `${(b.value / b.max) * 100}%` }}></div>
                       </div>
-                    ))
-                  ) : (
-                    <div className="warning-item">
-                      <p>Registry is currently clear. No high-risk signals in your area.</p>
+                      <span className="bd-val">{b.value}pts</span>
                     </div>
-                  )}
-               </div>
-               
-               <ConnectionsSection />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-        </>
-      )}
+
+          {/* Activity Feed */}
+          <ActivityFeed />
+        </div>
+
+        {/* RIGHT SIDEBAR */}
+        <div className="right-sidebar-column">
+
+          {/* CTA Card */}
+          <div className="trust-cta-card animate-in">
+            <div className="cta-icon-wrap">
+              <i className="fas fa-shield-alt"></i>
+            </div>
+            <h4>Level Up Your Trust</h4>
+            <p>
+              {userData.verificationCount === 0
+                ? 'Verify your email or phone to start building reputation and unlocking reviews.'
+                : userData.verificationCount === 1
+                ? 'Add your NIN or BVN to reach Advanced tier and 2.5× review weight.'
+                : '🏆 You\'re at the top tier! Your reviews carry maximum weight.'}
+            </p>
+            {userData.verificationCount < 2 && (
+              <button
+                className="btn-verify-now"
+                onClick={() => navigate('/dashboard/settings')}
+              >
+                <i className="fas fa-arrow-right"></i>
+                {userData.verificationCount === 0 ? 'Start Verification' : 'Upgrade to Advanced'}
+              </button>
+            )}
+          </div>
+
+          {/* Warnings */}
+          <div className="negative-signals-widget animate-in">
+            <h4><i className="fas fa-exclamation-triangle"></i> Registry Warnings</h4>
+            {warnings.length > 0 ? (
+              warnings.slice(0, 4).map(warning => (
+                <div key={warning.id} className="warning-item">
+                  <div className="warning-dot"></div>
+                  <div className="warning-body">
+                    <p><strong>{warning.target_name || 'Unknown'}</strong>: {warning.is_disputed ? 'Disputed interaction reported' : 'Low trust rating detected'}</p>
+                    <span>{new Date(warning.created_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'short' })}</span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="warnings-clear">
+                <i className="fas fa-check-circle"></i>
+                <p>Registry is clear. No high-risk signals found in your network.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Connections Section */}
+          <ConnectionsSection />
+        </div>
+      </div>
     </div>
   );
 };
