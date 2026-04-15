@@ -53,6 +53,32 @@ const getPasswordStrength = (password) => {
   return { score, ...map[score] };
 };
 
+// ── Reusable Field Component ────────────────────────────────────────────────
+const Field = ({ name, label, type = 'text', placeholder, autoComplete, form, touched, fieldErrors, handleChange, handleBlur }) => {
+  const error = touched[name] && fieldErrors[name];
+  return (
+    <div className={`form-field ${error ? 'field-error' : touched[name] && !error && form[name] ? 'field-valid' : ''}`}>
+      <label htmlFor={`reg-${name}`}>{label}</label>
+      <div className="field-input-wrap">
+        <input
+          id={`reg-${name}`}
+          name={name}
+          type={type}
+          value={form[name]}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+        />
+        {touched[name] && !error && form[name] && (
+          <span className="field-valid-icon">✓</span>
+        )}
+      </div>
+      {error && <p className="field-error-msg" role="alert">{error}</p>}
+    </div>
+  );
+};
+
 // ── Register Form ─────────────────────────────────────────────────────────
 const Register = () => {
   const navigate = useNavigate();
@@ -137,30 +163,7 @@ const Register = () => {
     }
   };
 
-  const Field = ({ name, label, type = 'text', placeholder, autoComplete }) => {
-    const error = touched[name] && fieldErrors[name];
-    return (
-      <div className={`form-field ${error ? 'field-error' : touched[name] && !error ? 'field-valid' : ''}`}>
-        <label htmlFor={`reg-${name}`}>{label}</label>
-        <div className="field-input-wrap">
-          <input
-            id={`reg-${name}`}
-            name={name}
-            type={type}
-            value={form[name]}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            placeholder={placeholder}
-            autoComplete={autoComplete}
-          />
-          {touched[name] && !error && form[name] && (
-            <span className="field-valid-icon">✓</span>
-          )}
-        </div>
-        {error && <p className="field-error-msg" role="alert">{error}</p>}
-      </div>
-    );
-  };
+  const fieldProps = { form, touched, fieldErrors, handleChange, handleBlur };
 
   return (
     <div className="auth-container">
@@ -171,9 +174,9 @@ const Register = () => {
           <p>Join the trust layer for Nigerian commerce</p>
         </div>
 
-        <Field name="name"    label="Full Name"  placeholder="Adeola Balogun"        autoComplete="name" />
-        <Field name="email"   label="Email"      type="email"  placeholder="you@email.com"  autoComplete="email" />
-        <Field name="phone"   label="Phone (optional)" type="tel" placeholder="+234 801 000 0000" autoComplete="tel" />
+        <Field name="name"    label="Full Name"  placeholder="Adeola Balogun"        autoComplete="name" {...fieldProps} />
+        <Field name="email"   label="Email"      type="email"  placeholder="you@email.com"  autoComplete="email" {...fieldProps} />
+        <Field name="phone"   label="Phone (optional)" type="tel" placeholder="+234 801 000 0000" autoComplete="tel" {...fieldProps} />
 
         {/* Password with strength meter */}
         <div className={`form-field ${touched.password && fieldErrors.password ? 'field-error' : touched.password && !fieldErrors.password && form.password ? 'field-valid' : ''}`}>
@@ -213,7 +216,7 @@ const Register = () => {
           )}
         </div>
 
-        <Field name="confirmPassword" label="Confirm Password" type="password" placeholder="Re-enter password" autoComplete="new-password" />
+        <Field name="confirmPassword" label="Confirm Password" type="password" placeholder="Re-enter password" autoComplete="new-password" {...fieldProps} />
 
         <button
           type="submit"
