@@ -61,7 +61,26 @@ const api = {
       return handleResponse(response);
     },
 
+    forgotPassword: async (email) => {
+      const response = await fetch(`${BASE_URL}/users/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      return handleResponse(response);
+    },
+
+    resetPassword: async (email, code, newPassword) => {
+      const response = await fetch(`${BASE_URL}/users/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, newPassword })
+      });
+      return handleResponse(response);
+    },
+
     confirmOTP: async (userId, code) => {
+
       const response = await fetch(`${BASE_URL}/users/login/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
