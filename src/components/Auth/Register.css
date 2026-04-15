@@ -1,10 +1,123 @@
+/* ── Auth brand header ── */
+.auth-brand { text-align: center; margin-bottom: 28px; }
+.auth-logo { font-size: 40px; margin-bottom: 8px; }
+.auth-brand h1 { font-size: 24px; margin: 0 0 6px; color: var(--text-primary, #111); }
+.auth-brand p { font-size: 14px; color: var(--text-secondary, #666); margin: 0; }
+
+/* ── Form fields ── */
+.form-field { margin-bottom: 18px; }
+.form-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary, #555);
+  margin-bottom: 6px;
+}
+
+.field-input-wrap { position: relative; }
+.field-input-wrap input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border-color, #ddd);
+  border-radius: 8px;
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: white;
+  box-sizing: border-box;
+}
+.field-input-wrap input:focus {
+  outline: none;
+  border-color: #1e3c72;
+  box-shadow: 0 0 0 3px rgba(30,60,114,0.1);
+}
+
+.field-valid .field-input-wrap input { border-color: #22c55e; }
+.field-error .field-input-wrap input { border-color: #ef4444; }
+
+.field-valid-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #22c55e;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.field-error-msg {
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: #ef4444;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Password strength ── */
+.password-strength-meter {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.strength-bars {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+.strength-bar-segment {
+  height: 4px;
+  border-radius: 2px;
+  flex: 1;
+  transition: background 0.3s;
+}
+
+/* ── Submit button ── */
+.btn-submit {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn-submit:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+.btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+
+.btn-loading { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: regSpin 0.7s linear infinite;
+}
+@keyframes regSpin { to { transform: rotate(360deg); } }
+
+/* ── Auth footer ── */
+.auth-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--text-secondary, #666);
+}
+.auth-footer a { color: #1e3c72; font-weight: 600; text-decoration: none; }
+.auth-footer a:hover { text-decoration: underline; }
+
 .register-form {
   background: var(--bg-primary);
   padding: 32px;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
 }
 
 .register-form h2 {
