@@ -13,6 +13,9 @@ import PublicProfile from './sections/Profile/PublicProfile';
 import Settings from './sections/Settings/Settings';
 import WalletSection from './sections/Wallet/WalletSection';
 import EscrowSection from './sections/Escrow/EscrowSection';
+import BarterSection from './sections/Barter/BarterSection';
+import ProductRegistry from './sections/Product/ProductRegistry';
+import ProductProfile from './sections/Product/ProductProfile';
 import AdminPanel from './sections/Admin/AdminPanel';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
@@ -56,6 +59,9 @@ const Dashboard = () => {
             <Route path="/settings" element={<Settings />} />
             <Route path="/wallet" element={<WalletSection />} />
             <Route path="/escrow" element={<EscrowSection />} />
+            <Route path="/barter" element={<BarterSection />} />
+            <Route path="/register-product" element={<ProductRegistry />} />
+            <Route path="/product/:id" element={<ProductProfile />} />
             {/* Admin-only route — only rendered for role=admin */}
             {user?.role === 'admin' && (
               <Route path="/admin" element={<AdminPanel />} />

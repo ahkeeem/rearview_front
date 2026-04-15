@@ -1,0 +1,113 @@
+.product-registry-container {
+    padding: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.registry-header h1 {
+    font-size: 28px;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.registry-header p {
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.registry-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+}
+
+.registry-form .form-group {
+    margin-bottom: 20px;
+}
+
+.registry-form label {
+    display: block;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.req {
+    color: #ef4444;
+}
+
+.registry-form input,
+.registry-form select,
+.registry-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #f9fafb;
+    transition: all 0.2s;
+}
+
+.registry-form input:focus,
+.registry-form select:focus,
+.registry-form textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.flex-row {
+    display: flex;
+    gap: 20px;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.btn-register {
+    width: 100%;
+    padding: 14px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 10px;
+}
+
+.btn-register:hover {
+    background: #1d4ed8;
+}
+
+.btn-register:disabled {
+    background: #93c5fd;
+    cursor: not-allowed;
+}
+
+.alert {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+.alert-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

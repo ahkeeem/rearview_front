@@ -46,8 +46,14 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
         <Link to="/dashboard/escrow" className={path.includes('/escrow') ? 'active' : ''} title="Escrow Payments">
           <i className="fas fa-shield-alt" aria-hidden /> {!isCollapsed && <span>Escrow</span>}
         </Link>
+        <Link to="/dashboard/barter" className={path.includes('/barter') ? 'active' : ''} title="Trade & Barter Network">
+          <i className="fas fa-sync" aria-hidden /> {!isCollapsed && <span>Barter</span>}
+        </Link>
         <Link to="/dashboard/profile" className={path.includes('/profile') ? 'active' : ''} title="Your Public Profile">
           <i className="fas fa-user" aria-hidden /> {!isCollapsed && <span>Profile</span>}
+        </Link>
+        <Link to="/dashboard/register-product" className={path.includes('/register-product') ? 'active' : ''} title="Register Product or Business">
+          <i className="fas fa-box-open" aria-hidden /> {!isCollapsed && <span>Entities</span>}
         </Link>
         <Link to="/dashboard/settings" className={path.includes('/settings') ? 'active' : ''} title="Account Settings">
           <i className="fas fa-cog" aria-hidden /> {!isCollapsed && <span>Settings</span>}
