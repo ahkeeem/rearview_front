@@ -48,15 +48,6 @@ const Navigation = ({ onToggleSidebar }) => {
   return (
     <nav className="main-nav glass-card" role="navigation">
       <div className="nav-left">
-        {onToggleSidebar && (
-          <button 
-            className="nav-sidebar-toggle" 
-            onClick={onToggleSidebar}
-            aria-label="Toggle Sidebar"
-          >
-            <i className="fas fa-bars" />
-          </button>
-        )}
         <Link to="/dashboard" className="logo-wrap">
           <img src="/logo-shield.png" alt="RearView Logo" className="nav-logo-img" />
           <span className="logo-text">RearView</span>
@@ -64,14 +55,39 @@ const Navigation = ({ onToggleSidebar }) => {
       </div>
 
       <div className="nav-center">
-        {/* Use the full SearchBar component with live results & navigation */}
         <SearchBar />
       </div>
 
       <div className="nav-right">
-        <NotificationsDropdown notifications={notifications} />
-        <MessagesDropdown conversations={conversations} />
-        <UserMenu />
+        <div className="nav-primary-links">
+          <Link to="/dashboard" className="nav-link-item" title="Home">
+            <i className="fas fa-home" />
+            <span>Home</span>
+          </Link>
+          <Link to="/dashboard/connections" className="nav-link-item" title="My Network">
+            <i className="fas fa-users" />
+            <span>Network</span>
+          </Link>
+          <Link to="/dashboard/messages" className="nav-link-item" title="Messaging">
+            <i className="fas fa-envelope" />
+            <span>Messaging</span>
+          </Link>
+          <Link to="/dashboard/wallet" className="nav-link-item" title="Wallet">
+            <i className="fas fa-wallet" />
+            <span>Wallet</span>
+          </Link>
+          <Link to="/dashboard/register-product" className="nav-link-item" title="Business/Entities">
+            <i className="fas fa-briefcase" />
+            <span>Business</span>
+          </Link>
+        </div>
+
+        <div className="nav-divider" />
+
+        <div className="nav-tools">
+          <NotificationsDropdown notifications={notifications} />
+          <UserMenu />
+        </div>
       </div>
     </nav>
   );

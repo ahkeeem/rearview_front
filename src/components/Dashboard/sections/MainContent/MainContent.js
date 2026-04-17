@@ -268,9 +268,9 @@ const MainContent = () => {
   };
 
   const stats = [
-    { icon: 'fas fa-users', value: userData.connectionCount, label: 'Network', color: '#6366f1', link: '/dashboard/connections' },
-    { icon: 'fas fa-star', value: userData.reviewCount, label: 'Reviews', color: '#f59e0b', link: '/dashboard/reviews' },
-    { icon: 'fas fa-id-badge', value: userData.verificationCount === 0 ? 'None' : userData.verificationCount === 1 ? 'Basic' : 'Advanced', label: 'Verify Level', color: '#22c55e', link: '/dashboard/settings' },
+    { icon: 'fas fa-users', value: userData.connectionCount, label: 'Network', color: 'var(--primary-indigo)', link: '/dashboard/connections' },
+    { icon: 'fas fa-star', value: userData.reviewCount, label: 'Reviews', color: 'var(--accent-gold)', link: '/dashboard/reviews' },
+    { icon: 'fas fa-id-badge', value: userData.verificationCount === 0 ? 'None' : userData.verificationCount === 1 ? 'Basic' : 'Advanced', label: 'Verify Level', color: 'var(--success)', link: '/dashboard/settings' },
   ];
 
   if (loading) {

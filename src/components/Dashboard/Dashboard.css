@@ -1,69 +1,51 @@
 /* Dashboard Container - Senior Layout Architecture */
 .dashboard-container {
   display: grid;
-  grid-template-columns: 280px 1fr 340px;
+  grid-template-columns: 230px 1fr 300px;
   gap: 24px;
   padding: 24px;
-  margin-top: 72px; /* Navigation height */
-  min-height: calc(100vh - 72px);
+  margin: 0 auto;
+  margin-top: 84px; /* Header height + gap */
+  max-width: 1200px;
+  min-height: calc(100vh - 84px);
   background: var(--bg-main);
-  transition: grid-template-columns var(--transition-base);
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-.dashboard-container.sidebar-collapsed {
-  grid-template-columns: 80px 1fr 340px;
+  transition: all var(--transition-base);
 }
 
 .dashboard-main-area {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   animation: fadeIn 0.4s ease-out;
 }
 
 /* ════════════════════════════════════════════
    RESPONSIVE GRID
    ════════════════════════════════════════════ */
-@media (max-width: 1440px) {
-  .dashboard-container {
-    grid-template-columns: 260px 1fr 300px;
-  }
-}
-
 @media (max-width: 1200px) {
   .dashboard-container {
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 220px 1fr;
     padding: 20px;
-  }
-  
-  .dashboard-container.sidebar-collapsed {
-    grid-template-columns: 80px 1fr;
-  }
-  
-  .dashboard-rightbar {
-    display: none; /* Hide RightBar on smaller desktops to focus on main content */
   }
 }
 
 @media (max-width: 992px) {
   .dashboard-container {
-    grid-template-columns: 80px 1fr;
+    grid-template-columns: 1fr; /* Stack everything on mobile/small tablets */
     padding: 16px;
-    gap: 16px;
+    gap: 12px;
   }
 }
 
 @media (max-width: 768px) {
-  .dashboard-container, .dashboard-container.sidebar-collapsed {
+  .dashboard-container {
     display: flex;
     flex-direction: column;
     padding: 16px;
-    padding-bottom: 90px; /* Room for mobile nav */
+    padding-bottom: 90px;
     margin-top: 64px;
-    gap: 16px;
+    gap: 12px;
   }
 }
 

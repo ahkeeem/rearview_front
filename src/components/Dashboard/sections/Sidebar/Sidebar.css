@@ -1,201 +1,148 @@
-.dashboard-sidebar {
+.dashboard-sidebar-profile {
   position: sticky;
-  top: 92px; /* Header height (72px) + 20px gap */
-  height: calc(100vh - 112px);
-  padding: 24px;
+  top: 92px; /* Top nav height (72px) + 20px gap */
   background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  transition: all var(--transition-base);
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-.dashboard-sidebar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.dashboard-sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.dashboard-sidebar::-webkit-scrollbar-thumb {
-  background: var(--glass-border);
-  border-radius: 20px;
-}
-
-.dashboard-sidebar.collapsed {
-  padding: 24px 15px;
-  width: 80px;
-}
-
-.sidebar-toggle {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 28px;
-  height: 28px;
-  background: var(--glass-bg);
-  color: var(--text-secondary);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--glass-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  transition: all var(--transition-fast);
-}
-
-.sidebar-toggle:hover {
-  background: var(--accent-gold);
-  color: var(--primary-deep);
-  border-color: var(--accent-gold);
-  transform: scale(1.1);
-}
-
-.user-profile {
-  text-align: center;
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.profile-image {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 16px;
-  border-radius: var(--radius-xl);
-  border: 2px solid var(--glass-border);
-  padding: 4px;
-  background: var(--glass-bg);
   transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
 }
 
-.collapsed .profile-image {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 0;
-  padding: 2px;
+.profile-card-top {
+  position: relative;
+  height: 90px;
 }
 
-.profile-image img {
+.profile-cover-photo {
+  height: 64px;
+  background: linear-gradient(135deg, var(--primary-indigo) 0%, var(--primary-deep) 100%);
+  overflow: hidden;
+}
+
+.profile-cover-photo img {
   width: 100%;
   height: 100%;
-  border-radius: inherit;
+  object-fit: cover;
+  opacity: 0.6;
+}
+
+.profile-avatar-wrap {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-card);
+  background: var(--bg-card);
+  padding: 2px;
+  box-shadow: var(--shadow-md);
+}
+
+.sidebar-profile-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
   object-fit: cover;
 }
 
-.user-profile h3 {
-  font-size: 1rem;
-  font-weight: 800;
+.profile-card-info {
+  margin-top: 16px;
+  text-align: center;
+  padding: 0 16px 16px;
+}
+
+.profile-name {
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.01em;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.sidebar-nav a {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  color: var(--text-secondary);
-  text-decoration: none;
-  border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.sidebar-nav a i {
-  width: 20px;
-  font-size: 1.1rem;
-  margin-right: 16px;
-  transition: all var(--transition-fast);
-}
-
-.sidebar-nav a.active {
-  background: rgba(67, 56, 202, 0.1);
-  color: var(--accent-gold);
-}
-
-.sidebar-nav a.active i {
-  color: var(--accent-gold);
-  filter: drop-shadow(0 0 5px var(--accent-gold-glow));
-}
-
-.sidebar-nav a:hover:not(.active) {
-  background: var(--glass-bg);
-  color: var(--text-primary);
-  transform: translateX(4px);
-}
-
-.collapsed .sidebar-nav a {
-  padding: 12px;
   justify-content: center;
+  gap: 6px;
+  margin-bottom: 4px;
 }
 
-.collapsed .sidebar-nav a i {
-  margin-right: 0;
+.verified-badge {
+  color: #3b82f6;
+  font-size: 14px;
 }
 
-/* Mobile Bottom Navigation Bar */
-@media (max-width: 768px) {
-  .dashboard-sidebar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    height: 72px;
-    width: 100% !important;
-    z-index: 1000;
-    flex-direction: row;
-    padding: 0 16px;
-    border-radius: 0;
-    border: none;
-    border-top: 1px solid var(--border-color);
-    background: rgba(2, 6, 23, 0.95);
-    backdrop-filter: blur(24px);
-  }
+.profile-headline {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+  line-height: 1.4;
+}
 
-  .sidebar-toggle, .user-profile {
+.profile-stats-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 0;
+}
+
+.profile-card-stats {
+  padding: 12px 0;
+}
+
+.stat-item {
+  padding: 4px 16px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.stat-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.stat-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.stat-value.highlight {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+.profile-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 700;
+  transition: background 0.2s ease;
+  border-top: 1px solid var(--border-color);
+}
+
+.profile-card-footer:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.profile-card-footer i {
+  color: var(--text-muted);
+}
+
+/* Mobile: LinkedIn-style bottom bar was handled in Navigation already, 
+   the profile sidebar might be hidden on mobile in Dashboard. 
+*/
+@media (max-width: 992px) {
+  .dashboard-sidebar-profile {
     display: none;
-  }
-
-  .sidebar-nav {
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0;
-  }
-
-  .sidebar-nav a {
-    flex-direction: column;
-    gap: 4px;
-    padding: 8px;
-    font-size: 10px;
-    width: 60px;
-    text-align: center;
-    background: transparent !important;
-    transform: none !important;
-  }
-
-  .sidebar-nav a i {
-    margin: 0 !important;
-    font-size: 1.25rem;
-  }
-
-  .sidebar-nav a.active {
-    color: var(--accent-gold);
   }
 }

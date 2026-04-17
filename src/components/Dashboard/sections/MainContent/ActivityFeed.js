@@ -166,31 +166,48 @@ const ActivityFeed = () => {
             </div>
           ) : (
             activities.map(activity => (
-              <div key={activity.id} className="activity-item-wrapper">
-                <div className="activity-item">
-                  <div className={`activity-icon ${activity.action_type}`}>
-                    <i className={getActivityIcon(activity.action_type)}></i>
-                  </div>
-                  <div className="activity-content">
-                    {renderActionContent(activity)}
-                    <div className="activity-footer">
-                      <div className="activity-time">
-                        {new Date(activity.created_at).toLocaleString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}
-                      </div>
-                      {activity.action_type === 'wrote_review' && (
-                        <button 
-                          className="community-toggle-btn"
-                          onClick={() => setExpandedDiscussion(expandedDiscussion === activity.id ? null : activity.id)}
-                        >
-                          <i className="fas fa-comments" /> Community Signals
-                        </button>
-                      )}
+              <div key={activity.id} className="activity-post-card">
+                <div className="post-header">
+                  <Link to={`/profile/${activity.actor_id}`} className="post-actor-avatar">
+                    <img src="/default-avatar.png" alt={activity.actor_name} />
+                  </Link>
+                  <div className="post-actor-info">
+                    <div className="actor-name-row">
+                      <Link to={`/profile/${activity.actor_id}`} className="actor-name">{activity.actor_name}</Link>
+                      <span className="actor-badge">1st</span>
                     </div>
+                    <span className="actor-headline">Verified Member • Trust Network</span>
+                    <span className="post-time">
+                      {new Date(activity.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} • <i className="fas fa-globe-africa" />
+                    </span>
                   </div>
+                  <button className="post-options-btn"><i className="fas fa-ellipsis-h" /></button>
+                </div>
+
+                <div className="post-content">
+                  {renderActionContent(activity)}
+                </div>
+                
+                <div className="post-actions-bar">
+                  <button className="action-btn">
+                    <i className="far fa-thumbs-up" />
+                    <span>Like</span>
+                  </button>
+                  <button 
+                    className={`action-btn ${expandedDiscussion === activity.id ? 'active' : ''}`}
+                    onClick={() => setExpandedDiscussion(expandedDiscussion === activity.id ? null : activity.id)}
+                  >
+                    <i className="far fa-comment-dots" />
+                    <span>Signal</span>
+                  </button>
+                  <button className="action-btn">
+                    <i className="fas fa-share" />
+                    <span>Trust Share</span>
+                  </button>
                 </div>
                 
                 {expandedDiscussion === activity.id && (
-                  <div className="activity-discussion-panel">
+                  <div className="post-discussion-area">
                     <ThreadedComments reviewId={activity.target_id} />
                   </div>
                 )}

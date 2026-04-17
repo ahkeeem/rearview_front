@@ -22,7 +22,6 @@ import api from '../../services/api';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -39,15 +38,11 @@ const Dashboard = () => {
   // 30 minute inactivity timeout
   useInactivityTimeout(handleLogout, 30 * 60 * 1000);
 
-  const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
-
   return (
     <>
-      <Navigation onToggleSidebar={toggleSidebar} />
-      <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-        <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+      <Navigation />
+      <div className="dashboard-container">
+        <Sidebar aria-label="Profile Summary" />
         <main className="dashboard-main-area">
           <Routes>
             <Route path="/" element={<MainContent />} />
@@ -68,7 +63,7 @@ const Dashboard = () => {
             )}
           </Routes>
         </main>
-        <RightBar />
+        <RightBar aria-label="Discovery & Recommendations" />
       </div>
     </>
   );
