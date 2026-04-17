@@ -379,6 +379,12 @@ const api = {
         body: JSON.stringify(entityData)
       });
       return handleResponse(response);
+    },
+    getSuggestions: async () => {
+      const response = await fetch(`${BASE_URL}/entities/suggestions`, {
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
     }
   },
 

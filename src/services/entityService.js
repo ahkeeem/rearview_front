@@ -28,6 +28,19 @@ export const entityService = {
             console.error('Error in registerEntity:', error);
             throw error;
         }
+    },
+
+    /**
+     * Get trust-based product suggestions
+     * @returns {Promise<Array>} List of suggested entities
+     */
+    getSuggestions: async () => {
+        try {
+            return await api.entities.getSuggestions();
+        } catch (error) {
+            console.error('Error in getSuggestions:', error);
+            throw error;
+        }
     }
 };
 
