@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../../../services/api';
+import ThreadedComments from '../Community/ThreadedComments';
 import './ProductProfile.css'; 
 
 const ProductProfile = () => {
@@ -12,6 +13,7 @@ const ProductProfile = () => {
     const [reviewContent, setReviewContent] = useState('');
     const [reviewRating, setReviewRating] = useState(5);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [expandedReviewId, setExpandedReviewId] = useState(null);
 
     useEffect(() => {
         const fetchProductData = async () => {
@@ -128,22 +130,38 @@ const ProductProfile = () => {
                     ) : (
                         <div className="reviews-stack">
                             {reviews.map(rev => (
-                                <div key={rev.id} className="review-item">
-                                    <div className="review-item-header">
-                                        <div className="reviewer-info">
-                                            <strong>{rev.reviewer_name}</strong>
-                                            <span className="review-date">{new Date(rev.created_at).toLocaleDateString()}</span>
+                                <div key={rev.id} className="review-wrapper">
+                                    <div className="review-item">
+                                        <div className="review-item-header">
+                                            <div className="reviewer-info">
+                                                <strong>{rev.reviewer_name}</strong>
+                                                <span className="review-date">{new Date(rev.created_at).toLocaleDateString()}</span>
+                                            </div>
+                                            <div className="review-item-rating">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <i key={i} className={i < rev.rating ? "fas fa-star" : "far fa-star"} />
+                                                ))}
+                                            </div>
                                         </div>
-                                        <div className="review-item-rating">
-                                            {[...Array(5)].map((_, i) => (
-                                                <i key={i} className={i < rev.rating ? "fas fa-star" : "far fa-star"} />
-                                            ))}
+                                        <p className="review-comment">{rev.comment}</p>
+                                        <div className="review-item-footer">
+                                            {rev.is_verified === 1 && (
+                                                <div className="verified-review-footer">
+                                                    <i className="fas fa-shield-alt" /> Evidence-backed Review
+                                                </div>
+                                            )}
+                                            <button 
+                                                className="discussion-toggle-btn"
+                                                onClick={() => setExpandedReviewId(expandedReviewId === rev.id ? null : rev.id)}
+                                            >
+                                                <i className="fas fa-comments" /> 
+                                                {expandedReviewId === rev.id ? ' Hide Signals' : ' Community Signals'}
+                                            </button>
                                         </div>
                                     </div>
-                                    <p className="review-comment">{rev.comment}</p>
-                                    {rev.is_verified === 1 && (
-                                        <div className="verified-review-footer">
-                                            <i className="fas fa-shield-alt" /> Evidence-backed Review
+                                    {expandedReviewId === rev.id && (
+                                        <div className="inline-thread-panel">
+                                            <ThreadedComments reviewId={rev.id} />
                                         </div>
                                     )}
                                 </div>

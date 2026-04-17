@@ -3,6 +3,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import api from '../../../../services/api';
 import LoadingSkeleton from '../../components/LoadingSkeleton';
+import ThreadedComments from '../Community/ThreadedComments';
 import './ActivityFeed.css';
 
 const ActivityFeed = () => {
@@ -12,6 +13,7 @@ const ActivityFeed = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLive, setIsLive] = useState(false);
   const [latestId, setLatestId] = useState(null);
+  const [expandedDiscussion, setExpandedDiscussion] = useState(null); // activityId
 
   useEffect(() => {
     if (user?.id) {
@@ -157,16 +159,34 @@ const ActivityFeed = () => {
             </div>
           ) : (
             activities.map(activity => (
-              <div key={activity.id} className="activity-item">
-                <div className={`activity-icon ${activity.action_type}`}>
-                  <i className={getActivityIcon(activity.action_type)}></i>
-                </div>
-                <div className="activity-content">
-                  {renderActionContent(activity)}
-                  <div className="activity-time">
-                    {new Date(activity.created_at).toLocaleString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}
+              <div key={activity.id} className="activity-item-wrapper">
+                <div className="activity-item">
+                  <div className={`activity-icon ${activity.action_type}`}>
+                    <i className={getActivityIcon(activity.action_type)}></i>
+                  </div>
+                  <div className="activity-content">
+                    {renderActionContent(activity)}
+                    <div className="activity-footer">
+                      <div className="activity-time">
+                        {new Date(activity.created_at).toLocaleString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}
+                      </div>
+                      {activity.action_type === 'wrote_review' && (
+                        <button 
+                          className="community-toggle-btn"
+                          onClick={() => setExpandedDiscussion(expandedDiscussion === activity.id ? null : activity.id)}
+                        >
+                          <i className="fas fa-comments" /> Community Signals
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
+                
+                {expandedDiscussion === activity.id && (
+                  <div className="activity-discussion-panel">
+                    <ThreadedComments reviewId={activity.target_id} />
+                  </div>
+                )}
               </div>
             ))
           )}

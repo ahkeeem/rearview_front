@@ -235,6 +235,45 @@
 .stat-row:last-child { border-bottom: none; }
 .stat-row span { color: #64748b; font-size: 14px; }
 
+.review-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.discussion-toggle-btn {
+    background: none;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.discussion-toggle-btn:hover {
+    background: #f8fafc;
+    color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.inline-thread-panel {
+    margin-top: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 4px;
+    animation: slideDown 0.3s ease;
+}
+
 .product-loading {
     padding: 100px;
     text-align: center;
