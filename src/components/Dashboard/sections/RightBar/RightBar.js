@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../../context/AuthContext';
 import { userService } from '../../../../services/userService';
 import LoadingSkeleton from '../../components/LoadingSkeleton';
+import DiscoverSidebar from '../Discovery/DiscoverSidebar';
 import './RightBar.css';
 
 const RightBar = () => {
@@ -29,7 +30,11 @@ const RightBar = () => {
     }
   };
 
-  if (loading) return <LoadingSkeleton />;
+  if (loading) return (
+    <div className="dashboard-rightbar">
+        <LoadingSkeleton />
+    </div>
+  );
 
   return (
     <div className="dashboard-rightbar">
@@ -40,12 +45,15 @@ const RightBar = () => {
         </div>
         <p>Complete your profile to increase trust score</p>
         <ul className="todo-list">
-          {profileStrength.tasks.map((task, index) => (
+          {profileStrength.tasks?.map((task, index) => (
             <li key={index}>{task}</li>
           ))}
         </ul>
       </div>
-      {/* Suggested Connections section removed per user request */}
+      
+      <div className="discovery-section">
+        <DiscoverSidebar />
+      </div>
     </div>
   );
 };
