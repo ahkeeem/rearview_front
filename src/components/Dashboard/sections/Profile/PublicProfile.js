@@ -6,6 +6,7 @@ import connectionService from '../../../../services/connectionService';
 import api from '../../../../services/api';
 import ReviewsList from '../Reviews/ReviewsList';
 import EntityForums from '../Discussions/EntityForums';
+import { getImageUrl } from '../../../../utils/imageUtils';
 import './UserProfile.css';
 
 const PublicProfile = () => {
@@ -99,7 +100,7 @@ const PublicProfile = () => {
         <div className="profile-info-wrapper">
           <div className="profile-avatar-section">
             <div className="profile-avatar">
-              <img src={profile.photo_url || '/default-avatar.png'} alt={profile.name} />
+              <img src={getImageUrl(profile.photo_url) || '/default-avatar.png'} alt={profile.name} />
             </div>
             <div className="profile-details">
               <h2>{profile.name} {stats?.trustScore > 80 && <i className="fas fa-check-circle verified-badge" title="High Trust Score"></i>}</h2>

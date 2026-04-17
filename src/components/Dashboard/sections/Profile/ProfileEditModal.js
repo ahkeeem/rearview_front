@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import Cropper from 'react-easy-crop';
 import api from '../../../../services/api';
+import { getImageUrl } from '../../../../utils/imageUtils';
+import { getCroppedImg } from '../../../../utils/cropUtils';
 import './ProfileEditModal.css';
 
 const ProfileEditModal = ({ profile, onSave, onCancel }) => {
@@ -7,37 +10,61 @@ const ProfileEditModal = ({ profile, onSave, onCancel }) => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('identity');
   const [previews, setPreviews] = useState({
-    avatar: profile.photo_url,
-    banner: profile.banner_url
+    avatar: getImageUrl(profile.photo_url),
+    banner: getImageUrl(profile.banner_url)
   });
+
+  // Cropper State
+  const [cropping, setCropping] = useState(null); // 'avatar' | 'banner' | null
+  const [imageToCrop, setImageToCrop] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleImageUpload = async (e, type) => {
+  const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const initiateImageSelect = (e, type) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Create local preview
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviews(prev => ({ ...prev, [type]: reader.result }));
+    reader.onload = () => {
+      setImageToCrop(reader.result);
+      setCropping(type);
     };
     reader.readAsDataURL(file);
+  };
 
-    // Upload to server
-    const uploadData = new FormData();
-    uploadData.append('image', file);
-    
+  const handleApplyCrop = async () => {
     try {
       setLoading(true);
+      const croppedBlob = await getCroppedImg(imageToCrop, croppedAreaPixels);
+      const file = new File([croppedBlob], `${cropping}-${Date.now()}.jpg`, { type: 'image/jpeg' });
+
+      // Create local preview for immediate feedback
+      const previewUrl = URL.createObjectURL(croppedBlob);
+      setPreviews(prev => ({ ...prev, [cropping]: previewUrl }));
+
+      // Upload to server
+      const uploadData = new FormData();
+      uploadData.append('image', file);
+      
       const res = await api.users.uploadImage(uploadData);
-      const field = type === 'avatar' ? 'photo_url' : 'banner_url';
+      const field = cropping === 'avatar' ? 'photo_url' : 'banner_url';
       setFormData(prev => ({ ...prev, [field]: res.imageUrl }));
+      
+      // Close cropper
+      setCropping(null);
+      setImageToCrop(null);
     } catch (err) {
-      alert('Failed to upload image: ' + err.message);
+      alert('Failed to process image: ' + err.message);
     } finally {
       setLoading(false);
     }
@@ -126,12 +153,12 @@ const ProfileEditModal = ({ profile, onSave, onCancel }) => {
                 <div className="image-edit-section">
                   <label>Profile Banner</label>
                   <div className="banner-preview-container">
-                    <img src={previews.banner || '/cover-default.jpg'} alt="Banner Preview" className="banner-preview" />
+                    <img src={getImageUrl(previews.banner) || '/cover-default.jpg'} alt="Banner Preview" className="banner-preview" />
                     <div className="upload-overlay">
                       <label htmlFor="banner-upload" className="upload-btn">
                         <i className="fas fa-camera"></i> Change Banner
                       </label>
-                      <input id="banner-upload" type="file" onChange={(e) => handleImageUpload(e, 'banner')} hidden accept="image/*" />
+                      <input id="banner-upload" type="file" onChange={(e) => initiateImageSelect(e, 'banner')} hidden accept="image/*" />
                     </div>
                   </div>
                 </div>
@@ -139,12 +166,12 @@ const ProfileEditModal = ({ profile, onSave, onCancel }) => {
                 <div className="image-edit-section">
                   <label>Profile Photo</label>
                   <div className="avatar-preview-container">
-                    <img src={previews.avatar || '/default-avatar.png'} alt="Avatar Preview" className="avatar-preview" />
+                    <img src={getImageUrl(previews.avatar) || '/default-avatar.png'} alt="Avatar Preview" className="avatar-preview" />
                     <div className="upload-overlay">
                       <label htmlFor="avatar-upload" className="upload-btn">
                         <i className="fas fa-camera"></i>
                       </label>
-                      <input id="avatar-upload" type="file" onChange={(e) => handleImageUpload(e, 'avatar')} hidden accept="image/*" />
+                      <input id="avatar-upload" type="file" onChange={(e) => initiateImageSelect(e, 'avatar')} hidden accept="image/*" />
                     </div>
                   </div>
                 </div>
@@ -182,6 +209,46 @@ const ProfileEditModal = ({ profile, onSave, onCancel }) => {
             </div>
           </form>
         </div>
+
+        {/* Cropper Overlay */}
+        {cropping && (
+          <div className="cropper-modal-overlay">
+            <div className="cropper-container">
+              <Cropper
+                image={imageToCrop}
+                crop={crop}
+                zoom={zoom}
+                aspect={cropping === 'avatar' ? 1 : 16 / 9}
+                cropShape={cropping === 'avatar' ? 'round' : 'rect'}
+                showGrid={false}
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+                onZoomChange={setZoom}
+              />
+            </div>
+            <div className="cropper-controls">
+              <div className="zoom-slider-wrap">
+                <i className="fas fa-minus"></i>
+                <input
+                  type="range"
+                  value={zoom}
+                  min={1}
+                  max={3}
+                  step={0.1}
+                  aria-labelledby="Zoom"
+                  onChange={(e) => setZoom(e.target.value)}
+                />
+                <i className="fas fa-plus"></i>
+              </div>
+              <div className="cropper-actions">
+                <button className="btn-cancel-crop" onClick={() => setCropping(null)}>Cancel</button>
+                <button className="btn-save-crop" onClick={handleApplyCrop} disabled={loading}>
+                  {loading ? 'Processing...' : 'Save Selection'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

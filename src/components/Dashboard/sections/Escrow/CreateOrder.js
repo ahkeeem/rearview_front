@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import api from '../../../../services/api';
+import { getImageUrl } from '../../../../utils/imageUtils';
 import './Escrow.css';
 
 const CreateOrder = ({ onBack }) => {
@@ -132,9 +133,8 @@ const CreateOrder = ({ onBack }) => {
             {showDropdown && vendorResults.length > 0 && (
               <div className="vendor-results-dropdown card">
                 {vendorResults.map(v => (
-                  <div key={v.id} className="vendor-result-item" onClick={() => selectVendor(v)}>
                     <div className="v-avatar">
-                      {v.photo_url ? <img src={v.photo_url} alt="" /> : <span>{v.name[0]}</span>}
+                      {v.photo_url ? <img src={getImageUrl(v.photo_url)} alt="" /> : <span>{v.name[0]}</span>}
                     </div>
                     <div className="v-info">
                       <span className="v-name">{v.name}</span>

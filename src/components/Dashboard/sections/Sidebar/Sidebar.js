@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
+import { getImageUrl } from '../../../../utils/imageUtils';
 import './Sidebar.css';
 
 const Sidebar = ({ isCollapsed, onToggle }) => {
@@ -20,7 +21,7 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
 
       <div className="user-profile" title={user?.name}>
         <img
-          src={user?.photo_url || '/default-avatar.png'}
+          src={getImageUrl(user?.photo_url) || '/default-avatar.png'}
           alt={user?.name}
           className="profile-image"
         />

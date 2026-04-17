@@ -3,6 +3,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import { userService } from '../../../../services/userService';
 import api from '../../../../services/api';
 import ProfileEditModal from './ProfileEditModal';
+import { getImageUrl } from '../../../../utils/imageUtils';
 import './UserProfile.css';
 
 const UserProfile = () => {
@@ -70,7 +71,7 @@ const UserProfile = () => {
       <div className="profile-header">
         <div className="profile-cover">
           {profile.banner_url ? (
-            <img src={profile.banner_url} alt="Profile banner" className="banner-img" />
+            <img src={getImageUrl(profile.banner_url)} alt="Profile banner" className="banner-img" />
           ) : (
             <div className="default-banner"></div>
           )}
@@ -81,7 +82,7 @@ const UserProfile = () => {
           <div className="profile-avatar-section">
             <div className="profile-avatar">
               <img 
-                src={profile.photo_url || '/default-avatar.png'} 
+                src={getImageUrl(profile.photo_url) || '/default-avatar.png'} 
                 alt={profile.name}
               />
             </div>

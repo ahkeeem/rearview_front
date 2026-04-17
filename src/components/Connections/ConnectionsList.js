@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import connectionService from '../../services/connectionService';
+import { getImageUrl } from '../../utils/imageUtils';
 import './ConnectionsList.css';
 
 const ConnectionsList = () => {
@@ -48,7 +49,7 @@ const ConnectionsList = () => {
             <div key={connection.id} className="connection-card">
               <div className="connection-info">
                 <img 
-                  src={connection.photo_url || '/default-avatar.png'} 
+                  src={getImageUrl(connection.photo_url) || '/default-avatar.png'} 
                   alt={connection.connected_user_name} 
                   className="connection-avatar"
                 />

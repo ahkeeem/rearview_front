@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../../services/userService';
 import { entityService } from '../../services/entityService';
+import { getImageUrl } from '../../utils/imageUtils';
 import './SearchBar.css';
 
 const SearchBar = () => {
@@ -113,7 +114,7 @@ const SearchBar = () => {
                 tabIndex={0}
               >
                 <img
-                  src={item.photo_url || item.avatar || item.avatar_url || '/default-avatar.png'}
+                  src={getImageUrl(item.photo_url || item.avatar || item.avatar_url) || '/default-avatar.png'}
                   alt={item.name}
                   className="result-avatar"
                   onError={(e) => { e.target.src = '/default-avatar.png'; }}

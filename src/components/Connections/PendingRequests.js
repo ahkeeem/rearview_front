@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import connectionService from '../../services/connectionService';
+import { getImageUrl } from '../../utils/imageUtils';
 import './PendingRequests.css';
 
 const PendingRequests = () => {
@@ -52,7 +53,7 @@ const PendingRequests = () => {
           incomingRequests.map(connection => (
             <div key={connection.id} className="request-item">
               <img 
-                src={connection.photo_url || '/default-avatar.png'} 
+                src={getImageUrl(connection.photo_url) || '/default-avatar.png'} 
                 alt={connection.connected_user_name} 
                 className="request-avatar"
               />

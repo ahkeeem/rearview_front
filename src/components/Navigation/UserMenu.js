@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { getImageUrl } from '../../utils/imageUtils';
 import './UserMenu.css';
 
 const UserMenu = () => {
@@ -34,7 +35,7 @@ const UserMenu = () => {
         aria-haspopup="true"
       >
         <img
-          src={user?.photo_url || '/default-avatar.png'}
+          src={getImageUrl(user?.photo_url) || '/default-avatar.png'}
           alt={user?.name}
           className="user-avatar"
         />

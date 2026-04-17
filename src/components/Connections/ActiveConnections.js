@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import connectionService from '../../services/connectionService';
+import { getImageUrl } from '../../utils/imageUtils';
 import './ActiveConnections.css';
 
 const ActiveConnections = () => {
@@ -60,7 +61,7 @@ const ActiveConnections = () => {
           {connections.map(connection => (
             <div key={connection.id} className="connection-card">
               <img 
-                src={connection.photo_url || '/default-avatar.png'} 
+                src={getImageUrl(connection.photo_url) || '/default-avatar.png'} 
                 alt={connection.connected_user_name} 
                 className="connection-avatar"
               />
