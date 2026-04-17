@@ -5,6 +5,7 @@ import NotificationsDropdown from './NotificationsDropdown';
 import SearchBar from './SearchBar';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
+import { useToastContext } from '../../context/ToastContext';
 import api from '../../services/api';
 import { getImageUrl } from '../../utils/imageUtils';
 import './Navigation.css';
@@ -12,14 +13,15 @@ import './Navigation.css';
 const Navigation = ({ onToggleSidebar }) => {
   const { user } = useAuth();
   const { socket } = useSocket();
+  const { showToast } = useToastContext();
   const [notifications, setNotifications] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [barterCount, setBarterCount] = useState(0);
   const [escrowCount, setEscrowCount] = useState(0);
 
   const unreadMessagesCount = conversations.reduce((total, conv) => {
-    if (conv.last_sender_id !== user?.id && conv.unread_count > 0) {
-      return total + conv.unread_count;
+    if (conv.last_sender_id !== user?.id) {
+      return total + (conv.unread_count || 0);
     }
     return total;
   }, 0);
@@ -43,9 +45,9 @@ const Navigation = ({ onToggleSidebar }) => {
         }));
         setNotifications(mappedNotifs);
 
-        // Fetch Conversations
+        // Fetch Conversations - keep full list for accurate counting
         const convData = await api.conversations.getAll();
-        setConversations(convData.slice(0, 5));
+        setConversations(convData);
 
         // Fetch Barter Loops (for pending items)
         const barterLoops = await api.barter.getMyLoops();
@@ -71,7 +73,15 @@ const Navigation = ({ onToggleSidebar }) => {
     
     // Listen for real-time message notifications
     if (socket) {
-      socket.on('new-message', fetchNavData);
+      const handleNewMessage = (data) => {
+        fetchNavData();
+        // Only show toast if it's from someone else and user isn't looking at the chat
+        if (data.sender_id !== user?.id && !window.location.pathname.includes('/dashboard/messages')) {
+          showToast(`New message from ${data.sender_name || 'User'}`, 'info');
+        }
+      };
+      socket.on('new-message', handleNewMessage);
+      return () => socket.off('new-message', handleNewMessage);
     }
 
     // Poll every 30s as a fallback
