@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './NotificationsDropdown.css';
 
 const NotificationsDropdown = ({ notifications = [], onMarkAllRead }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [localNotifs, setLocalNotifs] = useState(notifications);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   // Sync if parent updates the list
   useEffect(() => {
@@ -30,6 +32,17 @@ const NotificationsDropdown = ({ notifications = [], onMarkAllRead }) => {
 
   const handleMarkRead = (id) => {
     setLocalNotifs(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
+  const handleNotificationClick = (notification) => {
+    handleMarkRead(notification.id);
+    setIsOpen(false);
+    
+    if (notification.actor_id) {
+      navigate(`/dashboard/profile/${notification.actor_id}`);
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   const formatTime = (timestamp) => {
@@ -81,7 +94,7 @@ const NotificationsDropdown = ({ notifications = [], onMarkAllRead }) => {
                 <div
                   key={notification.id}
                   className={`notification-item ${!notification.read ? 'unread' : ''}`}
-                  onClick={() => handleMarkRead(notification.id)}
+                  onClick={() => handleNotificationClick(notification)}
                 >
                   {notification.avatar ? (
                     <img

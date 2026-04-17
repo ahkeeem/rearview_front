@@ -370,6 +370,12 @@ const api = {
         headers: getAuthHeaders()
       });
       return handleResponse(response);
+    },
+    getNotifications: async () => {
+      const response = await fetch(`${BASE_URL}/feed/notifications`, {
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
     }
   },
 

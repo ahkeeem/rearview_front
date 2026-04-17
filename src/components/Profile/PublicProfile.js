@@ -11,7 +11,10 @@ const PublicProfile = () => {
   const [profile, setProfile] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [stats, setStats] = useState(null);
+  const [connectionStatus, setConnectionStatus] = useState(null); // null, 'pending_outgoing', 'pending_incoming', 'accepted'
+  const [connectionId, setConnectionId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -32,11 +35,57 @@ const PublicProfile = () => {
       setProfile(profileData);
       setReviews(reviewsData || []);
       setStats(statsData);
+
+      // Check connection status
+      if (currentUser && currentUser.id !== parseInt(userId)) {
+        const connections = await api.connections.getAll().catch(() => []);
+        const conn = connections.find(c => 
+          (c.user_id === currentUser.id && c.connected_user_id === parseInt(userId)) ||
+          (c.user_id === parseInt(userId) && c.connected_user_id === currentUser.id)
+        );
+        
+        if (conn) {
+          setConnectionId(conn.id);
+          if (conn.status === 'accepted') {
+            setConnectionStatus('accepted');
+          } else if (conn.user_id === currentUser.id) {
+            setConnectionStatus('pending_outgoing');
+          } else {
+            setConnectionStatus('pending_incoming');
+          }
+        }
+      }
     } catch (err) {
       console.error('Error loading profile:', err);
       setError(err.message || 'Failed to load profile');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConnect = async () => {
+    setActionLoading(true);
+    try {
+      const res = await api.connections.create(parseInt(userId));
+      setConnectionStatus('pending_outgoing');
+      setConnectionId(res.connectionId);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleCancelRequest = async () => {
+    setActionLoading(true);
+    try {
+      await api.connections.updateStatus(connectionId, 'cancelled');
+      setConnectionStatus(null);
+      setConnectionId(null);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -92,6 +141,31 @@ const PublicProfile = () => {
             )}
           </div>
         </div>
+
+        <div className="profile-actions-top">
+          {!isOwnProfile && currentUser && (
+            <>
+              {connectionStatus === 'accepted' ? (
+                <Link to="/dashboard/messages" className="message-btn">
+                  <i className="fas fa-comment"></i> Message
+                </Link>
+              ) : connectionStatus === 'pending_outgoing' ? (
+                <button className="cancel-req-btn" onClick={handleCancelRequest} disabled={actionLoading}>
+                  {actionLoading ? 'Processing...' : 'Cancel Request'}
+                </button>
+              ) : connectionStatus === 'pending_incoming' ? (
+                <Link to="/dashboard/connections" className="respond-btn">
+                  Respond to Request
+                </Link>
+              ) : (
+                <button className="connect-btn" onClick={handleConnect} disabled={actionLoading}>
+                  {actionLoading ? 'Connecting...' : 'Connect to Verify'}
+                </button>
+              )}
+            </>
+          )}
+        </div>
+
         <div className="profile-stats-summary">
           {stats && (
             <>

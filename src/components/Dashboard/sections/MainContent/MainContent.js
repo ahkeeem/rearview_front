@@ -18,15 +18,15 @@ const TrustRing = ({ score }) => {
   const offset = circumference - (animatedScore / 100) * circumference;
 
   const getColor = (s) => {
-    if (s >= 80) return '#22c55e';   // green
-    if (s >= 50) return '#f59e0b';   // amber
-    return '#ef4444';                 // red
+    if (s >= 80) return 'var(--accent-gold)';   // gold
+    if (s >= 50) return 'var(--electric-cyan)'; // cyan
+    return 'var(--text-muted)';                 // muted
   };
 
   const getLabel = (s) => {
-    if (s >= 80) return 'High Credibility';
-    if (s >= 50) return 'Developing Trust';
-    return 'Unverified Status';
+    if (s >= 80) return 'Elite Credibility';
+    if (s >= 50) return 'Verified Professional';
+    return 'Basic Identity';
   };
 
   useEffect(() => {
@@ -53,11 +53,12 @@ const TrustRing = ({ score }) => {
     <div className="trust-ring-wrapper">
       <svg className="trust-ring-svg" viewBox="0 0 120 120">
         {/* Background track */}
-        <circle cx="60" cy="60" r={radius} fill="none" stroke="var(--border-color)" strokeWidth="10" />
+        <circle cx="60" cy="60" r={radius} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="10" />
         {/* Animated progress */}
         <circle
           cx="60" cy="60" r={radius}
           fill="none"
+          className="trust-pulse-stroke"
           stroke={color}
           strokeWidth="10"
           strokeLinecap="round"
@@ -284,36 +285,18 @@ const MainContent = () => {
     <div className="dashboard-main">
 
       {/* ── Hero ──────────────────────────────────── */}
-      <section className="lookup-hero-section">
-        <div className="hero-bg-orbs" aria-hidden="true">
-          <span className="orb orb-1"></span>
-          <span className="orb orb-2"></span>
-          <span className="orb orb-3"></span>
-        </div>
+      <section className="lookup-hero-section glass-card">
         <div className="lookup-hero-content">
           <div className="hero-eyebrow">
-            <i className="fas fa-shield-alt"></i> Nigeria's Trust Registry
+            <i className="fas fa-shield-check"></i> Nigeria's Trust Registry
           </div>
           <h2>
             <span className="hero-title-line">Know Before You</span>
             <span className="hero-title-line hero-title-accent"> Transact</span>
           </h2>
-          <p>Instantly verify any Person, Business, or Product by name or phone — before you hand over your money.</p>
+          <p>Verify any Person, Business, or Product instantly — before you hand over your money.</p>
 
           <HeroSearch />
-
-          <div className="quick-tags">
-            <span className="tag-label">Trending:</span>
-            {['#VerifiedMerchants', '#ScamAlert', '#SafeDelivery'].map(tag => (
-              <button
-                key={tag}
-                className="tag"
-                onClick={() => navigate(`/dashboard/reviews?search=${tag.replace('#', '')}`)}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -324,7 +307,7 @@ const MainContent = () => {
         <div className="left-column">
 
           {/* Trust Score Card */}
-          <div className="score-card primary animate-in">
+          <div className="score-card primary glass-card trust-pulse animate-in">
             <TrustRing score={userData.trustScore} />
 
             <div className="score-card-right">
@@ -396,9 +379,27 @@ const MainContent = () => {
 
         {/* RIGHT SIDEBAR */}
         <div className="right-sidebar-column">
+          {/* Verification Journey Stepper */}
+          <div className="verification-journey-card glass-card animate-in">
+            <h4><i className="fas fa-route"></i> Trust Journey</h4>
+            <div className="journey-stepper">
+              <div className={`step ${user?.email_verified ? 'complete' : 'active'}`}>
+                <div className="step-point"><i className="fas fa-envelope"></i></div>
+                <span>Email</span>
+              </div>
+              <div className={`step ${user?.phone_verified ? 'complete' : user?.email_verified ? 'active' : ''}`}>
+                <div className="step-point"><i className="fas fa-phone"></i></div>
+                <span>Phone</span>
+              </div>
+              <div className={`step ${user?.nin_verified ? 'complete' : user?.phone_verified ? 'active' : ''}`}>
+                <div className="step-point"><i className="fas fa-id-card"></i></div>
+                <span>NIN/BVN</span>
+              </div>
+            </div>
+          </div>
 
           {/* CTA Card */}
-          <div className="trust-cta-card animate-in">
+          <div className="trust-cta-card glass-card animate-in">
             <div className="cta-icon-wrap">
               <i className="fas fa-shield-alt"></i>
             </div>
