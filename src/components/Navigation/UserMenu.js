@@ -32,27 +32,27 @@ const UserMenu = () => {
         className="user-menu-trigger"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
-        aria-haspopup="true"
       >
         <img
           src={getImageUrl(user?.photo_url) || '/default-avatar.png'}
           alt={user?.name}
-          className="user-avatar"
+          className="user-avatar-small"
         />
         <span className="user-name">{user?.name}</span>
-        <i className={`fas fa-chevron-down ${isOpen ? 'rotate' : ''}`} aria-hidden />
+        <i className={`fas fa-chevron-down ${isOpen ? 'rotate' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="dropdown-menu" role="menu">
-          <Link to="/dashboard/profile" role="menuitem" onClick={() => setIsOpen(false)}>
-            <i className="fas fa-user" aria-hidden /> Profile
+        <div className="dropdown-panel animate-in">
+          <Link to="/dashboard/profile" className="dropdown-item" onClick={() => setIsOpen(false)}>
+            <i className="fas fa-user" /> Profile
           </Link>
-          <Link to="/dashboard/settings" role="menuitem" onClick={() => setIsOpen(false)}>
-            <i className="fas fa-cog" aria-hidden /> Settings
+          <Link to="/dashboard/settings" className="dropdown-item" onClick={() => setIsOpen(false)}>
+            <i className="fas fa-cog" /> Settings
           </Link>
-          <button type="button" onClick={handleLogout} role="menuitem">
-            <i className="fas fa-sign-out-alt" aria-hidden /> Logout
+          <div style={{ borderTop: '1px solid var(--border-color)', margin: '4px 0' }} />
+          <button type="button" className="dropdown-item" style={{ color: 'var(--error)' }} onClick={handleLogout}>
+            <i className="fas fa-sign-out-alt" /> Logout
           </button>
         </div>
       )}

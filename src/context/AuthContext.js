@@ -19,12 +19,17 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuthStatus = () => {
     const token = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+
     if (token) {
       try {
         const decoded = jwtDecode(token);
         if (decoded.exp * 1000 < Date.now()) {
           logout();
+        } else if (storedUser) {
+          setUser(JSON.parse(storedUser));
         } else {
+          // Fallback to basic data if storage is missing but token is valid
           setUser({
             id: decoded.userId || decoded.id,
             name: decoded.name,

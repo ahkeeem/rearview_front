@@ -108,48 +108,48 @@ const PublicProfile = () => {
             </div>
           </div>
           
-          <div className="profile-actions-section" style={{ display: 'flex', gap: '12px' }}>
+          <div className="profile-actions-section">
              {isConnected === 'accepted' ? (
                 <>
-                  <button type="button" className="save-profile-btn" onClick={() => navigate('/dashboard/messages')}>
+                  <button type="button" className="btn btn-primary" onClick={() => navigate('/dashboard/messages')}>
                     <i className="fas fa-paper-plane"></i> Message
                   </button>
-                  <button type="button" className="edit-profile-btn" onClick={() => navigate('/dashboard/reviews', { state: { preselectUser: profile } })}>
+                  <button type="button" className="btn btn-secondary" onClick={() => navigate('/dashboard/reviews', { state: { preselectUser: profile } })}>
                     <i className="fas fa-star"></i> Review {profile.name.split(' ')[0]}
                   </button>
                 </>
              ) : isConnected === 'pending' ? (
-                <button type="button" className="save-profile-btn" style={{ opacity: 0.7, cursor: 'not-allowed' }} disabled>
+                <button type="button" className="btn btn-secondary" style={{ opacity: 0.7 }} disabled>
                   <i className="fas fa-clock"></i> Pending
                 </button>
              ) : (
-                <button type="button" className="save-profile-btn" onClick={handleConnect}>
+                <button type="button" className="btn btn-primary" onClick={handleConnect}>
                   <i className="fas fa-user-plus"></i> Connect
                 </button>
              )}
           </div>
         </div>
         
-        <div className="profile-stats-bar" style={{ position: 'relative' }}>
-          <div className="stat-item" style={{ position: 'relative' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+        <div className="profile-stats-bar">
+          <div className="stat-item trust-score-container">
+            <div className="stat-value-row">
                 <span className="stat-value">{stats?.trustScore || 0}</span>
-                {stats?.scoreTrend === 'up' && <i className="fas fa-trending-up" style={{ color: '#25D366', fontSize: '0.8rem' }} title="Rising Reputation"></i>}
-                {stats?.scoreTrend === 'down' && <i className="fas fa-trending-down" style={{ color: '#c53030', fontSize: '0.8rem' }} title="Falling Reputation"></i>}
+                {stats?.scoreTrend === 'up' && <i className="fas fa-trending-up trend-up" title="Rising Reputation"></i>}
+                {stats?.scoreTrend === 'down' && <i className="fas fa-trending-down trend-down" title="Falling Reputation"></i>}
             </div>
             <span className="stat-label">Trust Score</span>
             
-            {/* Breakdown Tooltip/Widget */}
+            {/* Breakdown Overlay */}
             {stats?.breakdown && (
-                <div style={{ position: 'absolute', top: '100%', left: '0', background: 'white', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '12px', zIndex: 100, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', width: '200px', marginTop: '8px' }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px' }}>TRUST BREAKDOWN</div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '4px' }}>
+                <div className="trust-breakdown-card glass-card">
+                    <div className="breakdown-title">TRUST BREAKDOWN</div>
+                    <div className="breakdown-row">
                         <span>Reviews (60%)</span> <strong>{stats.breakdown.reviews}pts</strong>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '4px' }}>
+                    <div className="breakdown-row">
                         <span>Identity (25%)</span> <strong>{stats.breakdown.verification}pts</strong>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem' }}>
+                    <div className="breakdown-row">
                         <span>Network (15%)</span> <strong>{stats.breakdown.proximity}pts</strong>
                     </div>
                 </div>
@@ -169,7 +169,7 @@ const PublicProfile = () => {
 
         {/* Negative Signal Warning */}
         {stats?.trustScore < 50 && (
-          <div className="trust-warning-banner" style={{ margin: '20px 32px', background: '#fff5f5', border: '1px solid #feb2b2', padding: '12px', borderRadius: '8px', color: '#c53030', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div className="trust-warning-banner animate-in">
             <i className="fas fa-exclamation-triangle"></i>
             <div>
               <strong>Low Trust Alert:</strong> This entity has a below-average trust score. Proceed with caution.
@@ -179,7 +179,7 @@ const PublicProfile = () => {
 
         <div className="share-section">
            <button 
-             className="whatsapp-share-btn" 
+             className="btn btn-secondary whatsapp-btn" 
              onClick={() => {
                 const url = window.location.href;
                 const text = `Check out ${profile.name}'s trust score on RearView: ${url}`;
@@ -191,16 +191,16 @@ const PublicProfile = () => {
         </div>
 
         {/* Tab Interface */}
-        <div className="profile-tabs-nav" style={{ padding: '0 32px', borderBottom: '1px solid var(--border-color)', display: 'flex', gap: '32px' }}>
+        <div className="profile-tabs-nav">
             <button 
+                className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
                 onClick={() => setActiveTab('reviews')}
-                style={{ padding: '16px 0', borderBottom: activeTab === 'reviews' ? '2px solid var(--primary-color)' : '2px solid transparent', color: activeTab === 'reviews' ? 'var(--primary-color)' : 'var(--text-tertiary)', fontWeight: 'bold' }}
             >
                 Reviews
             </button>
             <button 
+                className={`tab-btn ${activeTab === 'discussions' ? 'active' : ''}`}
                 onClick={() => setActiveTab('discussions')}
-                style={{ padding: '16px 0', borderBottom: activeTab === 'discussions' ? '2px solid var(--primary-color)' : '2px solid transparent', color: activeTab === 'discussions' ? 'var(--primary-color)' : 'var(--text-tertiary)', fontWeight: 'bold' }}
             >
                 Discussions
             </button>
