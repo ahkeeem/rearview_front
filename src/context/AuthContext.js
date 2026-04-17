@@ -89,11 +89,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const refreshUser = async () => {
+    if (!user?.id) return;
+    try {
+      const userData = await api.users.getProfile(user.id);
+      setUser(prev => ({ ...prev, ...userData }));
+      localStorage.setItem('user', JSON.stringify({ ...user, ...userData }));
+    } catch (err) {
+      console.error('Failed to refresh user data:', err);
+    }
+  };
+
   const value = {
     user,
     login,
     verifyOTP,
     logout,
+    refreshUser,
     loading,
     error
   };

@@ -7,7 +7,7 @@ import { getImageUrl } from '../../../../utils/imageUtils';
 import './UserProfile.css';
 
 const UserProfile = () => {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -45,7 +45,10 @@ const UserProfile = () => {
       setSaveStatus('saving');
       await api.users.updateProfile(user.id, updatedData);
       setSaveStatus('saved');
-      await loadProfileData();
+      await Promise.all([
+        loadProfileData(),
+        refreshUser() // Update global auth context for Header/Sidebar
+      ]);
       setShowEditModal(false);
       setTimeout(() => setSaveStatus(null), 3000);
     } catch (err) {
