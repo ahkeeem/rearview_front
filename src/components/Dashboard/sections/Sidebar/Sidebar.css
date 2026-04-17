@@ -9,6 +9,7 @@
   flex-direction: column;
   transition: all var(--transition-base);
   box-shadow: var(--shadow-sm);
+  padding-bottom: var(--card-padding);
 }
 
 .profile-card-top {

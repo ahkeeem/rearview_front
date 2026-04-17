@@ -2,8 +2,8 @@
 .dashboard-container {
   display: grid;
   grid-template-columns: 230px 1fr 300px;
-  gap: 24px;
-  padding: 24px;
+  gap: var(--card-gap);
+  padding: var(--card-padding);
   margin: 0 auto;
   margin-top: 84px; /* Header height + gap */
   max-width: 1200px;
@@ -12,11 +12,20 @@
   transition: all var(--transition-base);
 }
 
+/* Sidebar & RightBar Sticky Containers */
+.dashboard-container > aside,
+.dashboard-container > .dashboard-sidebar,
+.dashboard-container > .dashboard-rightbar {
+  position: sticky;
+  top: 104px; /* Adjusted for navigation height + professional gutter */
+  height: fit-content;
+}
+
 .dashboard-main-area {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--card-gap);
   animation: fadeIn 0.4s ease-out;
 }
 
@@ -54,7 +63,7 @@
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 24px;
+  padding: var(--card-padding);
   box-shadow: var(--shadow-sm);
 }
 

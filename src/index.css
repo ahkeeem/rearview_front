@@ -21,6 +21,9 @@
 
   --transition-fast: 0.1s ease;
   --transition-base: 0.2s ease;
+
+  --card-padding: 16px;
+  --card-gap: 24px;
 }
 
 /* ════════════════════════════════════════════
