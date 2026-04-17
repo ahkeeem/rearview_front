@@ -199,6 +199,8 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
                     })}
                   </span>
                 </div>
+              </div>
+            );
           })
         )}
         

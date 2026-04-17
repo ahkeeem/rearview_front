@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import UserMenu from './UserMenu';
 import NotificationsDropdown from './NotificationsDropdown';
 import SearchBar from './SearchBar';
@@ -10,7 +10,92 @@ import api from '../../services/api';
 import { getImageUrl } from '../../utils/imageUtils';
 import './Navigation.css';
 
-const Navigation = ({ onToggleSidebar }) => {
+const NavLink = ({ to, icon, label, badge }) => {
+  const location = useLocation();
+  // Match exact for home, prefix for others
+  const isActive = to === '/dashboard'
+    ? location.pathname === '/dashboard'
+    : location.pathname.startsWith(to);
+
+  return (
+    <Link
+      to={to}
+      className={`nav-link-item${isActive ? ' active' : ''}`}
+      title={label}
+    >
+      <i className={icon} aria-hidden="true" />
+      <span>{label}</span>
+      {badge > 0 && (
+        <span className="notification-badge" aria-label={`${badge} unread`}>
+          {badge > 9 ? '9+' : badge}
+        </span>
+      )}
+    </Link>
+  );
+};
+
+/* More menu for secondary nav items */
+const MoreMenu = ({ barterCount, escrowCount }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const secondaryItems = [
+    { to: '/dashboard/barter',           icon: 'fas fa-rotate',          label: 'Barter',   badge: barterCount },
+    { to: '/dashboard/escrow',           icon: 'fas fa-shield-halved',   label: 'Escrow',   badge: escrowCount },
+    { to: '/dashboard/wallet',           icon: 'fas fa-wallet',          label: 'Wallet',   badge: 0 },
+    { to: '/dashboard/register-product', icon: 'fas fa-briefcase',       label: 'Business', badge: 0 },
+  ];
+
+  const activeCount = (barterCount + escrowCount);
+  const hasActiveSecondary = secondaryItems.some(i => location.pathname.startsWith(i.to));
+
+  return (
+    <div className="more-menu-wrap" ref={ref}>
+      <button
+        className={`nav-link-item nav-more-btn${hasActiveSecondary ? ' active' : ''}`}
+        onClick={() => setOpen(v => !v)}
+        aria-haspopup="true"
+        aria-expanded={open}
+        title="More"
+      >
+        <i className="fas fa-ellipsis" aria-hidden="true" />
+        <span>More</span>
+        {activeCount > 0 && (
+          <span className="notification-badge">{activeCount > 9 ? '9+' : activeCount}</span>
+        )}
+      </button>
+
+      {open && (
+        <div className="more-dropdown" role="menu">
+          {secondaryItems.map(item => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`more-item${location.pathname.startsWith(item.to) ? ' active' : ''}`}
+              role="menuitem"
+              onClick={() => setOpen(false)}
+            >
+              <i className={item.icon} aria-hidden="true" />
+              <span>{item.label}</span>
+              {item.badge > 0 && (
+                <span className="notification-badge">{item.badge}</span>
+              )}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Navigation = () => {
   const { user } = useAuth();
   const { socket } = useSocket();
   const { showToast } = useToastContext();
@@ -26,16 +111,14 @@ const Navigation = ({ onToggleSidebar }) => {
     return total;
   }, 0);
 
-  // Fetch nav data: notifications and conversations
   useEffect(() => {
     const fetchNavData = async () => {
       try {
-        // Fetch Notifications
         const notifData = await api.feed.getNotifications();
         const mappedNotifs = notifData.map(n => ({
           id: n.id,
-          message: n.action_type === 'connection_request' 
-            ? `${n.actor_name} wants to connect with you.` 
+          message: n.action_type === 'connection_request'
+            ? `${n.actor_name} wants to connect with you.`
             : `New activity from ${n.actor_name}`,
           timestamp: n.created_at,
           read: n.is_read || false,
@@ -45,123 +128,78 @@ const Navigation = ({ onToggleSidebar }) => {
         }));
         setNotifications(mappedNotifs);
 
-        // Fetch Conversations - keep full list for accurate counting
         const convData = await api.conversations.getAll();
         setConversations(convData);
 
-        // Fetch Barter Loops (for pending items)
         const barterLoops = await api.barter.getMyLoops();
         const pendingBarter = barterLoops.filter(loop => {
-          // Find the leg where current user is the sender
-          const myLeg = loop.matrix.find(leg => leg.from_user_id === user?.id);
-          // If my leg is not yet shipped/received, it's pending action from me
+          const myLeg = loop.matrix?.find(leg => leg.from_user_id === user?.id);
           return myLeg && myLeg.status !== 'shipped' && myLeg.status !== 'received';
         }).length;
         setBarterCount(pendingBarter);
 
-        // Fetch Escrow Orders
         const escrowOrders = await api.escrow.getOrders();
-        const pendingEscrow = escrowOrders.filter(order => 
-          order.status === 'funded' || order.status === 'disputed'
-        ).length;
+        const pendingEscrow = escrowOrders.filter(o => o.status === 'funded' || o.status === 'disputed').length;
         setEscrowCount(pendingEscrow);
-      } catch (_) {
-        // silently fail
-      }
+      } catch (_) { /* silently fail */ }
     };
+
     fetchNavData();
-    
-    // Listen for real-time message notifications
+
     if (socket) {
       const handleNewMessage = (data) => {
         fetchNavData();
-        // Only show toast if it's from someone else and user isn't looking at the chat
         if (data.sender_id !== user?.id && !window.location.pathname.includes('/dashboard/messages')) {
           showToast(`New message from ${data.sender_name || 'User'}`, 'info');
         }
       };
       socket.on('new-message', handleNewMessage);
-      return () => socket.off('new-message', handleNewMessage);
+      const interval = setInterval(fetchNavData, 30000);
+      return () => {
+        socket.off('new-message', handleNewMessage);
+        clearInterval(interval);
+      };
     }
 
-    // Poll every 30s as a fallback
     const interval = setInterval(fetchNavData, 30000);
-    return () => {
-      clearInterval(interval);
-      if (socket) {
-        socket.off('new-message', fetchNavData);
-      }
-    };
-  }, [socket, user?.id]);
+    return () => clearInterval(interval);
+  }, [socket, user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <nav className="main-nav glass-card" role="navigation">
+    <nav className="main-nav" role="navigation" aria-label="Main navigation">
       <div className="nav-container">
+
+        {/* Left: Logo */}
         <div className="nav-left">
-          <Link to="/dashboard" className="logo-wrap">
-            <img src="/logo-shield.png" alt="RearView Logo" className="nav-logo-img" />
+          <Link to="/dashboard" className="logo-wrap" aria-label="RearView home">
+            <img src="/logo-shield.png" alt="" className="nav-logo-img" />
             <span className="logo-text">RearView</span>
           </Link>
         </div>
 
+        {/* Center: Search */}
         <div className="nav-center">
           <SearchBar />
         </div>
 
+        {/* Right: Primary links + tools */}
         <div className="nav-right">
-          <div className="nav-primary-links">
-            <Link to="/dashboard" className="nav-link-item" title="Home">
-              <i className="fas fa-home" />
-              <span>Home</span>
-            </Link>
-            <Link to="/dashboard/connections" className="nav-link-item" title="My Network">
-              <i className="fas fa-users" />
-              <span>Network</span>
-            </Link>
-            <Link to="/dashboard/messages" className="nav-link-item" title="Messaging">
-              <i className="fas fa-envelope" />
-              <span>Messaging</span>
-              {unreadMessagesCount > 0 && (
-                <span className="notification-badge">
-                  {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
-                </span>
-              )}
-            </Link>
-            <Link to="/dashboard/reviews" className="nav-link-item" title="Reviews">
-              <i className="fas fa-star" />
-              <span>Reviews</span>
-            </Link>
-            <Link to="/dashboard/barter" className="nav-link-item" title="Barter">
-              <i className="fas fa-sync" />
-              <span>Barter</span>
-              {barterCount > 0 && (
-                <span className="notification-badge">{barterCount}</span>
-              )}
-            </Link>
-            <Link to="/dashboard/escrow" className="nav-link-item" title="Escrow">
-              <i className="fas fa-shield-halved" />
-              <span>Escrow</span>
-              {escrowCount > 0 && (
-                <span className="notification-badge">{escrowCount}</span>
-              )}
-            </Link>
-            <Link to="/dashboard/wallet" className="nav-link-item" title="Wallet">
-              <i className="fas fa-wallet" />
-              <span>Wallet</span>
-            </Link>
-            <Link to="/dashboard/register-product" className="nav-link-item" title="Business/Entities">
-              <i className="fas fa-briefcase" />
-              <span>Business</span>
-            </Link>
+          <div className="nav-primary-links" role="list">
+            <NavLink to="/dashboard"             icon="fas fa-home"    label="Home"    badge={0} />
+            <NavLink to="/dashboard/connections" icon="fas fa-users"   label="Network" badge={0} />
+            <NavLink to="/dashboard/messages"    icon="fas fa-envelope" label="Messages" badge={unreadMessagesCount} />
+            <NavLink to="/dashboard/reviews"     icon="fas fa-star"    label="Reviews" badge={0} />
+            <MoreMenu barterCount={barterCount} escrowCount={escrowCount} />
           </div>
 
-          <div className="nav-divider" />
+          <div className="nav-divider" aria-hidden="true" />
 
           <div className="nav-tools">
             <NotificationsDropdown notifications={notifications} />
             <UserMenu />
           </div>
         </div>
+
       </div>
     </nav>
   );

@@ -1,25 +1,25 @@
+/* ═══════════════════════════════════════════════════════════════
+   REARVIEW — Left Sidebar (Profile Card)
+   ═══════════════════════════════════════════════════════════════ */
+
 .dashboard-sidebar-profile {
-  position: sticky;
-  top: 92px; /* Top nav height (72px) + 20px gap */
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
+  background: var(--rv-surface);
+  border: 1px solid var(--rv-border);
+  border-radius: var(--r-lg);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: all var(--transition-base);
-  box-shadow: var(--shadow-sm);
-  padding-bottom: var(--card-padding);
+  box-shadow: var(--rv-shadow-sm);
 }
 
+/* ── Cover + Avatar ─────────────────────────────────────────────── */
 .profile-card-top {
   position: relative;
-  height: 90px;
+  height: 88px;
+  margin-bottom: 40px;
 }
 
 .profile-cover-photo {
   height: 64px;
-  background: linear-gradient(135deg, var(--primary-indigo) 0%, var(--primary-deep) 100%);
+  background: linear-gradient(135deg, var(--rv-blue) 0%, var(--rv-blue-dark) 100%);
   overflow: hidden;
 }
 
@@ -27,21 +27,20 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .profile-avatar-wrap {
   position: absolute;
-  top: 24px;
+  bottom: -20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  border: 2px solid var(--bg-card);
-  background: var(--bg-card);
-  padding: 2px;
-  box-shadow: var(--shadow-md);
+  border: 3px solid var(--rv-surface);
+  background: var(--rv-surface-2);
+  box-shadow: var(--rv-shadow-sm);
 }
 
 .sidebar-profile-avatar {
@@ -51,54 +50,51 @@
   object-fit: cover;
 }
 
+/* ── Info ───────────────────────────────────────────────────────── */
 .profile-card-info {
-  margin-top: 16px;
   text-align: center;
-  padding: 0 16px 16px;
+  padding: 0 var(--sp-4) var(--sp-4);
 }
 
 .profile-name {
-  font-size: 16px;
+  font-size: var(--fs-base);
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--rv-text-1);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin-bottom: 4px;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-1);
 }
 
 .verified-badge {
-  color: #3b82f6;
-  font-size: 14px;
+  color: var(--rv-blue);
+  font-size: 13px;
 }
 
 .profile-headline {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 500;
-  line-height: 1.4;
+  font-size: var(--fs-xs);
+  color: var(--rv-text-3);
+  line-height: var(--lh-normal);
 }
 
+/* ── Divider ────────────────────────────────────────────────────── */
 .profile-stats-divider {
   height: 1px;
-  background: var(--border-color);
-  margin: 0;
+  background: var(--rv-border);
 }
 
+/* ── Stats ──────────────────────────────────────────────────────── */
 .profile-card-stats {
-  padding: 12px 0;
+  padding: var(--sp-2) 0;
 }
 
 .stat-item {
-  padding: 4px 16px;
-  transition: background 0.2s ease;
+  padding: var(--sp-2) var(--sp-4);
+  transition: background var(--dur-fast);
   cursor: pointer;
 }
-
-.stat-item:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
+.stat-item:hover { background: var(--rv-surface-2); }
 
 .stat-label-row {
   display: flex;
@@ -107,43 +103,80 @@
 }
 
 .stat-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--rv-text-3);
 }
 
 .stat-value.highlight {
-  font-size: 12px;
+  font-size: var(--fs-xs);
   font-weight: 700;
-  color: var(--accent-gold);
+  color: var(--rv-gold);
 }
 
+/* ── Trust Badge ────────────────────────────────────────────────── */
+.sidebar-trust-badge {
+  margin: var(--sp-3) var(--sp-4);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--rv-gold-light);
+  border: 1px solid var(--rv-gold);
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--rv-gold-dark);
+}
+.sidebar-trust-badge i { color: var(--rv-gold); }
+
+/* ── Nav Links ──────────────────────────────────────────────────── */
+.sidebar-nav {
+  padding: var(--sp-2) 0;
+  border-top: 1px solid var(--rv-border);
+}
+
+.sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 10px var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--rv-text-2);
+  text-decoration: none;
+  transition: background var(--dur-fast), color var(--dur-fast);
+  border-left: 3px solid transparent;
+}
+.sidebar-nav-link:hover {
+  background: var(--rv-surface-2);
+  color: var(--rv-text-1);
+  text-decoration: none;
+}
+.sidebar-nav-link.active {
+  background: var(--rv-blue-light);
+  color: var(--rv-blue);
+  border-left-color: var(--rv-blue);
+  font-weight: 600;
+}
+.sidebar-nav-link i {
+  width: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────── */
 .profile-card-footer {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--rv-text-2);
   text-decoration: none;
-  color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 700;
-  transition: background 0.2s ease;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--rv-border);
+  background: var(--rv-surface-2);
+  transition: background var(--dur-fast);
 }
-
-.profile-card-footer:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.profile-card-footer i {
-  color: var(--text-muted);
-}
-
-/* Mobile: LinkedIn-style bottom bar was handled in Navigation already, 
-   the profile sidebar might be hidden on mobile in Dashboard. 
-*/
-@media (max-width: 992px) {
-  .dashboard-sidebar-profile {
-    display: none;
-  }
-}
+.profile-card-footer:hover { background: var(--rv-border); text-decoration: none; }
+.profile-card-footer i { color: var(--rv-text-3); }

@@ -1,90 +1,78 @@
+/* ═══════════════════════════════════════════════════════════════
+   REARVIEW — Right Bar (Discovery / Sidebar)
+   ═══════════════════════════════════════════════════════════════ */
+
 .dashboard-rightbar {
-  padding: 24px;
-  background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  height: fit-content;
-  position: sticky;
-  top: 92px;
-  animation: fadeIn 0.8s ease-out;
+  gap: var(--sp-4);
 }
 
+/* ── Quick Stats / Profile Strength ────────────────────────────── */
 .quick-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  background: var(--rv-surface);
+  border: 1px solid var(--rv-border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--rv-shadow-sm);
 }
 
 .quick-stats h3 {
-  margin: 0;
-  font-size: 1.1rem;
-  color: var(--text-primary);
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--rv-text-1);
+  margin-bottom: var(--sp-3);
 }
 
-.progress-bar {
+.quick-stats .progress-bar {
   height: 6px;
-  background: var(--glass-bg);
-  border-radius: 10px;
+  background: var(--rv-surface-2);
+  border-radius: var(--r-pill);
   overflow: hidden;
-  border: 1px solid var(--glass-border);
+  margin-bottom: var(--sp-3);
 }
 
-.progress {
+.quick-stats .progress {
   height: 100%;
-  background: var(--accent-gold);
-  box-shadow: 0 0 10px var(--accent-gold-glow);
-  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  background: var(--rv-blue);
+  border-radius: var(--r-pill);
+  transition: width 0.8s var(--ease-out);
 }
 
-.quick-stats p {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  margin: 0;
+.quick-stats > p {
+  font-size: var(--fs-xs);
+  color: var(--rv-text-3);
+  margin-bottom: var(--sp-3);
 }
 
 .todo-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--sp-2);
 }
 
 .todo-list li {
-  padding: 8px 0;
-  color: var(--text-secondary);
-  font-size: 0.85rem;
+  font-size: var(--fs-xs);
+  color: var(--rv-text-2);
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  line-height: 1.5;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-  transition: all var(--transition-fast);
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--rv-orange-light, var(--rv-amber-light));
+  border-radius: var(--r-sm);
+}
+.todo-list li::before {
+  content: '→';
+  color: var(--rv-blue);
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
-.todo-list li:hover {
-  color: var(--text-primary);
-  transform: translateX(4px);
-}
-
-.todo-list li:before {
-  content: '\f105'; /* FontAwesome right angle overlay */
-  font-family: 'Font Awesome 5 Free';
-  font-weight: 900;
-  color: var(--accent-gold);
-  font-size: 0.75rem;
-  margin-top: 2px;
-}
-
-.todo-list li:last-child {
-  border-bottom: none;
+/* ── Discovery section ──────────────────────────────────────────── */
+.discovery-section {
+  background: var(--rv-surface);
+  border: 1px solid var(--rv-border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--rv-shadow-sm);
 }

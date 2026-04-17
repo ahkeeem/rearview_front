@@ -133,7 +133,9 @@ const PublicProfile = () => {
           {profile.email && <p className="profile-email">{profile.email}</p>}
           {profile.bio && <p className="profile-bio">{profile.bio}</p>}
           <div className="profile-meta">
-            <span>Member since {new Date(profile.created_at).toLocaleDateString()}</span>
+            {profile.created_at && (
+              <span>Member since {new Date(profile.created_at).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
+            )}
             {profile.is_verified && (
               <span className="verified-badge">
                 <i className="fas fa-check-circle"></i> Verified
