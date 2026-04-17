@@ -45,7 +45,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <Navigation />
+      <Navigation onToggleSidebar={toggleSidebar} />
       <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className="dashboard-main-area">

@@ -7,7 +7,7 @@ import SearchBar from './SearchBar';
 import api from '../../services/api';
 import './Navigation.css';
 
-const Navigation = () => {
+const Navigation = ({ onToggleSidebar }) => {
   const [notifications, setNotifications] = useState([]);
   const [conversations, setConversations] = useState([]);
 
@@ -32,6 +32,15 @@ const Navigation = () => {
   return (
     <nav className="main-nav" role="navigation">
       <div className="nav-left">
+        {onToggleSidebar && (
+          <button 
+            className="nav-sidebar-toggle" 
+            onClick={onToggleSidebar}
+            aria-label="Toggle Sidebar"
+          >
+            <i className="fas fa-bars" />
+          </button>
+        )}
         <Link to="/dashboard" className="logo">
           RearView
         </Link>

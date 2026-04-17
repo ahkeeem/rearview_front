@@ -7,10 +7,30 @@
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-sm);
   transition: all 0.3s ease;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
+
+/* Custom Scrollbar for Sidebar */
+.dashboard-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dashboard-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dashboard-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 20px;
+}
+
+.dashboard-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
 
 .dashboard-sidebar.collapsed {
   padding: 24px 15px;
