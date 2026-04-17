@@ -5,6 +5,7 @@ import NotificationsDropdown from './NotificationsDropdown';
 import MessagesDropdown from './MessagesDropdown';
 import SearchBar from './SearchBar';
 import api from '../../services/api';
+import { getImageUrl } from '../../utils/imageUtils';
 import './Navigation.css';
 
 const Navigation = ({ onToggleSidebar }) => {
@@ -25,7 +26,7 @@ const Navigation = ({ onToggleSidebar }) => {
           timestamp: n.created_at,
           read: n.is_read || false,
           icon: n.action_type === 'connection_request' ? 'user-plus' : 'bell',
-          avatar: n.actor_avatar ? `${API_CONFIG.API_BASE.replace('/api', '')}${n.actor_avatar}` : null,
+          avatar: getImageUrl(n.actor_avatar),
           actor_id: n.actor_id
         }));
         setNotifications(mappedNotifs);
