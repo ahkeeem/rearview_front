@@ -189,5 +189,3 @@ const ProductProfile = () => {
 };
 
 export default ProductProfile;
-
-export default ProductProfile;
