@@ -22,7 +22,8 @@ const Settings = () => {
     privacy: {
       profileVisibility: 'public',
       showEmail: false,
-      showConnections: true
+      showConnections: true,
+      reviewsEnabled: user?.reviews_enabled ?? true
     },
     theme: 'light'
   });
@@ -37,7 +38,7 @@ const Settings = () => {
     }));
   };
 
-  const handlePrivacyChange = (key, value) => {
+  const handlePrivacyChange = async (key, value) => {
     setSettings(prev => ({
       ...prev,
       privacy: {
@@ -45,6 +46,15 @@ const Settings = () => {
         [key]: value
       }
     }));
+
+    // If it's a field we sync to the server (like reviews_enabled)
+    if (key === 'reviewsEnabled') {
+      try {
+        await api.users.updateProfile(user.id, { reviews_enabled: value });
+      } catch (error) {
+        console.error('Failed to sync privacy setting:', error);
+      }
+    }
   };
 
   const handleDeleteAccount = async () => {
@@ -122,6 +132,15 @@ const Settings = () => {
               type="checkbox"
               checked={settings.privacy.showEmail}
               onChange={() => handlePrivacyChange('showEmail', !settings.privacy.showEmail)}
+            />
+            <span className="toggle-slider"></span>
+          </label>
+          <label className="toggle-setting">
+            <span>Allow Public Reviews</span>
+            <input
+              type="checkbox"
+              checked={settings.privacy.reviewsEnabled}
+              onChange={() => handlePrivacyChange('reviewsEnabled', !settings.privacy.reviewsEnabled)}
             />
             <span className="toggle-slider"></span>
           </label>

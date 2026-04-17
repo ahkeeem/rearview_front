@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import api from '../../../../services/api';
 import './NotificationDropdown.css';
@@ -56,6 +57,7 @@ const NotificationDropdown = () => {
   const getNotificationIcon = (type) => {
     switch (type) {
       case 'connection':
+      case 'connection_request':
         return 'fas fa-user-plus';
       case 'review':
         return 'fas fa-star';
@@ -92,8 +94,9 @@ const NotificationDropdown = () => {
               <p className="no-notifications">No notifications</p>
             ) : (
               notifications.map(notification => (
-                <div 
+                <Link 
                   key={notification.id}
+                  to={`/profile/${notification.actor_id || notification.sender_id || notification.user_id}`}
                   className={`notification-item ${!notification.read ? 'unread' : ''}`}
                   onClick={() => markAsRead(notification.id)}
                 >
@@ -103,10 +106,10 @@ const NotificationDropdown = () => {
                   <div className="notification-content">
                     <p>{notification.message}</p>
                     <span className="notification-time">
-                      {new Date(notification.timestamp).toLocaleDateString()}
+                      {new Date(notification.timestamp || notification.created_at).toLocaleDateString()}
                     </span>
                   </div>
-                </div>
+                </Link>
               ))
             )}
           </div>

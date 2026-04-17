@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import api from '../../../../services/api';
 import './ChatWindow.css';
@@ -148,7 +149,7 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
   return (
     <div className="chat-window">
       <div className="chat-header">
-        <div className="chat-user-info">
+        <Link to={`/profile/${otherUserId}`} className="chat-user-info">
           <img 
             src="/default-avatar.png" 
             alt={otherUserName} 
@@ -157,7 +158,7 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
             <h3>{otherUserName}</h3>
             <span className="online-status">Online</span>
           </div>
-        </div>
+        </Link>
       </div>
 
       <div className="messages-container">

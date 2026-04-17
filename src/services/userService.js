@@ -51,6 +51,24 @@ export const userService = {
       return [];
     }
   },
+  
+  // Connection management
+  getPendingConnections: async () => {
+    const list = await api.connections.getAll();
+    return Array.isArray(list) ? list.filter(c => c.status === 'pending') : [];
+  },
+
+  acceptConnection: async (id) => {
+    return api.connections.updateStatus(id, 'accepted');
+  },
+
+  declineConnection: async (id) => {
+    return api.connections.updateStatus(id, 'rejected');
+  },
+
+  cancelConnection: async (id) => {
+    return api.connections.delete(id);
+  },
 
   /**
    * Profile completeness: score 0–100 and list of tasks. Derived from profile + stats.

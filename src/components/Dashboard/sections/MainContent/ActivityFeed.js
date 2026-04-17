@@ -85,6 +85,12 @@ const ActivityFeed = () => {
             <Link to={`/profile/${activity.actor_id}`}>{activity.actor_name}</Link> formed a new connection.
           </p>
         );
+      case 'connection_request':
+        return (
+          <p className="activity-text">
+            <Link to={`/profile/${activity.actor_id}`}>{activity.actor_name}</Link> sent you a connection request.
+          </p>
+        );
       default:
         return (
           <p className="activity-text">
@@ -97,6 +103,7 @@ const ActivityFeed = () => {
   const getActivityIcon = (type) => {
     switch (type) {
       case 'connected':
+      case 'connection_request':
         return 'fas fa-user-plus';
       case 'wrote_review':
         return 'fas fa-star';

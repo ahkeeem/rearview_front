@@ -244,6 +244,13 @@ const api = {
         body: JSON.stringify({ status })
       });
       return handleResponse(response);
+    },
+    delete: async (connectionId) => {
+      const response = await fetch(`${BASE_URL}/connections/${connectionId}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
     }
   },
   reviews: {
