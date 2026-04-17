@@ -133,6 +133,7 @@ const CreateOrder = ({ onBack }) => {
             {showDropdown && vendorResults.length > 0 && (
               <div className="vendor-results-dropdown card">
                 {vendorResults.map(v => (
+                  <div key={v.id} className="vendor-result-item" onClick={() => selectVendor(v)}>
                     <div className="v-avatar">
                       {v.photo_url ? <img src={getImageUrl(v.photo_url)} alt="" /> : <span>{v.name[0]}</span>}
                     </div>
