@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import api from '../../../../services/api';
+import TransactionReceipt from './TransactionReceipt';
 import { getImageUrl } from '../../../../utils/imageUtils';
 import './Escrow.css';
 
@@ -14,6 +15,7 @@ const CreateOrder = ({ onBack }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [vendorSuccess, setVendorSuccess] = useState(null);
+  const [createdOrder, setCreatedOrder] = useState(null);
 
   // Vendor search state
   const [vendorQuery, setVendorQuery] = useState('');
@@ -79,13 +81,13 @@ const CreateOrder = ({ onBack }) => {
     setError(null);
 
     try {
-      await api.escrow.createOrder({
+      const res = await api.escrow.createOrder({
         vendor_id: parseInt(form.vendor_id),
         title: form.title,
         amount: parseFloat(form.amount),
         description: form.description
       });
-      onBack();
+      setCreatedOrder(res.order);
     } catch (err) {
       setError(err.message || 'Failed to initialize escrow order');
     } finally {
@@ -101,6 +103,10 @@ const CreateOrder = ({ onBack }) => {
         </button>
         <h1>Initialize New Escrow</h1>
       </div>
+
+      {createdOrder && (
+        <TransactionReceipt order={createdOrder} onDone={onBack} />
+      )}
 
       <div className="escrow-safety-banner premium">
         <div className="safety-icon-wrap">

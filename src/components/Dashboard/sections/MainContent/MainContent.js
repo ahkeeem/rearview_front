@@ -24,7 +24,7 @@ const TrustRing = ({ score }) => {
   };
 
   const getLabel = (s) => {
-    if (s >= 80) return 'Elite Credibility';
+    if (s >= 80) return 'Gold Standard Verified';
     if (s >= 50) return 'Verified Professional';
     return 'Basic Identity';
   };
@@ -384,16 +384,19 @@ const MainContent = () => {
             <h4><i className="fas fa-route"></i> Trust Journey</h4>
             <div className="journey-stepper">
               <div className={`step ${user?.email_verified ? 'complete' : 'active'}`}>
-                <div className="step-point"><i className="fas fa-envelope"></i></div>
+                <div className="step-point"><i className="fas fa-check"></i></div>
+                <span className="step-tier">Tier 1</span>
                 <span>Email</span>
               </div>
               <div className={`step ${user?.phone_verified ? 'complete' : user?.email_verified ? 'active' : ''}`}>
                 <div className="step-point"><i className="fas fa-phone"></i></div>
-                <span>Phone</span>
+                <span className="step-tier">Tier 2</span>
+                <span>Mobile</span>
               </div>
               <div className={`step ${user?.nin_verified ? 'complete' : user?.phone_verified ? 'active' : ''}`}>
-                <div className="step-point"><i className="fas fa-id-card"></i></div>
-                <span>NIN/BVN</span>
+                <div className="step-point"><i className="fas fa-fingerprint"></i></div>
+                <span className="step-tier">Tier 3</span>
+                <span>NIN / BVN</span>
               </div>
             </div>
           </div>

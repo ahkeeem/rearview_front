@@ -310,11 +310,20 @@
 }
 
 .step span {
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 700;
   color: var(--text-muted);
-  letter-spacing: 0.05em;
+  text-transform: capitalize;
+}
+
+.step-tier {
+  font-size: 0.65rem !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em;
+  color: var(--accent-gold) !important;
+  opacity: 0.8;
+  margin-top: 4px;
 }
 
 .step.complete span, .step.active span {
