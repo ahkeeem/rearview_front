@@ -349,8 +349,11 @@ const api = {
   },
 
   feed: {
-    get: async (scope = 'mixed') => {
-      const response = await fetch(`${BASE_URL}/feed?scope=${scope}`, {
+    get: async (scope = 'mixed', sinceId = null) => {
+      const url = sinceId 
+        ? `${BASE_URL}/feed?scope=${scope}&sinceId=${sinceId}` 
+        : `${BASE_URL}/feed?scope=${scope}`;
+      const response = await fetch(url, {
         headers: getAuthHeaders()
       });
       return handleResponse(response);

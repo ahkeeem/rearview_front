@@ -135,11 +135,59 @@
   margin: 16px 0;
 }
 
-/* Loading States */
-.activity-item.loading {
-  padding: 16px;
+/* Feed Controls */
+.feed-toggles {
+  display: flex;
+  gap: 8px;
+  background: var(--bg-secondary);
+  padding: 4px;
+  border-radius: var(--border-radius-lg);
 }
 
-.activity-content .skeleton {
-  margin: 8px 0;
+.toggle-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 400;
+  transition: all 0.2s ease;
 }
+
+.toggle-btn.active {
+  background: var(--primary-color);
+  color: #fff;
+  font-weight: 600;
+}
+
+.live-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.live-indicator {
+  width: 8px;
+  height: 8px;
+  background: #ccc;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+
+.live-indicator.active {
+  background: var(--success-color);
+  box-shadow: 0 0 8px var(--success-color);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+

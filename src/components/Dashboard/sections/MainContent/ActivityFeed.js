@@ -10,22 +10,53 @@ const ActivityFeed = () => {
   const [activities, setActivities] = useState([]);
   const [scope, setScope] = useState('mixed'); // 'mixed', 'connections', 'global'
   const [isLoading, setIsLoading] = useState(true);
+  const [isLive, setIsLive] = useState(false);
+  const [latestId, setLatestId] = useState(null);
 
   useEffect(() => {
     if (user?.id) {
-      loadActivities();
+      loadInitialActivities();
     }
   }, [user, scope]);
 
-  const loadActivities = async () => {
+  useEffect(() => {
+    let interval = null;
+    if (isLive && user?.id) {
+      interval = setInterval(() => {
+        pollNewActivities();
+      }, 30000); // Poll every 30 seconds
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isLive, user, scope, latestId]);
+
+  const loadInitialActivities = async () => {
     try {
       setIsLoading(true);
       const feedData = await api.feed.get(scope);
       setActivities(feedData || []);
+      if (feedData && feedData.length > 0) {
+        setLatestId(feedData[0].id);
+      }
     } catch (error) {
       console.error('Error loading activity feed:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const pollNewActivities = async () => {
+    if (!latestId) return;
+    try {
+      const newData = await api.feed.get(scope, latestId);
+      if (newData && newData.length > 0) {
+        // Add new items to the top
+        setActivities(prev => [...newData, ...prev]);
+        setLatestId(newData[0].id);
+      }
+    } catch (error) {
+      console.error('Error polling activity feed:', error);
     }
   };
 
@@ -74,26 +105,31 @@ const ActivityFeed = () => {
 
   return (
     <section className="recent-activity">
-      <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Timeline Activity</h2>
+      <div className="section-header">
+        <div className="header-left">
+          <h2>Timeline Activity</h2>
+          <div className="live-toggle" onClick={() => setIsLive(!isLive)}>
+            <div className={`live-indicator ${isLive ? 'active' : ''}`}></div>
+            <span>{isLive ? 'Live Updates ON' : 'Go Live'}</span>
+          </div>
+        </div>
         
-        {/* Instagram/Twitter Style Feed Toggles */}
-        <div className="feed-toggles" style={{ display: 'flex', gap: '8px', background: 'var(--bg-secondary)', padding: '4px', borderRadius: 'var(--border-radius-lg)' }}>
+        <div className="feed-toggles">
            <button 
+             className={`toggle-btn ${scope === 'mixed' ? 'active' : ''}`}
              onClick={() => setScope('mixed')} 
-             style={{ padding: '6px 12px', border: 'none', borderRadius: '4px', cursor: 'pointer', background: scope === 'mixed' ? 'var(--primary-color)' : 'transparent', color: scope === 'mixed' ? 'var(--text-inverse)' : 'var(--text-secondary)', fontWeight: scope === 'mixed' ? '600' : '400' }}
            >
              Mixed
            </button>
            <button 
+             className={`toggle-btn ${scope === 'connections' ? 'active' : ''}`}
              onClick={() => setScope('connections')} 
-             style={{ padding: '6px 12px', border: 'none', borderRadius: '4px', cursor: 'pointer', background: scope === 'connections' ? 'var(--primary-color)' : 'transparent', color: scope === 'connections' ? 'var(--text-inverse)' : 'var(--text-secondary)', fontWeight: scope === 'connections' ? '600' : '400' }}
            >
              My Network
            </button>
            <button 
+             className={`toggle-btn ${scope === 'global' ? 'active' : ''}`}
              onClick={() => setScope('global')} 
-             style={{ padding: '6px 12px', border: 'none', borderRadius: '4px', cursor: 'pointer', background: scope === 'global' ? 'var(--primary-color)' : 'transparent', color: scope === 'global' ? 'var(--text-inverse)' : 'var(--text-secondary)', fontWeight: scope === 'global' ? '600' : '400' }}
            >
              Global
            </button>
@@ -115,19 +151,19 @@ const ActivityFeed = () => {
       ) : (
         <div className="activity-feed">
           {activities.length === 0 ? (
-            <div className="no-activity" style={{ padding: '32px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-                <i className="fas fa-inbox" style={{ fontSize: '2rem', marginBottom: '12px', opacity: 0.5 }}></i>
+            <div className="no-activity">
+                <i className="fas fa-inbox"></i>
                 <p>No timeline activity found in this scope.</p>
             </div>
           ) : (
             activities.map(activity => (
-              <div key={activity.id} className="activity-item" style={{ display: 'flex', alignItems: 'flex-start', padding: '16px 0', borderBottom: '1px solid var(--border-color)' }}>
-                <div className={`activity-icon ${activity.action_type}`} style={{ flexShrink: 0, width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '16px', color: 'var(--primary-color)' }}>
+              <div key={activity.id} className="activity-item">
+                <div className={`activity-icon ${activity.action_type}`}>
                   <i className={getActivityIcon(activity.action_type)}></i>
                 </div>
-                <div className="activity-content" style={{ flexGrow: 1 }}>
+                <div className="activity-content">
                   {renderActionContent(activity)}
-                  <div className="activity-time" style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)', marginTop: '4px' }}>
+                  <div className="activity-time">
                     {new Date(activity.created_at).toLocaleString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}
                   </div>
                 </div>
