@@ -4,12 +4,14 @@ import UserMenu from './UserMenu';
 import NotificationsDropdown from './NotificationsDropdown';
 import SearchBar from './SearchBar';
 import { useAuth } from '../../context/AuthContext';
+import { useSocket } from '../../context/SocketContext';
 import api from '../../services/api';
 import { getImageUrl } from '../../utils/imageUtils';
 import './Navigation.css';
 
 const Navigation = ({ onToggleSidebar }) => {
   const { user } = useAuth();
+  const { socket } = useSocket();
   const [notifications, setNotifications] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [barterCount, setBarterCount] = useState(0);
@@ -66,11 +68,21 @@ const Navigation = ({ onToggleSidebar }) => {
       }
     };
     fetchNavData();
+    
+    // Listen for real-time message notifications
+    if (socket) {
+      socket.on('new-message', fetchNavData);
+    }
 
-    // Poll every 30s for notifications to feel "live"
+    // Poll every 30s as a fallback
     const interval = setInterval(fetchNavData, 30000);
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      clearInterval(interval);
+      if (socket) {
+        socket.off('new-message', fetchNavData);
+      }
+    };
+  }, [socket, user?.id]);
 
   return (
     <nav className="main-nav glass-card" role="navigation">

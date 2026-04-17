@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
+import { useSocket } from '../../../../context/SocketContext';
 import { io } from 'socket.io-client';
 import ConversationsList from './ConversationsList';
 import ChatWindow from './ChatWindow';
@@ -11,56 +12,26 @@ import './MessagesSection.css';
 
 const MessagesSection = () => {
   const { user } = useAuth();
+  const { socket } = useSocket();
   const location = useLocation();
   const navigate = useNavigate();
-  
-  const [socket, setSocket] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Initialize WebSocket connection
+  // Handle incoming messages for list refresh
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
+    if (!socket) return;
 
-    const newSocket = io(API_CONFIG.SOCKET_URL, {
-      auth: {
-        token: token
-      },
-      transports: ['websocket', 'polling']
-    });
-
-    newSocket.on('connect', () => {
-      console.log('Connected to chat server');
-    });
-
-    newSocket.on('disconnect', () => {
-      console.log('Disconnected from chat server');
-    });
-
-    newSocket.on('connect_error', (err) => {
-      console.error('Socket connection error:', err);
-    });
-
-    newSocket.on('new-message', (messageData) => {
-      // Refresh conversations list when new message arrives
-      fetchConversations();
-    });
-
-    newSocket.on('error', (error) => {
-      console.error('Socket error:', error);
-      setError('Connection error. Please refresh the page.');
-    });
-
-    setSocket(newSocket);
+    const handleNewMessage = () => fetchConversations();
+    socket.on('new-message', handleNewMessage);
 
     return () => {
-      newSocket.close();
+      socket.off('new-message', handleNewMessage);
     };
-  }, []);
+  }, [socket]);
 
   // Fetch conversations on mount
   useEffect(() => {

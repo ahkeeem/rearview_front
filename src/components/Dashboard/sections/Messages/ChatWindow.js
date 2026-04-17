@@ -8,7 +8,7 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
   const { user } = useAuth();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [isTyping, setIsTyping] = useState(false);
+  const [typingUser, setTypingUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef(null);
@@ -57,10 +57,23 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
 
     socket.on('new-message', handleNewMessage);
 
+    // Listen for typing indicators
+    const handleUserTyping = (data) => {
+      if (data.conversationId === conversation?.id && data.userId !== user.id) {
+        setTypingUser(otherUserName);
+        // Clear typing indicator after 3 seconds of inactivity
+        const timeout = setTimeout(() => setTypingUser(null), 3000);
+        return () => clearTimeout(timeout);
+      }
+    };
+
+    socket.on('user-typing', handleUserTyping);
+
     return () => {
       socket.off('new-message', handleNewMessage);
+      socket.off('user-typing', handleUserTyping);
     };
-  }, [socket, conversation?.id]);
+  }, [socket, conversation?.id, otherUserName, user.id]);
 
   const fetchMessages = async () => {
     if (!conversation?.id) return;
@@ -126,13 +139,11 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
   };
 
   const handleTyping = () => {
-    if (!isTyping && socket && conversation?.id) {
-      setIsTyping(true);
+    if (socket && conversation?.id) {
       socket.emit('typing', {
         conversationId: conversation.id,
         userId: user.id
       });
-      setTimeout(() => setIsTyping(false), 2000);
     }
   };
 
@@ -188,10 +199,22 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
                     })}
                   </span>
                 </div>
-              </div>
-            );
           })
         )}
+        
+        {typingUser && (
+          <div className="typing-indicator message received">
+            <div className="message-content typing-bubble">
+              <span className="typing-name">{typingUser}</span> is typing
+              <div className="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div ref={messagesEndRef} />
       </div>
 
