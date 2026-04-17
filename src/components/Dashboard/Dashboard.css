@@ -6,7 +6,7 @@
   padding: var(--card-padding);
   margin: 0 auto;
   margin-top: 84px; /* Header height + gap */
-  max-width: 1200px;
+  max-width: 1440px;
   min-height: calc(100vh - 84px);
   background: var(--bg-main);
   transition: all var(--transition-base);

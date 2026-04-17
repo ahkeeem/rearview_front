@@ -1,8 +1,6 @@
 .main-nav {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
   height: 72px;
   background: rgba(2, 6, 23, 0.8);
   backdrop-filter: blur(20px);
@@ -14,6 +12,16 @@
   right: 0;
   z-index: 1000;
   transition: all var(--transition-base);
+}
+
+.nav-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--card-padding);
 }
 
 .nav-left {
