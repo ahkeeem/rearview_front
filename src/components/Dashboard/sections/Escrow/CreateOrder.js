@@ -71,7 +71,7 @@ const CreateOrder = ({ onBack }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.vendor_id) {
-      setError('Please select a vendor from the search results.');
+      setError('Please select a verified vendor from the search results.');
       return;
     }
     setLoading(true);
@@ -86,7 +86,7 @@ const CreateOrder = ({ onBack }) => {
       });
       onBack();
     } catch (err) {
-      setError(err.message || 'Failed to create order');
+      setError(err.message || 'Failed to initialize escrow order');
     } finally {
       setLoading(false);
     }
@@ -94,134 +94,132 @@ const CreateOrder = ({ onBack }) => {
 
   return (
     <div className="create-order-section fade-in">
-      <div className="escrow-header">
-        <button className="btn-back" onClick={onBack}>← Back</button>
-        <h2>Create Escrow Order</h2>
+      <div className="detail-header">
+        <button className="btn-back-text" onClick={onBack}>
+          <i className="fas fa-chevron-left"></i> Back to Dashboard
+        </button>
+        <h1>Initialize New Escrow</h1>
       </div>
 
-      {/* Safety Banner */}
-      <div className="escrow-safety-banner">
-        <i className="fas fa-shield-alt"></i>
-        <span>Your payment is held securely in escrow. Funds are only released when <strong>you confirm</strong> delivery.</span>
+      <div className="escrow-safety-banner premium">
+        <div className="safety-icon-wrap">
+            <i className="fas fa-shield-check"></i>
+        </div>
+        <div className="safety-text">
+            <strong>RearView Trust Protocol Active</strong>
+            <p>Your payment is held in our secure vault. Funds are only released when you confirm delivery.</p>
+        </div>
       </div>
 
-      <form className="create-order-form card" onSubmit={handleSubmit}>
-        {error && <div className="alert alert-danger">{error}</div>}
+      <div className="order-detail-layout" style={{ marginTop: '32px' }}>
+        <form className="invoice-container card" onSubmit={handleSubmit} style={{ padding: '40px' }}>
+          {error && <div className="feedback-box disputed" style={{ marginBottom: '24px' }}>{error}</div>}
 
-        {/* ── Vendor Search ── */}
-        <div className="form-group" ref={dropdownRef}>
-          <label>Who are you paying? <span className="required">*</span></label>
-          <div className="vendor-search-wrapper">
-            <div className="vendor-search-input-wrap">
-              <i className="fas fa-search vendor-search-icon"></i>
+          <div className="form-group" ref={dropdownRef} style={{ position: 'relative' }}>
+            <label>Select Vendor (Search by name or email)</label>
+            <div className="vendor-search-wrap">
               <input
                 type="text"
                 value={vendorQuery}
                 onChange={handleVendorSearch}
-                placeholder="Search by name or email..."
+                placeholder="Find a trusted vendor..."
                 autoComplete="off"
-                className="vendor-search-input"
+                className="premium-input search-icon-input"
               />
-              {searching && <span className="vendor-search-spinner"></span>}
+              {searching && <div className="loading-spinner-small"></div>}
             </div>
 
             {showDropdown && vendorResults.length > 0 && (
-              <ul className="vendor-dropdown">
+              <div className="vendor-results-dropdown card">
                 {vendorResults.map(v => (
-                  <li key={v.id} className="vendor-dropdown-item" onClick={() => selectVendor(v)}>
-                    <div className="vendor-avatar-mini">
-                      {v.photo_url
-                        ? <img src={v.photo_url} alt={v.name} />
-                        : <span>{v.name?.charAt(0).toUpperCase()}</span>
-                      }
+                  <div key={v.id} className="vendor-result-item" onClick={() => selectVendor(v)}>
+                    <div className="v-avatar">
+                      {v.photo_url ? <img src={v.photo_url} alt="" /> : <span>{v.name[0]}</span>}
                     </div>
-                    <div className="vendor-info-mini">
-                      <span className="vendor-name-mini">{v.name}</span>
-                      {v.headline && <span className="vendor-headline-mini">{v.headline}</span>}
+                    <div className="v-info">
+                      <span className="v-name">{v.name}</span>
+                      <span className="v-meta">{v.headline || 'Verified Merchant'}</span>
                     </div>
-                    {v.trust_score > 0 && (
-                      <span className="vendor-trust-mini">
-                        <i className="fas fa-shield-alt"></i> {v.trust_score}
-                      </span>
-                    )}
-                  </li>
+                    {v.trust_score > 0 && <span className="v-score">★ {v.trust_score}</span>}
+                  </div>
                 ))}
-              </ul>
-            )}
-
-            {showDropdown && vendorResults.length === 0 && !searching && vendorQuery.length >= 2 && (
-              <div className="vendor-no-results">No users found for "{vendorQuery}"</div>
+              </div>
             )}
           </div>
 
-          {/* Selected vendor confirmation pill */}
-          {vendorSuccess && (
-            <div className="vendor-selected-pill">
-              <i className="fas fa-check-circle"></i>
-              <span>Paying <strong>{vendorSuccess.name}</strong></span>
-              {vendorSuccess.verification_level && vendorSuccess.verification_level !== 'none' && (
-                <span className="verified-chip">✓ Verified</span>
-              )}
-              <button type="button" className="vendor-clear-btn" onClick={() => {
-                setVendorQuery('');
-                setVendorSuccess(null);
-                setForm({ ...form, vendor_id: '', vendor_name: '' });
-              }}>✕</button>
-            </div>
-          )}
-        </div>
-
-        <div className="form-group">
-          <label>Service / Product Title <span className="required">*</span></label>
-          <input
-            type="text"
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            placeholder="e.g. Logo Design, Plumbing Repair, Laptop"
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Agreed Amount (₦) <span className="required">*</span></label>
-          <div className="amount-input-wrap">
-            <span className="currency-prefix">₦</span>
+          <div className="form-group">
+            <label>Order Title / Service Name</label>
             <input
-              type="number"
-              min="100"
-              step="0.01"
-              value={form.amount}
-              onChange={(e) => setForm({ ...form, amount: e.target.value })}
-              placeholder="0.00"
+              type="text"
+              className="premium-input"
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+              placeholder="e.g. Premium UI Design Package"
               required
             />
           </div>
-          {form.amount && parseFloat(form.amount) >= 100 && (
-            <small className="amount-breakdown">
-              Vendor receives: <strong>₦{(parseFloat(form.amount) * 0.975).toLocaleString()}</strong> &nbsp;·&nbsp;
-              Platform fee: <strong>₦{(parseFloat(form.amount) * 0.025).toFixed(2)}</strong>
-            </small>
-          )}
-        </div>
 
-        <div className="form-group">
-          <label>Delivery Terms</label>
-          <textarea
-            rows="4"
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            placeholder="Describe exactly what must be delivered before you release payment. This protects both parties."
-          />
-        </div>
+          <div className="form-group">
+            <label>Agreed Transaction Amount (₦)</label>
+            <div className="amount-p-input">
+              <span className="p-naira">₦</span>
+              <input
+                type="number"
+                min="100"
+                className="premium-input"
+                value={form.amount}
+                onChange={(e) => setForm({ ...form, amount: e.target.value })}
+                placeholder="0.00"
+                required
+              />
+            </div>
+            {form.amount && parseFloat(form.amount) >= 100 && (
+              <div className="p-breakdown">
+                <span>Fee: ₦{(parseFloat(form.amount) * 0.025).toFixed(2)}</span>
+                <span>Vendor receives: ₦{(parseFloat(form.amount) * 0.975).toLocaleString()}</span>
+              </div>
+            )}
+          </div>
 
-        <button
-          type="submit"
-          className="btn-primary full-width"
-          disabled={loading || !form.vendor_id}
-        >
-          {loading ? 'Creating...' : 'Create Order & Proceed to Fund'}
-        </button>
-      </form>
+          <div className="form-group">
+            <label>Escrow Terms & Delivery Agreement</label>
+            <textarea
+              className="premium-input"
+              rows="4"
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              placeholder="Define exact delivery conditions. This protects you if a dispute arises."
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn-fund-p"
+            style={{ marginTop: '24px' }}
+            disabled={loading || !form.vendor_id}
+          >
+            {loading ? 'Initializing Secure Vault...' : 'Create Protected Order'}
+          </button>
+        </form>
+
+        <div className="detail-actions-sidebar">
+          <div className="actions-card card">
+             <h3>Why Escrow?</h3>
+             <ul className="escrow-perks">
+                <li><i className="fas fa-check-circle"></i> Funds stay in our vault until you're happy.</li>
+                <li><i className="fas fa-check-circle"></i> Verified identity checks for all vendors.</li>
+                <li><i className="fas fa-check-circle"></i> 24/7 Dispute resolution support.</li>
+             </ul>
+             
+             {vendorSuccess && (
+               <div className="feedback-box success" style={{ marginTop: '32px' }}>
+                  <h4>Vendor Identity Verified</h4>
+                  <p>Paying <strong>{vendorSuccess.name}</strong></p>
+               </div>
+             )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
