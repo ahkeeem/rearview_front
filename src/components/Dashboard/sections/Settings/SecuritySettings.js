@@ -15,7 +15,8 @@ const SecuritySettings = () => {
         email_verified: false,
         phone_verified: false,
         phone: '',
-        verification_level: 'none'
+        verification_level: 'none',
+        two_factor_enabled: true
     });
     const [pendingEmailOtp, setPendingEmailOtp] = useState(false);
     const [pendingPhoneOtp, setPendingPhoneOtp] = useState(false);
@@ -34,7 +35,8 @@ const SecuritySettings = () => {
                 email_verified: !!profile.email_verified,
                 phone_verified: !!profile.phone_verified,
                 phone: profile.phone || '',
-                verification_level: profile.verification_level || 'none'
+                verification_level: profile.verification_level || 'none',
+                two_factor_enabled: profile.two_factor_enabled !== 0
             });
             if (profile.phone) setPhoneInput(profile.phone);
         } catch (err) {
@@ -120,6 +122,19 @@ const SecuritySettings = () => {
             fetchStatus();
         } catch (err) {
             alert('Failed: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleToggle2FA = async () => {
+        const newValue = !status.two_factor_enabled;
+        setLoading(true);
+        try {
+            await api.users.toggle2FA(newValue);
+            setStatus(prev => ({ ...prev, two_factor_enabled: newValue }));
+        } catch (err) {
+            alert('Failed to update 2FA: ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -273,9 +288,17 @@ const SecuritySettings = () => {
                     <div className="safety-toggle">
                         <div className="toggle-info">
                             <strong>Two-Factor Authentication</strong>
-                            <p>Required for all logins on this infrastructure.</p>
+                            <p>Recommended for all logins on this infrastructure.</p>
                         </div>
-                        <div className="status-badge active">Always On</div>
+                        <label className="settings-toggle">
+                            <input 
+                                type="checkbox" 
+                                checked={status.two_factor_enabled}
+                                onChange={handleToggle2FA}
+                                disabled={loading}
+                            />
+                            <span className="slider round"></span>
+                        </label>
                     </div>
 
                     <div className="safety-toggle">

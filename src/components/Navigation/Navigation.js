@@ -2,15 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import UserMenu from './UserMenu';
 import NotificationsDropdown from './NotificationsDropdown';
-import MessagesDropdown from './MessagesDropdown';
 import SearchBar from './SearchBar';
+import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import { getImageUrl } from '../../utils/imageUtils';
 import './Navigation.css';
 
 const Navigation = ({ onToggleSidebar }) => {
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [conversations, setConversations] = useState([]);
+  const [barterCount, setBarterCount] = useState(0);
+  const [escrowCount, setEscrowCount] = useState(0);
+
+  const unreadMessagesCount = conversations.reduce((total, conv) => {
+    if (conv.last_sender_id !== user?.id && conv.unread_count > 0) {
+      return total + conv.unread_count;
+    }
+    return total;
+  }, 0);
 
   // Fetch nav data: notifications and conversations
   useEffect(() => {
@@ -34,6 +44,23 @@ const Navigation = ({ onToggleSidebar }) => {
         // Fetch Conversations
         const convData = await api.conversations.getAll();
         setConversations(convData.slice(0, 5));
+
+        // Fetch Barter Loops (for pending items)
+        const barterLoops = await api.barter.getMyLoops();
+        const pendingBarter = barterLoops.filter(loop => {
+          // Find the leg where current user is the sender
+          const myLeg = loop.matrix.find(leg => leg.from_user_id === user?.id);
+          // If my leg is not yet shipped/received, it's pending action from me
+          return myLeg && myLeg.status !== 'shipped' && myLeg.status !== 'received';
+        }).length;
+        setBarterCount(pendingBarter);
+
+        // Fetch Escrow Orders
+        const escrowOrders = await api.escrow.getOrders();
+        const pendingEscrow = escrowOrders.filter(order => 
+          order.status === 'funded' || order.status === 'disputed'
+        ).length;
+        setEscrowCount(pendingEscrow);
       } catch (_) {
         // silently fail
       }
@@ -72,6 +99,29 @@ const Navigation = ({ onToggleSidebar }) => {
             <Link to="/dashboard/messages" className="nav-link-item" title="Messaging">
               <i className="fas fa-envelope" />
               <span>Messaging</span>
+              {unreadMessagesCount > 0 && (
+                <span className="notification-badge">
+                  {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
+                </span>
+              )}
+            </Link>
+            <Link to="/dashboard/reviews" className="nav-link-item" title="Reviews">
+              <i className="fas fa-star" />
+              <span>Reviews</span>
+            </Link>
+            <Link to="/dashboard/barter" className="nav-link-item" title="Barter">
+              <i className="fas fa-sync" />
+              <span>Barter</span>
+              {barterCount > 0 && (
+                <span className="notification-badge">{barterCount}</span>
+              )}
+            </Link>
+            <Link to="/dashboard/escrow" className="nav-link-item" title="Escrow">
+              <i className="fas fa-shield-halved" />
+              <span>Escrow</span>
+              {escrowCount > 0 && (
+                <span className="notification-badge">{escrowCount}</span>
+              )}
             </Link>
             <Link to="/dashboard/wallet" className="nav-link-item" title="Wallet">
               <i className="fas fa-wallet" />

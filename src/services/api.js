@@ -125,6 +125,14 @@ const api = {
       });
       return handleResponse(response);
     },
+    toggle2FA: async (enabled) => {
+      const response = await fetch(`${BASE_URL}/users/2fa`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ enabled })
+      });
+      return handleResponse(response);
+    },
 
     getStats: async (userId) => {
       const response = await fetch(`${BASE_URL}/users/${userId}/stats`, {
@@ -332,6 +340,13 @@ const api = {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ userId })
+      });
+      return handleResponse(response);
+    },
+    markAsRead: async (conversationId) => {
+      const response = await fetch(`${BASE_URL}/conversations/${conversationId}/read`, {
+        method: 'PUT',
+        headers: getAuthHeaders()
       });
       return handleResponse(response);
     }

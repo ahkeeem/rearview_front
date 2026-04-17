@@ -21,6 +21,9 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
   useEffect(() => {
     if (conversation?.id) {
       fetchMessages();
+      // Mark as read when opened
+      api.conversations.markAsRead(conversation.id).catch(() => {});
+      
       // Join conversation room for real-time updates
       if (socket) {
         socket.emit('join-conversation', conversation.id);
@@ -28,7 +31,7 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
     } else {
       setMessages([]);
     }
-  }, [conversation?.id]);
+  }, [conversation?.id, socket]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -47,6 +50,8 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
           if (exists) return prev;
           return [...prev, messageData];
         });
+        // Mark as read immediately if chat is open
+        api.conversations.markAsRead(conversation.id).catch(() => {});
       }
     };
 

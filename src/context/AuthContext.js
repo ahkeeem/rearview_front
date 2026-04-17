@@ -98,8 +98,11 @@ export const AuthProvider = ({ children }) => {
     if (!user?.id) return;
     try {
       const userData = await api.users.getProfile(user.id);
-      setUser(prev => ({ ...prev, ...userData }));
-      localStorage.setItem('user', JSON.stringify({ ...user, ...userData }));
+      setUser(prev => {
+        const merged = { ...prev, ...userData };
+        localStorage.setItem('user', JSON.stringify(merged));
+        return merged;
+      });
     } catch (err) {
       console.error('Failed to refresh user data:', err);
     }
