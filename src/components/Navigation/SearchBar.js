@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../../services/userService';
+import { entityService } from '../../services/entityService';
 import './SearchBar.css';
 
 const SearchBar = () => {
@@ -30,8 +31,17 @@ const SearchBar = () => {
       setLoading(true);
       setShowResults(true);
       try {
-        const searchResults = await userService.searchUsers(value);
-        setResults(searchResults);
+        // Parallel search for Users and Entities
+        const [userResults, entityResults] = await Promise.all([
+          userService.searchUsers(value).catch(() => []),
+          entityService.searchEntities(value).catch(() => [])
+        ]);
+
+        // Tag results with their type
+        const taggedUsers = userResults.map(u => ({ ...u, resultType: 'user' }));
+        const taggedEntities = entityResults.map(e => ({ ...e, resultType: e.type || 'product' }));
+
+        setResults([...taggedUsers, ...taggedEntities]);
       } catch (error) {
         console.error('Search error:', error);
         setResults([]);
@@ -44,11 +54,16 @@ const SearchBar = () => {
     }
   };
 
-  const handleSelectUser = (user) => {
+  const handleSelectItem = (item) => {
     setQuery('');
     setResults([]);
     setShowResults(false);
-    navigate(`/dashboard/profile/${user.id}`);
+    
+    if (item.resultType === 'user') {
+      navigate(`/dashboard/profile/${item.id}`);
+    } else {
+      navigate(`/dashboard/product/${item.id}`);
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -88,37 +103,46 @@ const SearchBar = () => {
       {showResults && (
         <div className="search-results" role="listbox">
           {results.length > 0 ? (
-            results.map(user => (
+            results.map(item => (
               <div
-                key={user.id}
-                className="search-result-item"
+                key={`${item.resultType}-${item.id}`}
+                className={`search-result-item type-${item.resultType}`}
                 role="option"
-                onClick={() => handleSelectUser(user)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSelectUser(user)}
+                onClick={() => handleSelectItem(item)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSelectItem(item)}
                 tabIndex={0}
               >
                 <img
-                  src={user.photo_url || user.avatar || '/default-avatar.png'}
-                  alt={user.name}
+                  src={item.photo_url || item.avatar || item.avatar_url || '/default-avatar.png'}
+                  alt={item.name}
                   className="result-avatar"
                   onError={(e) => { e.target.src = '/default-avatar.png'; }}
                 />
                 <div className="result-info">
-                  <span className="result-name">{user.name}</span>
-                  {user.connectionStatus && (
-                    <span className={`result-status ${user.connectionStatus}`}>
-                      {user.connectionStatus === 'accepted' ? '• Connected' : '• Pending'}
+                  <div className="name-wrapper">
+                    <span className="result-name">{item.name}</span>
+                    <span className={`result-badge badge-${item.resultType}`}>
+                      {item.resultType}
                     </span>
+                  </div>
+                  {item.resultType === 'user' ? (
+                     item.connectionStatus && (
+                      <span className={`result-status ${item.connectionStatus}`}>
+                        {item.connectionStatus === 'accepted' ? '• Connected' : '• Pending'}
+                      </span>
+                    )
+                  ) : (
+                    <span className="result-tagline">{item.description?.substring(0, 40)}...</span>
                   )}
                 </div>
-                <i className="fas fa-arrow-right result-arrow" aria-hidden="true"></i>
+                <i className="fas fa-chevron-right result-arrow" aria-hidden="true"></i>
               </div>
             ))
           ) : (
             !loading && query.length > 2 && (
               <div className="no-results">
-                <i className="fas fa-user-slash"></i>
-                <span>No users found for "<strong>{query}</strong>"</span>
+                <i className="fas fa-search-minus"></i>
+                <span>No results found for "<strong>{query}</strong>"</span>
               </div>
             )
           )}

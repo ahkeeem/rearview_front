@@ -1,0 +1,249 @@
+.product-profile-page {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero Section */
+.product-hero-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 20px;
+    padding: 40px;
+    color: white;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.product-hero-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+}
+
+.hero-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-left h1 {
+    font-size: 36px;
+    font-weight: 800;
+    margin: 12px 0;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.entity-type-badge {
+    display: inline-block;
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.entity-description {
+    color: #94a3b8;
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.entity-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.entity-meta i {
+    color: #3b82f6;
+    margin-right: 6px;
+}
+
+/* Sentiment Box */
+.sentiment-display {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    min-width: 200px;
+}
+
+.sentiment-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.sentiment-score {
+    font-size: 48px;
+    font-weight: 800;
+}
+
+.sentiment-score.positive { color: #10b981; text-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+.sentiment-score.negative { color: #ef4444; }
+
+.sentiment-trend {
+    display: block;
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 8px;
+}
+
+/* Grid Layout */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* Review Form */
+.write-review-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-sm);
+}
+
+.rating-selector {
+    display: flex;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.rating-selector i {
+    font-size: 24px;
+    color: #e2e8f0;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.rating-selector i.fas { color: #fbbf24; }
+.rating-selector i:hover { transform: scale(1.1); }
+
+.write-review-card textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    resize: none;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.write-review-card textarea:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+.write-review-card button {
+    width: 100%;
+    padding: 14px;
+    background: #1e293b;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.write-review-card button:hover { background: #0f172a; }
+
+/* Reviews List */
+.review-item {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #f1f5f9;
+}
+
+.review-item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.reviewer-info strong { display: block; color: #1e293b; }
+.review-date { font-size: 12px; color: #94a3b8; }
+
+.review-item-rating i { color: #fbbf24; font-size: 14px; }
+
+.review-comment {
+    color: #475569;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.verified-review-footer {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    color: #10b981;
+    font-size: 12px;
+    font-weight: 600;
+    background: #ecfdf5;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+/* Sidebar Stats */
+.entity-sidebar-card {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.stat-row:last-child { border-bottom: none; }
+.stat-row span { color: #64748b; font-size: 14px; }
+
+.product-loading {
+    padding: 100px;
+    text-align: center;
+    color: #64748b;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .profile-grid { grid-template-columns: 1fr; }
+    .hero-content { flex-direction: column; text-align: center; gap: 30px; }
+    .hero-left h1 { font-size: 28px; }
+}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../../../services/api';
-import './ProductRegistry.css'; // Re-use core styling
+import './ProductProfile.css'; 
 
 const ProductProfile = () => {
     const { id } = useParams();
@@ -9,13 +9,14 @@ const ProductProfile = () => {
     const [entity, setEntity] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [reviewContent, setReviewContent] = useState('');
+    const [reviewRating, setReviewRating] = useState(5);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         const fetchProductData = async () => {
             try {
-                // 1. Fetch Entity (Uses the search endpoint for now, ideally an ID endpoint exists)
-                // Assuming `api.entities.search` can lookup the exact entity via exact DB match bounds. 
-                // As a fallback to the existing logic, we search and filter.
+                // Fetch Entity via Search (Exact ID match)
                 const searchRes = await api.entities.search(id);
                 const exMatch = searchRes.find(e => e.id === id);
                 
@@ -25,9 +26,6 @@ const ProductProfile = () => {
                     throw new Error("Entity Not Found");
                 }
 
-                // 2. Fetch Entity Reviews
-                // Note: The backend review fetching might need to be adjusted to fetch purely by target_entity_id 
-                // if it natively maps to the user's entity_id. For now, hitting generic user reviews path.
                 const revRes = await api.reviews.getUserReviews(id).catch(() => []);
                 setReviews(revRes);
 
@@ -40,77 +38,138 @@ const ProductProfile = () => {
         fetchProductData();
     }, [id]);
 
-    if (loading) return <div style={{ padding: '40px' }}>Loading Product Data...</div>;
-    if (!entity) return <div style={{ padding: '40px' }}>Product not found.</div>;
+    const handleSubmitReview = async (e) => {
+        e.preventDefault();
+        try {
+            setIsSubmitting(true);
+            await api.reviews.submit({
+                target_entity_id: entity.id,
+                rating: reviewRating,
+                comment: reviewContent,
+                interaction_type: 'service'
+            });
+            
+            // Refresh reviews
+            const updatedRev = await api.reviews.getUserReviews(id).catch(() => []);
+            setReviews(updatedRev);
+            setReviewContent('');
+            alert('Review submitted successfully!');
+        } catch (err) {
+            alert('Failed to submit review: ' + err.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    if (loading) return <div className="product-loading">Loading Product Assets...</div>;
+    if (!entity) return <div className="product-loading">Product not found.</div>;
 
     return (
-        <div className="product-registry-container">
-            <div className="registry-card" style={{ marginBottom: '30px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                        <h1 style={{ marginBottom: '8px', fontSize: '28px', color: '#1f2937' }}>{entity.name}</h1>
-                        <span style={{ 
-                            background: '#e0e7ff', 
-                            color: '#4f46e5', 
-                            padding: '4px 12px', 
-                            borderRadius: '20px',
-                            fontSize: '12px',
-                            fontWeight: '600',
-                            textTransform: 'uppercase'
-                        }}>{entity.type}</span>
-                    </div>
-                    <div style={{ textAlign: 'center', background: '#f8fafc', padding: '15px 25px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                        <div style={{ fontSize: '13px', color: '#64748b', fontWeight: '600' }}>GLOBAL SENTIMENT</div>
-                        <div style={{ fontSize: '32px', fontWeight: '800', color: entity.sentiment_score >= 0 ? '#059669' : '#dc2626' }}>
-                           {entity.sentiment_score > 0 ? '+' : ''}{entity.sentiment_score}
+        <div className="product-profile-page">
+            <div className="product-hero-card">
+                <div className="hero-content">
+                    <div className="hero-left">
+                        <div className="entity-type-badge">{entity.type}</div>
+                        <h1>{entity.name}</h1>
+                        <p className="entity-description">{entity.description || 'Verified RearView Entity'}</p>
+                        
+                        <div className="entity-meta">
+                            {entity.phone && <span><i className="fas fa-phone" /> {entity.phone}</span>}
+                            <span><i className="fas fa-check-circle" /> Verified Identity</span>
                         </div>
                     </div>
+                    <div className="hero-right">
+                        <div className="sentiment-display">
+                            <span className="sentiment-label">TRUST SENTIMENT</span>
+                            <div className={`sentiment-score ${entity.sentiment_score >= 0 ? 'positive' : 'negative'}`}>
+                                {entity.sentiment_score > 0 ? '+' : ''}{entity.sentiment_score}
+                            </div>
+                            <span className="sentiment-trend">Based on {reviews.length} reviews</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="profile-grid">
+                <div className="grid-left">
+                    <div className="write-review-card">
+                        <h3>Share your experience</h3>
+                        <form onSubmit={handleSubmitReview}>
+                            <div className="rating-selector">
+                                {[1, 2, 3, 4, 5].map(star => (
+                                    <i 
+                                        key={star} 
+                                        className={`${star <= reviewRating ? 'fas' : 'far'} fa-star`}
+                                        onClick={() => setReviewRating(star)}
+                                    />
+                                ))}
+                            </div>
+                            <textarea 
+                                placeholder="What was your experience with this product/business?"
+                                value={reviewContent}
+                                onChange={(e) => setReviewContent(e.target.value)}
+                                required
+                            />
+                            <button type="submit" disabled={isSubmitting}>
+                                {isSubmitting ? 'Posting...' : 'Post Verified Review'}
+                            </button>
+                        </form>
+                    </div>
+
+                    <div className="reviews-list-header">
+                        <h2>Community Feedback ({reviews.length})</h2>
+                    </div>
+
+                    {reviews.length === 0 ? (
+                        <div className="empty-reviews">
+                            <i className="fas fa-ghost" />
+                            <p>No reviews yet. Start the conversation!</p>
+                        </div>
+                    ) : (
+                        <div className="reviews-stack">
+                            {reviews.map(rev => (
+                                <div key={rev.id} className="review-item">
+                                    <div className="review-item-header">
+                                        <div className="reviewer-info">
+                                            <strong>{rev.reviewer_name}</strong>
+                                            <span className="review-date">{new Date(rev.created_at).toLocaleDateString()}</span>
+                                        </div>
+                                        <div className="review-item-rating">
+                                            {[...Array(5)].map((_, i) => (
+                                                <i key={i} className={i < rev.rating ? "fas fa-star" : "far fa-star"} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <p className="review-comment">{rev.comment}</p>
+                                    {rev.is_verified === 1 && (
+                                        <div className="verified-review-footer">
+                                            <i className="fas fa-shield-alt" /> Evidence-backed Review
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
                 
-                <p style={{ marginTop: '20px', color: '#4b5563', lineHeight: '1.6' }}>
-                    {entity.description || 'No description provided.'}
-                </p>
-
-                <button 
-                    onClick={() => navigate('/dashboard/reviews')}
-                    style={{ marginTop: '20px', padding: '10px 20px', background: '#111827', color: 'white', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: '600' }}
-                >
-                    <i className="fas fa-star" /> Review this Entity
-                </button>
-            </div>
-
-            <div className="registry-header">
-                <h2>Verified Reviews ({reviews.length})</h2>
-            </div>
-
-            {reviews.length === 0 ? (
-                <div className="registry-card" style={{ textAlign: 'center', color: '#6b7280' }}>
-                    No reviews yet. Be the first to share your experience!
-                </div>
-            ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    {reviews.map(rev => (
-                        <div key={rev.id} className="registry-card" style={{ padding: '20px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                                <strong>{rev.reviewer_name || 'Anonymous User'}</strong>
-                                <span style={{ color: '#f59e0b' }}>
-                                    {[...Array(5)].map((_, i) => (
-                                        <i key={i} className={i < rev.rating ? "fas fa-star" : "far fa-star"} />
-                                    ))}
-                                </span>
-                            </div>
-                            <p style={{ color: '#374151', margin: 0 }}>{rev.comment}</p>
-                            {rev.is_verified === 1 && (
-                                <div style={{ fontSize: '12px', color: '#059669', marginTop: '10px', fontWeight: '600' }}>
-                                    <i className="fas fa-check-circle" /> TrueIdentity Verified
-                                </div>
-                            )}
+                <div className="grid-right">
+                    <div className="entity-sidebar-card">
+                        <h3>Trust Stats</h3>
+                        <div className="stat-row">
+                            <span>Dispute Rate</span>
+                            <strong>0%</strong>
                         </div>
-                    ))}
+                        <div className="stat-row">
+                            <span>Verification Level</span>
+                            <strong>Tier 1</strong>
+                        </div>
+                    </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 };
+
+export default ProductProfile;
 
 export default ProductProfile;
