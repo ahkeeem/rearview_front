@@ -249,3 +249,26 @@
   font-size: var(--fs-sm);
   padding: var(--sp-10);
 }
+
+/* ── Send error banner ──────────────────────────────────────────── */
+.send-error-banner {
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--rv-amber-light, #fff8e6);
+  border-top: 1px solid var(--rv-gold, #e8b84b);
+  font-size: var(--fs-xs);
+  color: var(--rv-gold-dark, #92600a);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  animation: rv-fade-up var(--dur-base) var(--ease-out) both;
+}
+.send-error-banner i {
+  flex-shrink: 0;
+  color: var(--rv-gold, #e8b84b);
+}
+.send-error-banner a {
+  color: var(--rv-blue);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.send-error-banner a:hover { opacity: 0.8; }

@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import { useSocket } from '../../../../context/SocketContext';
-import { io } from 'socket.io-client';
 import ConversationsList from './ConversationsList';
 import ChatWindow from './ChatWindow';
 import NewMessageModal from './NewMessageModal';
 import api from '../../../../services/api';
-import API_CONFIG from '../../../../config/api';
 import './MessagesSection.css';
 
 const MessagesSection = () => {

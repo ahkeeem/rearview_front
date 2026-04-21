@@ -11,7 +11,12 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
   const [typingUser, setTypingUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(null);
   const messagesEndRef = useRef(null);
+
+  // Derive these at the top — needed by hooks below
+  const otherUserName = conversation?.participant_name || 'User';
+  const otherUserId = conversation?.participant_id;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -61,9 +66,7 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
     const handleUserTyping = (data) => {
       if (data.conversationId === conversation?.id && data.userId !== user.id) {
         setTypingUser(otherUserName);
-        // Clear typing indicator after 3 seconds of inactivity
-        const timeout = setTimeout(() => setTypingUser(null), 3000);
-        return () => clearTimeout(timeout);
+        setTimeout(() => setTypingUser(null), 3000);
       }
     };
 
@@ -106,13 +109,14 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
 
     const messageContent = message.trim();
     setMessage('');
+    setSendError(null);
     setSending(true);
 
     try {
       // Send message via API (saves to DB)
       const result = await api.messages.send(conversation.id, messageContent);
       
-      // Emit via WebSocket for real-time delivery (with messageId to avoid duplicate save)
+      // Emit via WebSocket for real-time delivery
       if (socket && result.messageId) {
         socket.emit('send-message', {
           conversationId: conversation.id,
@@ -122,17 +126,17 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
         });
       }
       
-      // Refresh messages to get the saved message from DB
       await fetchMessages();
-      
-      // Notify parent component
-      if (onMessageSent) {
-        onMessageSent();
-      }
+      if (onMessageSent) onMessageSent();
     } catch (error) {
       console.error('Error sending message:', error);
-      // Restore message on error
-      setMessage(messageContent);
+      setMessage(messageContent); // restore message
+      // Show clear error — especially for unverified users
+      if (error.message?.includes('verification required') || error.message?.includes('verify')) {
+        setSendError('verify_required');
+      } else {
+        setSendError(error.message || 'Failed to send message');
+      }
     } finally {
       setSending(false);
     }
@@ -159,13 +163,11 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
     );
   }
 
-  const otherUserName = conversation.participant_name || 'User';
-  const otherUserId = conversation.participant_id;
 
   return (
     <div className="chat-window">
       <div className="chat-header">
-        <Link to={`/profile/${otherUserId}`} className="chat-user-info">
+        <Link to={`/dashboard/profile/${otherUserId}`} className="chat-user-info">
           <img 
             src="/default-avatar.png" 
             alt={otherUserName} 
@@ -233,6 +235,19 @@ const ChatWindow = ({ conversation, socket, onMessageSent }) => {
           {sending ? '...' : <i className="fas fa-paper-plane"></i>}
         </button>
       </form>
+      {sendError && (
+        <div className="send-error-banner">
+          {sendError === 'verify_required' ? (
+            <>
+              <i className="fas fa-shield-alt" />{' '}
+              You need to verify your email or phone to send messages.{' '}
+              <a href="/dashboard/settings">Go to Settings →</a>
+            </>
+          ) : (
+            <><i className="fas fa-exclamation-triangle" /> {sendError}</>
+          )}
+        </div>
+      )}
     </div>
   );
 };
