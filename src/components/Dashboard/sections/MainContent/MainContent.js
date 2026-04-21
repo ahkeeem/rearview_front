@@ -301,10 +301,10 @@ const MainContent = () => {
       </section>
 
       {/* ── Dashboard Grid ─────────────────────────── */}
-      <div className="dashboard-grid-refocus">
+      <div className="bento-grid">
 
         {/* LEFT COLUMN */}
-        <div className="left-column">
+        <div className="left-column slide-up stagger-1">
 
           {/* Trust Score Card */}
           <div className="score-card primary glass-card trust-pulse animate-in">
@@ -378,7 +378,7 @@ const MainContent = () => {
         </div>
 
         {/* RIGHT SIDEBAR */}
-        <div className="right-sidebar-column">
+        <div className="right-sidebar-column slide-up stagger-2">
           {/* Verification Journey Stepper */}
           <div className="verification-journey-card glass-card animate-in">
             <h4><i className="fas fa-route"></i> Trust Journey</h4>

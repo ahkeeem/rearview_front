@@ -3,11 +3,25 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .dashboard-sidebar-profile {
-  background: var(--rv-surface);
-  border: 1px solid var(--rv-border);
-  border-radius: var(--r-lg);
+  /* Glass — medium blur, sits below nav */
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--r-xl);
   overflow: hidden;
-  box-shadow: var(--rv-shadow-sm);
+  box-shadow: 0 4px 24px rgba(31, 38, 135, 0.1);
+  animation: rv-fade-up var(--dur-slow) var(--ease-out) both;
+  transition: transform var(--dur-base) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out);
+}
+.dashboard-sidebar-profile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+}
+[data-theme='dark'] .dashboard-sidebar-profile {
+  background: rgba(30, 42, 56, 0.78);
+  border-color: rgba(255, 255, 255, 0.07);
 }
 
 /* ── Cover + Avatar ─────────────────────────────────────────────── */

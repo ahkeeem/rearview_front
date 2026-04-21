@@ -10,11 +10,23 @@
 
 /* ── Quick Stats / Profile Strength ────────────────────────────── */
 .quick-stats {
-  background: var(--rv-surface);
-  border: 1px solid var(--rv-border);
-  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--r-xl);
   padding: var(--sp-5);
-  box-shadow: var(--rv-shadow-sm);
+  box-shadow: 0 4px 24px rgba(31, 38, 135, 0.1);
+  animation: rv-fade-up var(--dur-slow) var(--ease-out) 150ms both;
+  transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+}
+.quick-stats:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+}
+[data-theme='dark'] .quick-stats {
+  background: rgba(30, 42, 56, 0.78);
+  border-color: rgba(255, 255, 255, 0.07);
 }
 
 .quick-stats h3 {
@@ -70,9 +82,21 @@
 
 /* ── Discovery section ──────────────────────────────────────────── */
 .discovery-section {
-  background: var(--rv-surface);
-  border: 1px solid var(--rv-border);
-  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--r-xl);
   padding: var(--sp-5);
-  box-shadow: var(--rv-shadow-sm);
+  box-shadow: 0 4px 24px rgba(31, 38, 135, 0.1);
+  animation: rv-fade-up var(--dur-slow) var(--ease-out) 250ms both;
+  transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+}
+.discovery-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+}
+[data-theme='dark'] .discovery-section {
+  background: rgba(30, 42, 56, 0.78);
+  border-color: rgba(255, 255, 255, 0.07);
 }

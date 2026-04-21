@@ -86,11 +86,20 @@
   --lh-relaxed:1.7;
 
   /* Motion */
+  --ease-soft:   cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-elastic:cubic-bezier(0.68, -0.6, 0.32, 1.6);
   --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --dur-fast:    120ms;
   --dur-base:    200ms;
   --dur-slow:    350ms;
+
+  /* Glassmorphism Liquid Tokens */
+  --glass-blur:       blur(12px);
+  --glass-bg:         rgba(255, 255, 255, 0.7);
+  --glass-border:     rgba(255, 255, 255, 0.3);
+  --glass-highlight:  rgba(255, 255, 255, 0.5);
+  --glass-shadow:     0 8px 32px 0 rgba(31, 38, 135, 0.15);
 
   /* Nav */
   --nav-height: 60px;
@@ -103,6 +112,13 @@
   --c-text:       var(--rv-text-1);
   --c-text-2:     var(--rv-text-2);
   --c-text-3:     var(--rv-text-3);
+}
+
+[data-theme='dark'] {
+  --glass-bg:         rgba(30, 41, 59, 0.7);
+  --glass-border:     rgba(255, 255, 255, 0.1);
+  --glass-highlight:  rgba(255, 255, 255, 0.05);
+  --glass-shadow:     0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 
 /* ── Dark Theme ────────────────────────────────────────────────── */
@@ -671,13 +687,76 @@ textarea:focus {
   --bg-main:       var(--rv-bg);
   --bg-card:       var(--rv-surface);
   --bg-secondary:  var(--rv-surface-2);
-  --glass-bg:      var(--rv-surface);
-  --glass-border:  var(--rv-border);
 }
 [data-theme='light'] {
   --bg-main:       var(--rv-bg);
   --bg-card:       var(--rv-surface);
   --bg-secondary:  var(--rv-surface-2);
-  --glass-bg:      var(--rv-surface);
-  --glass-border:  var(--rv-border);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   BENTO GRID & MODERN LAYOUT UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-auto-rows: minmax(180px, auto);
+  gap: var(--sp-5);
+  width: 100%;
+}
+
+.bento-item {
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--dur-base) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out);
+}
+
+/* Glass Surface Utility */
+.glass-surface {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--r-lg);
+  position: relative;
+}
+
+.glass-surface::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-highlight), transparent);
+  pointer-events: none;
+}
+
+/* Fluid spacing */
+.fluid-padding {
+  padding: clamp(var(--sp-4), 4vw, var(--sp-12));
+}
+
+.full-screen-container {
+  width: 100%;
+  max-width: 1800px; /* Relaxed for ultra-wide */
+  margin: 0 auto;
+  padding: 0 var(--sp-5);
+}
+
+/* Refraction Hover Effect */
+.refract-hover {
+  transition: transform var(--dur-base) var(--ease-soft),
+              filter var(--dur-base) var(--ease-soft),
+              box-shadow var(--dur-base) var(--ease-soft);
+}
+.refract-hover:hover {
+  transform: translateY(-4px) scale(1.01);
+  filter: brightness(1.05);
+  box-shadow: var(--rv-shadow-lg);
+}
+
+/* Staggered Animations */
+.stagger-1 { animation-delay: 100ms; }
+.stagger-2 { animation-delay: 200ms; }
+.stagger-3 { animation-delay: 300ms; }
+.stagger-4 { animation-delay: 400ms; }

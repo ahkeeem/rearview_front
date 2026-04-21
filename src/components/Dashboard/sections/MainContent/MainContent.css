@@ -14,10 +14,13 @@
    ═══════════════════════════════════════════════════════════════ */
 .lookup-hero-section {
   background: linear-gradient(135deg, var(--rv-blue-dark) 0%, var(--rv-blue) 100%);
-  border-radius: var(--r-lg);
-  padding: var(--sp-8) var(--sp-8);
+  border-radius: var(--r-xl);
+  padding: var(--sp-10) var(--sp-8);
   position: relative;
   overflow: hidden;
+  box-shadow: var(--rv-shadow-xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: rv-fade-up var(--dur-slow) var(--ease-soft) both;
 }
 
 .lookup-hero-section::before {
@@ -185,11 +188,21 @@
    TRUST SCORE CARD
    ═══════════════════════════════════════════════════════════════ */
 .score-card {
-  background: var(--rv-surface);
-  border: 1px solid var(--rv-border);
-  border-radius: var(--r-lg);
-  padding: var(--sp-6);
-  box-shadow: var(--rv-shadow-sm);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-xl);
+  padding: var(--sp-8);
+  box-shadow: var(--glass-shadow);
+  transition: transform var(--dur-base) var(--ease-soft), box-shadow var(--dur-base) var(--ease-soft);
+  animation: rv-fade-up var(--dur-slow) var(--ease-soft) both;
+  animation-delay: 100ms;
+}
+.score-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--rv-shadow-lg);
+  border-color: var(--glass-highlight);
 }
 
 .trust-ring-wrapper {
@@ -347,11 +360,15 @@
 
 /* ── Verification journey ───────────────────────────────────────── */
 .verification-journey-card {
-  background: var(--rv-surface);
-  border: 1px solid var(--rv-border);
-  border-radius: var(--r-lg);
-  padding: var(--sp-5);
-  box-shadow: var(--rv-shadow-sm);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-xl);
+  padding: var(--sp-6);
+  box-shadow: var(--glass-shadow);
+  animation: rv-fade-up var(--dur-slow) var(--ease-soft) both;
+  animation-delay: 200ms;
 }
 .verification-journey-card h4 {
   font-size: var(--fs-sm);
@@ -414,11 +431,15 @@
 
 /* ── CTA Card ───────────────────────────────────────────────────── */
 .trust-cta-card {
-  background: var(--rv-surface);
-  border: 1px solid var(--rv-border);
-  border-radius: var(--r-lg);
-  padding: var(--sp-5);
-  box-shadow: var(--rv-shadow-sm);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-xl);
+  padding: var(--sp-6);
+  box-shadow: var(--glass-shadow);
+  animation: rv-fade-up var(--dur-slow) var(--ease-soft) both;
+  animation-delay: 300ms;
 }
 
 .cta-icon-wrap {

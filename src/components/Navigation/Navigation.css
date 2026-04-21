@@ -66,26 +66,40 @@
   top: 0; left: 0; right: 0;
   z-index: 1000;
   height: var(--nav-height);
-  background: var(--rv-surface);
-  border-bottom: 1px solid var(--rv-border);
+  /* Liquid Glass — highest layer, strongest blur */
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 1px 24px rgba(0, 0, 0, 0.07);
   display: flex;
   align-items: center;
+  /* Highlight shimmer at the bottom edge */
+  position: fixed;
+}
+.main-nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+  pointer-events: none;
 }
 
 [data-theme='dark'] .main-nav {
-  background: var(--rv-surface);
-  border-bottom-color: var(--rv-border);
+  background: rgba(28, 38, 50, 0.85);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 24px rgba(0, 0, 0, 0.3);
 }
 
 .nav-container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 100%; /* Match full-screen dashboard */
   margin: 0 auto;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--sp-4);
-  padding: 0 var(--sp-4);
+  padding: 0 var(--sp-6);
 }
 
 /* ── Left: Logo ────────────────────────────────────────────────── */
@@ -212,13 +226,21 @@
   top: calc(100% + 8px);
   right: 0;
   width: 260px;
-  background: var(--rv-surface);
-  border: 1px solid var(--rv-border);
-  border-radius: var(--r-lg);
-  box-shadow: var(--rv-shadow-lg);
+  /* Glass panel — slightly below nav in hierarchy */
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--r-xl);
+  box-shadow: var(--rv-shadow-xl);
   padding: var(--sp-2);
   animation: rv-fade-down var(--dur-base) var(--ease-out) both;
   z-index: 1001;
+}
+
+[data-theme='dark'] .dropdown-panel {
+  background: rgba(28, 38, 50, 0.92);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .dropdown-header {

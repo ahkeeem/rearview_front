@@ -5,17 +5,16 @@
 
 .dashboard-container {
   display: grid;
-  grid-template-columns: 220px 1fr 300px;
-  gap: var(--sp-5);
-  padding: var(--sp-5);
+  grid-template-columns: 240px 1fr 340px;
+  gap: var(--sp-6);
+  padding: var(--sp-6);
   margin-top: var(--nav-height);
   min-height: calc(100vh - var(--nav-height));
   background: var(--rv-bg);
   align-items: start;
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 100%; /* FULL SCREEN */
   width: 100%;
+  transition: padding var(--dur-slow) var(--ease-out);
 }
 
 /* Pages without a right column (Messages, Profile, Settings, etc.) */
@@ -31,24 +30,47 @@
   gap: var(--sp-5);
 }
 
-/* Sticky side panels */
+/* Sticky side panels with Liquid Glass styling */
 .dashboard-container > aside,
 .dashboard-sidebar-profile,
 .dashboard-rightbar {
   position: sticky;
-  top: calc(var(--nav-height) + var(--sp-5));
+  top: calc(var(--nav-height) + var(--sp-6));
   height: fit-content;
-  max-height: calc(100vh - var(--nav-height) - var(--sp-10));
+  max-height: calc(100vh - var(--nav-height) - var(--sp-12));
   overflow-y: auto;
+  padding: var(--sp-5);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--glass-shadow);
+  transition: transform var(--dur-base) var(--ease-soft);
+}
+
+.dashboard-container > aside:hover,
+.dashboard-sidebar-profile:hover,
+.dashboard-rightbar:hover {
+  transform: translateY(-2px);
+  border-color: var(--glass-highlight);
 }
 
 /* Card wrapper for consistent section styling */
 .main-content-card {
-  background: var(--rv-surface);
-  border: 1px solid var(--rv-border);
-  border-radius: var(--r-lg);
-  padding: var(--sp-5);
-  box-shadow: var(--rv-shadow-sm);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-xl);
+  padding: var(--sp-6);
+  box-shadow: var(--glass-shadow);
+  transition: transform var(--dur-base) var(--ease-soft), box-shadow var(--dur-base) var(--ease-soft);
+}
+.main-content-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--rv-shadow-lg);
+  border-color: var(--glass-highlight);
 }
 
 /* ─── Responsive ────────────────────────────────────────────────── */
