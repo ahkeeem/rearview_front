@@ -10,6 +10,7 @@ const navLinks = [
   { to: '/dashboard/profile',      icon: 'fas fa-user',      label: 'My Profile' },
   { to: '/dashboard/connections',  icon: 'fas fa-users',     label: 'My Network' },
   { to: '/dashboard/reviews',      icon: 'fas fa-star',      label: 'Reviews' },
+  { to: '/dashboard/trust-links',  icon: 'fas fa-link',      label: 'Trust Links' },
   { to: '/dashboard/settings',     icon: 'fas fa-cog',       label: 'Settings' },
 ];
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../../../services/api';
 import './AdminPanel.css';
+import DisputeEvidenceBoard from '../Escrow/DisputeEvidenceBoard';
 
 const AdminPanel = () => {
   const [tab, setTab] = useState('disputes');
@@ -11,6 +12,7 @@ const AdminPanel = () => {
   const [resolving, setResolving] = useState(null);
   const [toast, setToast] = useState(null);
   const [statusFilter, setStatusFilter] = useState('disputed');
+  const [selectedDispute, setSelectedDispute] = useState(null);
 
   const showToast = (msg, type = 'success') => {
     setToast({ msg, type });
@@ -65,6 +67,7 @@ const AdminPanel = () => {
     try {
       await api.admin.resolveDispute(orderId, resolution);
       showToast(`Dispute resolved: ${resolution === 'release' ? 'Funds released to vendor' : 'Buyer refunded'}`);
+      setSelectedDispute(null);
       loadDisputes();
     } catch (err) {
       showToast(err.message || 'Resolution failed', 'error');
@@ -187,28 +190,67 @@ const AdminPanel = () => {
                       <td>{o.disputed_at ? new Date(o.disputed_at).toLocaleDateString() : '—'}</td>
                       {statusFilter === 'disputed' && (
                         <td>
-                          <div className="admin-action-btns">
-                            <button
-                              className="admin-btn release"
-                              onClick={() => handleResolve(o.id, 'release')}
-                              disabled={resolving === o.id}
-                            >
-                              {resolving === o.id ? '...' : '▶ Release to Vendor'}
-                            </button>
-                            <button
-                              className="admin-btn refund"
-                              onClick={() => handleResolve(o.id, 'refund')}
-                              disabled={resolving === o.id}
-                            >
-                              {resolving === o.id ? '...' : '↩ Refund Buyer'}
-                            </button>
-                          </div>
+                          <button 
+                            className="admin-btn admin-btn-inspect" 
+                            onClick={() => setSelectedDispute(o)}
+                          >
+                            <i className="fas fa-search"></i> Inspect Case
+                          </button>
                         </td>
                       )}
                     </tr>
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+
+          {/* Admin Dispute Details Sub-Panel */}
+          {selectedDispute && (
+            <div className="admin-dispute-modal-overlay">
+              <div className="admin-dispute-modal fade-in card">
+                <div className="admin-modal-header">
+                  <h3><i className="fas fa-balance-scale"></i> Dispute Resolution: #{selectedDispute.order_ref}</h3>
+                  <button className="btn-close" onClick={() => setSelectedDispute(null)}><i className="fas fa-times"></i></button>
+                </div>
+                
+                <div className="admin-modal-layout">
+                  <div className="admin-evidence-side">
+                    <DisputeEvidenceBoard orderId={selectedDispute.id} isAdmin={true} />
+                  </div>
+                  
+                  <div className="admin-action-side">
+                    <div className="admin-dispute-summary">
+                      <h4>Order Summary</h4>
+                      <p><strong>Title:</strong> {selectedDispute.title}</p>
+                      <p><strong>Amount:</strong> ₦{Number(selectedDispute.amount).toLocaleString()}</p>
+                      <hr/>
+                      <p><strong>Buyer:</strong> <br/>{selectedDispute.buyer_name} <br/>({selectedDispute.buyer_email})</p>
+                      <p><strong>Vendor:</strong> <br/>{selectedDispute.vendor_name} <br/>({selectedDispute.vendor_email})</p>
+                    </div>
+
+                    <div className="admin-resolution-actions">
+                      <p>Once you are satisfied with the evidence, issue a binding resolution.</p>
+                      <button
+                        className="admin-btn release"
+                        onClick={() => handleResolve(selectedDispute.id, 'release')}
+                        disabled={resolving === selectedDispute.id}
+                        style={{ width: '100%', marginBottom: '10px', padding: '1rem' }}
+                      >
+                        {resolving === selectedDispute.id ? 'Loading...' : '▶ Release to Vendor'}
+                      </button>
+                      <button
+                        className="admin-btn refund"
+                        onClick={() => handleResolve(selectedDispute.id, 'refund')}
+                        disabled={resolving === selectedDispute.id}
+                        style={{ width: '100%', padding: '1rem' }}
+                      >
+                        {resolving === selectedDispute.id ? 'Loading...' : '↩ Refund Buyer'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>

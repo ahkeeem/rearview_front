@@ -531,11 +531,35 @@ const api = {
       });
       return handleResponse(response);
     },
+
+    markDelivered: async (id) => {
+      const response = await fetch(`${BASE_URL}/escrow/orders/${id}/deliver`, {
+        method: 'PUT',
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
+    },
     disputeOrder: async (id, reason) => {
       const response = await fetch(`${BASE_URL}/escrow/orders/${id}/dispute`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify({ reason })
+      });
+      return handleResponse(response);
+    },
+
+    getDisputeMessages: async (id) => {
+      const response = await fetch(`${BASE_URL}/escrow/orders/${id}/messages`, {
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
+    },
+
+    addDisputeMessage: async (id, data) => {
+      const response = await fetch(`${BASE_URL}/escrow/orders/${id}/messages`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
       });
       return handleResponse(response);
     },
@@ -609,6 +633,20 @@ const api = {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify({ resolution })
+      });
+      return handleResponse(response);
+    },
+    getDisputeMessages: async (orderId) => {
+      const response = await fetch(`${BASE_URL}/admin/disputes/${orderId}/messages`, {
+        headers: getAuthHeaders()
+      });
+      return handleResponse(response);
+    },
+    addDisputeMessage: async (orderId, data) => {
+      const response = await fetch(`${BASE_URL}/admin/disputes/${orderId}/messages`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
       });
       return handleResponse(response);
     },

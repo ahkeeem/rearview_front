@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../../../services/api';
+import DisputeEvidenceBoard from './DisputeEvidenceBoard';
 
 const OrderDetail = ({ orderId, onBack }) => {
   const [order, setOrder] = useState(null);
@@ -49,6 +50,19 @@ const OrderDetail = ({ orderId, onBack }) => {
       fetchOrder(); // refresh
     } catch (err) {
       alert(err.message || 'Confirmation failed');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDeliver = async () => {
+    if (!window.confirm('Have you shipped or delivered this order? This will notify the buyer to confirm.')) return;
+    try {
+      setActionLoading(true);
+      await api.escrow.markDelivered(order.id);
+      fetchOrder();
+    } catch (err) {
+      alert(err.message || 'Failed to mark as delivered');
     } finally {
       setActionLoading(false);
     }
@@ -163,7 +177,7 @@ const OrderDetail = ({ orderId, onBack }) => {
               </div>
             )}
 
-            {order.status === 'funded' && order.my_role === 'buyer' && (
+            {['funded', 'delivered'].includes(order.status) && order.my_role === 'buyer' && (
               <div className="action-cta">
                 <p>Funds are locked in RearView Vault. Confirm delivery to release funds to vendor.</p>
                 <div className="btn-stack">
@@ -180,6 +194,20 @@ const OrderDetail = ({ orderId, onBack }) => {
             {order.status === 'funded' && order.my_role === 'vendor' && (
               <div className="action-cta">
                 <p>The buyer has funded the escrow. You can safely begin work/shipping.</p>
+                <div className="btn-stack">
+                    <button className="btn-confirm-s" onClick={handleDeliver} disabled={actionLoading}>
+                        Mark as Delivered / Shipped
+                    </button>
+                    <button className="btn-dispute-s" onClick={() => setShowDispute(!showDispute)}>
+                        Need Help? Open Dispute
+                    </button>
+                </div>
+              </div>
+            )}
+
+            {order.status === 'delivered' && order.my_role === 'vendor' && (
+              <div className="action-cta">
+                <p>You have marked this order as delivered. We have notified the buyer to confirm.</p>
                 <button className="btn-dispute-s" onClick={() => setShowDispute(!showDispute)}>
                     Need Help? Open Dispute
                 </button>
@@ -203,11 +231,19 @@ const OrderDetail = ({ orderId, onBack }) => {
             {order.status === 'disputed' && (
                <div className="feedback-box disputed">
                  <h4>Dispute Under Review</h4>
-                 <p>{order.dispute_reason}</p>
-                 <span className="note">An agent will resolve this within 24-48h.</span>
+                 <p>An agent is reviewing this case. Please provide any evidence below.</p>
                </div>
             )}
+          </div>
 
+          {/* Evidence Board is rendered outside the actions-card for better spacing */}
+          {order.status === 'disputed' && (
+            <div className="actions-card card" style={{ marginTop: '1rem', padding: '0', background: 'transparent', border: 'none' }}>
+              <DisputeEvidenceBoard orderId={order.id} isAdmin={false} />
+            </div>
+          )}
+
+          <div className="actions-card card" style={{ marginTop: '1rem' }}>
             {order.status === 'released' && (
                <div className="feedback-box success">
                  <h4>Transaction Complete</h4>

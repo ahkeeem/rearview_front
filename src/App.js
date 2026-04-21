@@ -9,6 +9,7 @@ import Register from './components/Auth/Register';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import Dashboard from './components/Dashboard/Dashboard';
 import PublicProfile from './components/Profile/PublicProfile';
+import TrustLinkCheckout from './routes/TrustLinkCheckout';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './App.css';
 
@@ -29,6 +30,7 @@ const App = () => {
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/profile/:userId" element={<PublicProfile />} />
+                <Route path="/pay/:slug" element={<TrustLinkCheckout />} />
                 <Route
                   path="/dashboard/*"
                   element={

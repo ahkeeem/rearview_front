@@ -14,6 +14,7 @@ import Settings from './sections/Settings/Settings';
 import WalletSection from './sections/Wallet/WalletSection';
 import EscrowSection from './sections/Escrow/EscrowSection';
 import BarterSection from './sections/Barter/BarterSection';
+import TrustLinksGenerator from './sections/TrustLinks/TrustLinksGenerator';
 import ProductRegistry from './sections/Product/ProductRegistry';
 import ProductProfile from './sections/Product/ProductProfile';
 import AdminPanel from './sections/Admin/AdminPanel';
@@ -28,6 +29,7 @@ const FULL_WIDTH_ROUTES = [
   '/dashboard/barter',
   '/dashboard/escrow',
   '/dashboard/wallet',
+  '/dashboard/trust-links',
   '/dashboard/register-product',
   '/dashboard/admin',
 ];
@@ -70,6 +72,7 @@ const Dashboard = () => {
             <Route path="/wallet"            element={<WalletSection />} />
             <Route path="/escrow"            element={<EscrowSection />} />
             <Route path="/barter"            element={<BarterSection />} />
+            <Route path="/trust-links"       element={<TrustLinksGenerator />} />
             <Route path="/register-product"  element={<ProductRegistry />} />
             <Route path="/product/:id"       element={<ProductProfile />} />
             {user?.role === 'admin' && (
