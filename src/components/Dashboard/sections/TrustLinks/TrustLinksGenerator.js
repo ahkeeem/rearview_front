@@ -16,8 +16,8 @@ const TrustLinksGenerator = () => {
   const fetchLinks = async () => {
     try {
       setLoading(true);
-      const res = await api.get('/trust-links');
-      setLinks(res.data);
+      const res = await api.trustLinks.getMyLinks();
+      setLinks(res);
     } catch (err) {
       setError('Failed to load your trust links');
     } finally {
@@ -34,11 +34,11 @@ const TrustLinksGenerator = () => {
 
     try {
       setCreating(true);
-      const res = await api.post('/trust-links', formData);
-      setLinks([res.data.link, ...links]);
+      const res = await api.trustLinks.createLink(formData);
+      setLinks([res.link, ...links]);
       setFormData({ title: '', amount: '', description: '' });
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to create trust link');
+      setError(err.message || 'Failed to create trust link');
     } finally {
       setCreating(false);
     }
@@ -46,7 +46,7 @@ const TrustLinksGenerator = () => {
 
   const toggleLinkStatus = async (id, currentStatus) => {
     try {
-      await api.put(`/trust-links/${id}/toggle`, { is_active: !currentStatus });
+      await api.trustLinks.toggleLinkStatus(id, !currentStatus);
       setLinks(links.map(l => l.id === id ? { ...l, is_active: !currentStatus ? 1 : 0 } : l));
     } catch (err) {
       console.error(err);
