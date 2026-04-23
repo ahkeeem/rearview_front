@@ -168,8 +168,11 @@ const Register = () => {
   return (
     <div className="auth-container">
       <form className="register-form" onSubmit={handleSubmit} noValidate>
-        <div className="auth-brand">
-          <div className="auth-logo">🛡️</div>
+        <div className="auth-brand" aria-hidden="true">
+        <div className="auth-brand-logo">
+          <img src="/logo.svg" alt="" />
+          <span>RearView</span>
+        </div>
           <h1>Create Account</h1>
           <p>Join the trust layer for Nigerian commerce</p>
         </div>

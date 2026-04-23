@@ -95,7 +95,7 @@ const Login = () => {
       {/* ── Brand panel ──────────────────────────────────── */}
       <div className="auth-brand" aria-hidden="true">
         <div className="auth-brand-logo">
-          <img src="/logo-shield.png" alt="" />
+          <img src="/logo.svg" alt="" />
           <span>RearView</span>
         </div>
         <h1>

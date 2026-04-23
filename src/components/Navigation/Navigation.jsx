@@ -172,7 +172,7 @@ const Navigation = () => {
         {/* Left: Logo */}
         <div className="nav-left">
           <Link to="/dashboard" className="logo-wrap" aria-label="RearView home">
-            <img src="/logo-shield.png" alt="" className="nav-logo-img" />
+            <img src="/logo.svg" alt="" className="nav-logo-img" />
             <span className="logo-text">RearView</span>
           </Link>
         </div>

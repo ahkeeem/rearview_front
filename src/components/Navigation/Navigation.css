@@ -113,11 +113,17 @@
   flex-shrink: 0;
 }
 .logo-wrap:hover { text-decoration: none; }
+.logo-wrap:hover .nav-logo-img {
+  transform: scale(1.05) rotate(-2deg);
+  filter: drop-shadow(0 4px 12px rgba(10, 102, 194, 0.3));
+}
 
 .nav-logo-img {
-  height: 32px;
-  width: 32px;
+  height: 34px;
+  width: 34px;
   border-radius: var(--r-sm);
+  transition: transform var(--dur-base) var(--ease-out), filter var(--dur-base) var(--ease-out);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 .logo-text {
