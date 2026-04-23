@@ -16,7 +16,7 @@ const ThreadedComments = ({ threadId, reviewId }) => {
 
                 // If no direct threadId, try fetching by reviewId
                 if (!targetId && reviewId) {
-                    const threadRes = await fetch(`${process.env.REACT_APP_API_URL}/threads/review/${reviewId}`, {
+                    const threadRes = await fetch(`${import.meta.env.VITE_API_URL}/threads/review/${reviewId}`, {
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                     }).then(res => res.json());
                     

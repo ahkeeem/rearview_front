@@ -1,0 +1,73 @@
+.trade-map-container {
+  background: var(--rv-surface);
+  border: 1px solid var(--rv-border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--rv-shadow-sm);
+  margin-bottom: var(--sp-6);
+}
+
+.trade-map-header {
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--rv-border);
+  background: var(--rv-surface-2);
+}
+
+.trade-map-header h3 {
+  font-size: var(--fs-md);
+  color: var(--rv-text-1);
+  margin-bottom: 4px;
+}
+
+.trade-map-header p {
+  font-size: var(--fs-sm);
+  color: var(--rv-text-2);
+}
+
+.map-wrapper {
+  height: 400px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.leaflet-map-instance {
+  height: 100%;
+  width: 100%;
+  z-index: 1; /* Keep map below navbar */
+}
+
+/* Custom Popup Styling */
+.leaflet-popup-content-wrapper {
+  border-radius: var(--r-md);
+  box-shadow: var(--rv-shadow-md);
+  padding: 0;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  padding: var(--sp-3);
+}
+
+.map-popup-content strong {
+  display: block;
+  font-size: var(--fs-base);
+  color: var(--rv-text-1);
+  margin-bottom: 4px;
+}
+
+.popup-subtitle {
+  font-size: var(--fs-sm);
+  color: var(--rv-gold-dark);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.popup-meta {
+  font-size: var(--fs-xs);
+  color: var(--rv-text-3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

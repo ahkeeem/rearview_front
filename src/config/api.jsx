@@ -3,7 +3,7 @@
 // REACT_APP_API_URL=https://rearview-api.onrender.com
 
 const API_BASE =
-  process.env.REACT_APP_API_URL ||
+  import.meta.env.VITE_API_URL ||
   process.env.NEXT_PUBLIC_API_URL ||
   'http://localhost:4000';
 
@@ -11,7 +11,7 @@ export const API_CONFIG = {
   BASE_URL: API_BASE,
   API_BASE: `${API_BASE}/api`,
   SOCKET_URL:
-    process.env.REACT_APP_SOCKET_URL ||
+    import.meta.env.VITE_SOCKET_URL ||
     process.env.NEXT_PUBLIC_SOCKET_URL ||
     API_BASE,
 };

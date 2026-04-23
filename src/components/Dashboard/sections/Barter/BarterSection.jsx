@@ -11,7 +11,9 @@ const CATEGORIES = [
   { value: 'other', label: 'General / Other', banner: 'gradient-gold' },
 ];
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// import TradeMap from '../Discovery/TradeMap';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 /* ────────────────────────────────────────────────────────
    TradeLoopGraph — The Golden Circle Visualizer
@@ -132,7 +134,7 @@ const BarterSection = () => {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    if (tab === 'browse') fetchBrowseItems();
+    if (tab === 'browse' || tab === 'radar') fetchBrowseItems();
     if (tab === 'loops') fetchMyLoops();
   };
 
@@ -146,6 +148,9 @@ const BarterSection = () => {
       <div className="barter-tabs glass-card">
         <button className={activeTab === 'browse' ? 'active' : ''} onClick={() => handleTabChange('browse')}>
           <i className="fas fa-compass" /> Explore Items
+        </button>
+        <button className={activeTab === 'radar' ? 'active' : ''} onClick={() => handleTabChange('radar')}>
+          <i className="fas fa-map-marked-alt" /> Map Radar
         </button>
         <button className={activeTab === 'list' ? 'active' : ''} onClick={() => handleTabChange('list')}>
           <i className="fas fa-plus-circle" /> Add Item
@@ -192,6 +197,20 @@ const BarterSection = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === 'radar' && (
+        <div className="animate-in">
+          {browseLoading ? (
+            <div className="empty-state">Triangulating signals...</div>
+          ) : (
+            <div className="empty-state">
+              <p>Map dependencies not installed. Please run:</p>
+              <code>npm install leaflet react-leaflet</code>
+              <p>Then uncomment TradeMap in BarterSection.jsx</p>
             </div>
           )}
         </div>

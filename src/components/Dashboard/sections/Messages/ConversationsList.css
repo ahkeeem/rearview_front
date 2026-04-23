@@ -105,7 +105,7 @@
   margin: 0;
   font-size: 13px;
   color: var(--text-secondary);
-  var(--bg-primary)-space: nowrap;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }

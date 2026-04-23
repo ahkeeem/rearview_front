@@ -316,7 +316,7 @@ h1, h2, h3, h4, h5, h6 {
 .rv-btn-icon { padding: 8px; border-radius: var(--r-md); }
 
 /* Backwards-compat aliases so existing components don't break */
-.btn-primary { @extend .rv-btn; background: var(--rv-blue); color:#fff; border-color: var(--rv-blue); padding: 9px 20px; border-radius: var(--r-pill); font-size: var(--fs-sm); font-weight:600; display:inline-flex; align-items:center; gap:var(--sp-2); transition: background var(--dur-fast); border: 1.5px solid transparent; }
+.btn-primary { background: var(--rv-blue); color:#fff; border-color: var(--rv-blue); padding: 9px 20px; border-radius: var(--r-pill); font-size: var(--fs-sm); font-weight:600; display:inline-flex; align-items:center; justify-content:center; gap:var(--sp-2); transition: background var(--dur-fast); border: 1.5px solid transparent; }
 .btn-primary:hover { background: var(--rv-blue-hover); }
 .btn-secondary { background: transparent; color: var(--rv-blue); border: 1.5px solid var(--rv-blue); padding: 9px 20px; border-radius: var(--r-pill); font-size: var(--fs-sm); font-weight:600; display:inline-flex; align-items:center; gap:var(--sp-2); transition: background var(--dur-fast); }
 .btn-secondary:hover { background: var(--rv-blue-light); }

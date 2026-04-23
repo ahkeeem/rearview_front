@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../../../services/api';
 import './AdminPanel.css';
 import DisputeEvidenceBoard from '../Escrow/DisputeEvidenceBoard';
+// import AnalyticsDashboard from './AnalyticsDashboard';
 
 const AdminPanel = () => {
   const [tab, setTab] = useState('disputes');
@@ -111,6 +112,7 @@ const AdminPanel = () => {
       {/* Tab bar */}
       <div className="admin-tabs">
         {[
+          { key: 'analytics', label: 'Analytics', icon: 'fa-chart-pie' },
           { key: 'disputes', label: 'Dispute Queue', icon: 'fa-flag' },
           { key: 'all_orders', label: 'All Escrow Orders', icon: 'fa-list' },
           { key: 'verifications', label: 'Pending Verifications', icon: 'fa-id-card' }
@@ -127,6 +129,15 @@ const AdminPanel = () => {
           </button>
         ))}
       </div>
+
+      {/* ── Analytics Tab ── */}
+      {tab === 'analytics' && (
+        <div className="empty-state">
+          <p>Analytics dependencies not installed. Please run:</p>
+          <code>npm install recharts</code>
+          <p>Then uncomment AnalyticsDashboard in AdminPanel.jsx</p>
+        </div>
+      )}
 
       {/* ── Disputes Tab ── */}
       {tab === 'disputes' && (
